@@ -1,0 +1,115 @@
+extends layout
+
+block additionalCSS
+  link(href='/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
+
+
+block renderBody
+  .qa-summary
+    .row
+      .col-md-6.qa-slider
+        | slider here
+      .col-md-6.qa-most-voted
+        .row
+          .col-sm-1 icon
+          .col-sm-1 67
+          .col-sm-8 Title here title here title here
+          .col-sm-2 2015-5-3
+  .divide30
+
+  .container.qa-post-titles
+    .row.qa-post-title-header
+      .col-sm-1
+      .col-sm-7 TOPIC
+      .col-sm-1 REPLY
+      .col-sm-1 VIEW
+      .col-sm-2 LAST REPLY
+    .divide30
+    .qa-post-titles
+      .row.qa-post-title-row
+        .col-sm-1 ICON
+        .col-sm-7
+          .row
+            .col-xs-12 Dummy title here, China Man Basketball team beat Iran
+          .row
+            .col-xs-12.text-muted Posted by wsliubw, 1 week ago
+        .col-sm-1 15
+        .col-sm-1 345
+        .col-sm-2
+          .row
+            .col-xs-4 ProI
+            .col-xs-8
+              .row
+                .col-xs-12
+                  | Username
+              .row
+                .col-xs-12
+                  | 3 days ago
+      .row.qa-post-title-row
+        .col-sm-1 ICON
+        .col-sm-7
+          .row
+            .col-xs-12 Dummy title here, China Man Basketball team beat Iran
+          .row
+            .col-xs-12.text-muted Posted by wsliubw, 1 week ago
+        .col-sm-1 15
+        .col-sm-1 345
+        .col-sm-2
+          .row
+            .col-xs-4 ProI
+            .col-xs-8
+              .row
+                .col-xs-12
+                  | Username
+              .row
+                .col-xs-12
+                  | 3 days ago
+
+    .divide30
+    .row.qa-post-title-filter
+      .col-sm-8.col-sm-offset-2
+        form(method='post')
+          | Display topics from previous:
+          .btn-group
+            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+              | all
+              span.caret
+            ul.dropdown-menu
+              li
+                a(href='#') All
+              li
+                a(href='#') 1 day ago
+              li
+                a(href='#') 1 week ago
+          |&nbsp;&nbsp; Sort by
+          .btn-group
+            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+              | Post time
+              span.caret
+            ul.dropdown-menu
+              li
+                a(href='#') Post time
+              li
+                a(href='#') Views
+              li
+                a(href='#') Replies
+              li: a(href = "#") Subjects
+          |&nbsp;&nbsp;
+          .btn-group
+            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+              | Descending
+              span.caret
+            ul.dropdown-menu
+              li: a(href = "#") Descending
+              li: a(href = "#") Ascending
+
+
+
+
+          // div.btn-group ends
+          button.btn.btn-primary(type='button') Go
+  .divide60
+
+
+
+block additionalJS

@@ -1,0 +1,236 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title #{title}
+    // Bootstrap, must
+    link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet')
+    
+    // custom css, must
+    link(href='/css/style.css', rel='stylesheet', type='text/css', media='screen')
+    
+    // font awesome for icons, must
+    link(href='/font-awesome-4.4.0/css/font-awesome.min.css', rel='stylesheet')
+    // animated css
+    link(href='/css/animate.css', rel='stylesheet', type='text/css', media='screen')
+    // google fonts
+    link(href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,600,700,800', rel='stylesheet', type='text/css')
+    // mega menu
+    link(href='/css/yamm.css', rel='stylesheet', type='text/css')
+    block additionalCSS
+    // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+    // WARNING: Respond.js doesn't work if you view the page via file://
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
+      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+
+mixin properActive(text)
+  case text
+    when "Home"
+      | active
+
+body
+  // navigation
+  // Static navbar
+  .navbar.navbar-default.navbar-static-top.yamm.sticky(role='navigation')
+    .container
+      .navbar-header
+        button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+          span.sr-only Toggle navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.navbar-brand(href='#')
+          h5 FASIDS
+      .navbar-collapse.collapse
+        ul.nav.navbar-nav.navbar-right
+          li.dropdown(class='#{(activePage=="Home")?"active":null}')
+            // Home
+            a(href='/' ) Home
+          // menu home li end here
+          li.dropdown
+            a.dropdown-toggle(href='#', class="")
+              | INTERACTIVE LANDSCAPE
+              i.fa.fa-angle-down
+            ul.dropdown-menu(role='menu')
+              li
+                a(href='#') PLandscape Management Tool
+              li
+                a(href='#') Home Owner Management Tool
+              li
+                a(href='#') Texas Ant Distribution Map
+          // menu Portfolio li end here
+          li.dropdown(class='#{(activePage=="Reports")?"active":null}')
+            a.dropdown-toggle(href='#', class='')
+              | REPORTS
+              i.fa.fa-angle-down
+            ul.dropdown-menu(role='menu')
+              li
+                a(href='#') Management Reports
+              li
+                a(href='#') Invasive Ant Monitoring Tool
+          // menu blog li end here
+          li.dropdown(class='#{(activePage=="Ants")?"active":null}')
+            a.dropdown-toggle(href='#', data-toggle='dropdown') ANT ACTIVITY
+          // menu pages li end here
+          li.dropdown(class='#{(activePage=="Questions")?"active":null}')
+            a(href='/questions') Q &amp; A
+          // menu Shop li end here
+          li.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown')
+              i.fa.fa-lock
+              |  Sign In
+            .dropdown-menu.dropdown-menu-right.dropdown-login-box.animated.fadeInUp
+              form(role='form')
+                h4 Signin
+                .form-group
+                  .input-group
+                    span.input-group-addon
+                      i.fa.fa-user
+                    input.form-control(type='text', placeholder='Username')
+                  br
+                  .input-group
+                    span.input-group-addon
+                      i.fa.fa-lock
+                    input.form-control(type='password', placeholder='Password')
+                  .checkbox.pull-left
+                    label
+                      input(type='checkbox')
+                      |  Remember me
+                  a.btn.btn-theme-bg.pull-right Login
+                  // <button type="submit" class="btn btn-theme pull-right">Login</button>
+                  .clearfix
+                  hr
+                  p
+                    | Don't have an account! 
+                    a(href='#') Register Now
+          // menu login li end here
+      // /.nav-collapse
+    // container
+  // navbar-default
+  block renderBody
+  footer#footer
+    .container
+      .row
+        .col-md-3.col-sm-6.margin30
+          .footer-col
+            h3 About assan
+            p
+              | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie.
+            ul.list-inline.social-1
+              li
+                a(href='#')
+                  i.fa.fa-facebook
+              li
+                a(href='#')
+                  i.fa.fa-twitter
+              li
+                a(href='#')
+                  i.fa.fa-google-plus
+              li
+                a(href='#')
+                  i.fa.fa-pinterest
+              li
+                a(href='#')
+                  i.fa.fa-dribbble
+        // footer col
+        .col-md-3.col-sm-6.margin30
+          .footer-col
+            h3 Contact
+            ul.list-unstyled.contact
+              li
+                p
+                  strong
+                    i.fa.fa-map-marker
+                    |  Address:
+                  |  vaisahali, jaipur, 302012
+              li
+                p
+                  strong
+                    i.fa.fa-envelope
+                    |  Mail Us:
+                  a(href='#') Support@designmylife.com
+              li
+                p
+                  strong
+                    i.fa.fa-phone
+                    |  Phone:
+                  |  +91 1800 2345 2132
+              li
+                p
+                  strong
+                    i.fa.fa-print
+                    |  Fax
+                  |  1800 2345 2132
+              li
+                p
+                  strong
+                    i.fa.fa-skype
+                    |  Skype
+                  |  assan.856
+        // footer col
+        .col-md-3.col-sm-6.margin30
+          .footer-col
+            h3 Featured Work
+            ul.list-inline.f2-work
+              li
+                a(href='portfolio-single.html')
+                  img.img-responsive(src='/img/img-1.jpg', alt='')
+              li
+                a(href='portfolio-single.html')
+                  img.img-responsive(src='/img/img-2.jpg', alt='')
+              li
+                a(href='portfolio-single.html')
+                  img.img-responsive(src='/img/img-3.jpg', alt='')
+              li
+                a(href='portfolio-single.html')
+                  img.img-responsive(src='/img/img-4.jpg', alt='')
+              li
+                a(href='portfolio-single.html')
+                  img.img-responsive(src='/img/img-5.jpg', alt='')
+              li
+                a(href='portfolio-single.html')
+                  img.img-responsive(src='/img/img-6.jpg', alt='')
+              li
+                a(href='portfolio-single.html')
+                  img.img-responsive(src='/img/img-7.jpg', alt='')
+              li
+                a(href='portfolio-single.html')
+                  img.img-responsive(src='/img/img-8.jpg', alt='')
+              li
+                a(href='portfolio-single.html')
+                  img.img-responsive(src='/img/img-9.jpg', alt='')
+        // footer col
+        .col-md-3.col-sm-6.margin30
+          .footer-col
+            h3 Newsletter
+            p
+              | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam,
+            form.subscribe-form(role='form')
+              .input-group
+                input.form-control(type='text', placeholder='Enter email to subscribe')
+                span.input-group-btn
+                  button.btn.btn-theme-dark.btn-lg(type='submit') Ok
+        // footer col
+      .row
+        .col-md-12.text-center
+          .footer-btm
+            span ©2015. KEL@Texas A&amp;M
+            
+  // default footer end here
+  // scripts and plugins
+  // must need plugin jquery
+  script(src='/js/jquery.min.js')
+  script(src='/js/jquery-migrate.min.js')
+  // bootstrap js plugin
+  script(src='/bootstrap/js/bootstrap.min.js', type='text/javascript')
+  // sticky header
+  script(type='text/javascript', src='/js/jquery.sticky.js')
+  // on scroll animation BOWEI: I need this
+  script(src='/js/wow.min.js', type='text/javascript')
+  // customizable plugin edit according to your needs
+  script(src='/js/custom.js', type='text/javascript')
+  block additionalJS
+

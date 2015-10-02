@@ -1,0 +1,9 @@
+﻿body .qa-slider{
+    height:300px;
+    background-color:lightsteelblue;
+}
+
+body .qa-most-voted {
+    background-color:lightgray;
+    height:300px;
+}
