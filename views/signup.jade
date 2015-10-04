@@ -4,9 +4,45 @@ block additionalCSS
 
 
 block renderBody
+  include snippets/breadcrum
+  include snippets/infobox.jade
+  .divide30
   .container
-      .row
-        .col-sm-12
+    .row
+      .col-md-8.col-sm-8.col-md-offset-2.col-sm-offset-2
+        .login-form
+          h3 Sign Up 
+            
+          form(role='form' method="post")
+            .form-group
+              label(for='email') Email address
+              input#email.form-control(type='email', name='email', placeholder='Enter email')
+            .form-group
+              label(for='password') Password
+              input#password.form-control(type='password',name='password' ,placeholder='Password')
+            .form-group
+              label(for='firstname') First Name
+              input#firstname.form-control(type='text',name='firstname' ,placeholder='Enter firstname')
+            .form-group
+              label(for='lastname') Last Name
+              input#lastname.form-control(type='text',name='lastname' ,placeholder='Enter lastname')
+            .form-group
+              label(for="usercat") User Category
+              select#usercat(name="usercat").form-control
+                option(value='2') user
+                option(value='1') admin
+            //-.checkbox
+              label
+                input(type='checkbox')
+                |  Remember Me
+            button.btn.btn-theme-bg(type='submit') Login
+            
+            //- a.btn.btn-fb-login(href='#')
+              i.fa.fa-facebook
+              |  Login With Facebook
+            
+            a(href='#') Forget Password?
+  .divide60
           
 
 block additionalJS

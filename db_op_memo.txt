@@ -1,0 +1,2 @@
+/*removal*/
+db.user.remove({first_name:"Bowei"})

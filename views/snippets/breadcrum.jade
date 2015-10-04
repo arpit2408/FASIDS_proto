@@ -1,0 +1,11 @@
+.breadcrumb-wrap
+  .container
+    .row
+      .col-sm-6
+        h4 #{(breadcrumTitle)?breadcrumTitle:"breadcrumb title unspecified"}
+      .col-sm-6.hidden-xs.text-right
+        ol.breadcrumb
+          li
+            a(href='/') Home
+          li #{(pathToHere)?pathToHere:"path unspecified"}
+// breadcrumbs

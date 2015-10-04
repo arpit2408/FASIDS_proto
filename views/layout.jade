@@ -46,12 +46,12 @@ body
           h5 FASIDS
       .navbar-collapse.collapse
         ul.nav.navbar-nav.navbar-right
-          li.dropdown(class='#{(activePage=="Home")?"active":null}')
+          li(class='#{(activePage=="Home")?"active ":""}')
             // Home
             a(href='/' ) Home
           // menu home li end here
           li.dropdown
-            a.dropdown-toggle(href='#', class="")
+            a.dropdown-toggle(href='#', class="", data-toggle="dropdown")
               | INTERACTIVE LANDSCAPE
               i.fa.fa-angle-down
             ul.dropdown-menu(role='menu')
@@ -62,8 +62,8 @@ body
               li
                 a(href='#') Texas Ant Distribution Map
           // menu Portfolio li end here
-          li.dropdown(class='#{(activePage=="Reports")?"active":null}')
-            a.dropdown-toggle(href='#', class='')
+          li(class='#{(activePage=="Reports")?"active dropdown":"dropdown"}')
+            a.dropdown-toggle(href='#', class='', data-toggle="dropdown")
               | REPORTS
               i.fa.fa-angle-down
             ul.dropdown-menu(role='menu')
@@ -78,34 +78,52 @@ body
           li.dropdown(class='#{(activePage=="Questions")?"active":null}')
             a(href='/questions') Q &amp; A
           // menu Shop li end here
-          li.dropdown
-            a.dropdown-toggle(href='#', data-toggle='dropdown')
-              i.fa.fa-lock
-              |  Sign In
-            .dropdown-menu.dropdown-menu-right.dropdown-login-box.animated.fadeInUp
-              form(role='form')
-                h4 Signin
-                .form-group
-                  .input-group
-                    span.input-group-addon
-                      i.fa.fa-user
-                    input.form-control(type='text', placeholder='Username')
-                  br
-                  .input-group
-                    span.input-group-addon
-                      i.fa.fa-lock
-                    input.form-control(type='password', placeholder='Password')
-                  .checkbox.pull-left
-                    label
-                      input(type='checkbox')
-                      |  Remember me
-                  a.btn.btn-theme-bg.pull-right Login
-                  // <button type="submit" class="btn btn-theme pull-right">Login</button>
-                  .clearfix
-                  hr
-                  p
-                    | Don't have an account! 
-                    a(href='#') Register Now
+          if (!isAuthenticated)
+            li.dropdown
+              a.dropdown-toggle(href='#', data-toggle='dropdown')
+                i.fa.fa-lock
+                |  Sign In
+              .dropdown-menu.dropdown-menu-right.dropdown-login-box.animated.fadeInUp
+                form(role='form', action='/users/signin', method='post')
+                  h4 Signin
+                  .form-group
+                    .input-group
+                      span.input-group-addon
+                        i.fa.fa-user
+                      input.form-control(type='text',name='email', placeholder='Email')
+                    br
+                    .input-group
+                      span.input-group-addon
+                        i.fa.fa-lock
+                      input.form-control(type='password',name='password', placeholder='Password')
+                    .checkbox.pull-left
+                      label
+                        input(type='checkbox', name='remember')
+                        |  Remember me
+                    //-a.btn.btn-theme-bg.pull-right Login
+                    button.btn.btn-theme.pull-right(type='submit') Login
+                    .clearfix
+                    hr
+                    p
+                      | Don't have an account! 
+                      a(href='/users/signup') Register Now
+          else
+            li.dropdown
+              a.dropdown-toggle(href="#", data-toggle='dropdown') 
+                | #{user.first_name}
+                i.fa.fa-angle-down
+              ul.dropdown-menu(role='menu')
+                li
+                  a(href='#') User dashboard
+                li
+                  a(href='#') option2
+                li
+                  a(href='/users/logout') Log out
+
+
+
+  
+
           // menu login li end here
       // /.nav-collapse
     // container
