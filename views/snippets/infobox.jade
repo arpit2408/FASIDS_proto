@@ -1,0 +1,28 @@
+
+.divide30
+if msg_type
+  .container
+    .row
+      .col-md-8.col-sm-8.col-md-offset-2.col-sm-offset-2
+        case msg_type
+          when "warning"
+            .alert-warning.alert
+              button.close(type='button', data-dismiss='alert') ×
+              | #{msg_content?msg_content:"msg_content unspecified"}
+          when "danger"
+            .alert-danger.alert
+              button.close(type='button', data-dismiss='alert') ×
+              | #{msg_content?msg_content:"msg_content unspecified"}
+          when "info"
+            .alert-info.alert
+              button.close(type='button', data-dismiss='alert') ×
+              | #{msg_content?msg_content:"msg_content unspecified"}
+          when "success"
+            .alert-success.alert
+              button.close(type='button', data-dismiss='alert') ×
+              | #{msg_content?msg_content:"msg_content unspecified"}
+          default
+            .alert-info.alert
+              button.close(type='button', data-dismiss='alert') ×
+              | #{msg_content?msg_content:"msg_content unspecified"}
+
