@@ -1,9 +1,13 @@
-﻿body .qa-slider{
-    height:300px;
-    background-color:lightsteelblue;
+body .qa-slider {
+  height: 300px;
+  background-color: #f7f9fa;
 }
-
-body .qa-most-voted {
-    background-color:lightgray;
-    height:300px;
+body .qa-post-titles .qa-post-title-row {
+  padding: 15px 0px;
+}
+body .qa-post-titles .even-numbered-post-row {
+  background-color: #f7f9fa;
+}
+body #filter-go-btn {
+  margin-left: 10px;
 }

@@ -19,7 +19,8 @@ body {
 }
 
 
-/*basic partial scss includes "resetting" and "dividers" and nav overrides, form elements, buttons, image hover effect*/
+/*basic partial scss includes "resetting" and "dividers" and nav overrides, 
+  form elements, buttons, image hover effect(both old and new)*/
 @import "basic";
 
 /*fasids might not need this topbars */
@@ -111,45 +112,46 @@ body {
   background: #FFF;
   border-top: none;
   position: relative;
+  &:before{
+    content: "";
+    display: block;
+    position: absolute;
+    top: -8px;
+    margin-left: 20px;
+    width: 8px;
+    height: 8px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #fff;
+    z-index: 100;  
+  }
+  h3{
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;  
+  }
+  span{
+    font-weight: 600;
+    font-style: normal;
+    text-transform: lowercase;
+    font-size: 11px;
+    color: #777;
+  }
 }
-.work-desc:before{
-  content: "";
-  display: block;
-  position: absolute;
-  top: -8px;
-  margin-left: 20px;
-  width: 8px;
-  height: 8px;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 8px solid #fff;
-  z-index: 100;
-}
-.work-desc h3{
-  margin: 0;
-  padding: 0;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
+
 .owl-spaced .owl-item > div{
   margin: 5px;
 }
-.work-desc span{
-  font-weight: 600;
-  font-style: normal;
-  text-transform: lowercase;
-  font-size: 11px;
-  color: #777;
+
+//.project-detail only found at "portfolio-single-2.html"&"portfolio-single.html"
+.project-detail{
+  h3{margin-bottom: 10px;}
+  em{display: block;}
 }
 
-.project-detail h3{
-  margin-bottom: 10px;
-}
-.project-detail em{
-  display: block;
-}
-
+//.full-width-3-work, not found any where
 .full-width-3-work .work-desc{
   padding: 10px;
 }
@@ -171,29 +173,29 @@ h3.heading-progress {
   @include box-shadow (none);
   background: #E9E9E9;
   @include border-radius (0);
-}
-.progress-bar {
-  line-height: 10px;
-  background:$skincolor;
-  @include box-shadow (none);
+  .progress-bar{
+    line-height: 10px;
+    background:$skincolor;
+    @include box-shadow (none);  
+  }
 }
 
-
-/*news and blogs*/
+/*news and blogs, can be found at footer-2.html, just above footer*/
 .news-desc{
   padding: 15px 0;
-}
-.news-desc h4{
-  margin: 0px;
-  font-weight: 500;
-}
-.news-desc span{
-  font-size: 12px;
-  font-weight: 400;
-  font-style: normal;
-}
-.news-desc span + span{
-  padding-left: 30px;
+  h4{
+    margin: 0px;
+    font-weight: 500;
+  }
+  span{
+    font-size: 12px;
+    font-weight: 400;
+    font-style: normal;
+
+    + span{
+      padding-left: 30px;
+    }
+  }
 }
 
 /*latest news in home option, found in home-2.html*/
@@ -226,11 +228,9 @@ h3.heading-progress {
 // .l-news-desc only found in home-2.html
 .l-news-desc {
   padding: 10px 20px;
-
   h3 {
     margin-bottom: 15px;
   }
-
   ul.post-desc{
     padding: 0;
     li{
@@ -415,42 +415,7 @@ h3.heading-progress {
 // @import "not-found-any-where";
 
 /*************breadcrumb: Looks like one title of this page, can be found at about.html etc****************/
-.breadcrumb-wrap{
-  padding: 30px 0;
-  background-image:url(../img/shadow-bg.png);
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-color: #f6f6f6;
-  border-top: 1px solid #d2d3d4;
-  border-bottom: 1px solid #d2d3d4;
-  h4{
-    margin: 0px;
-    font-size:16px;
-    color: #333;
-    font-weight: 700;
-    letter-spacing: 8px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-family: $primary-font;
-  }
-}
-
-// Bowei, question, what is ol
-ol.breadcrumb{
-  margin: 0;
-  padding: 0;
-  background-color: transparent;
-  color:#333;
-  li{
-    font-weight: 400;
-    font-size: 13px;
-    text-transform: capitalize;
-    letter-spacing: 1px;
-    a{
-      color:#333;
-    }
-  }
-}
+@import "breadcrum-snippet";
 
 /***list of highlight,  only found in about.html, ctrl-f "OUR HIGHLIGHTS"**/
 .highlight-list li{
@@ -522,14 +487,12 @@ label span{
   color:red;
 }
 
-
 /***error page****/
 .error-digit{
   font-size: 150px;
   text-align: center;
   line-height: 150px;
   color:$skincolor;
-
 }
 .error-text h2{
   font-weight: 400;
@@ -538,56 +501,32 @@ label span{
 
 /*****sidebar, found many using in blogs, like you see in right side of blog-2col.html****/
 @import "side-bar-snippets";
-
 /***********************sign in or sign up css****************/
-.login-form{
-  padding: 20px;
-  background-color: #f5f5f8;
-}
-.login-form h3 span{
-  color:#777;
-  font-size: 15px;
-}
-.btn-fb-login{
-  background-color: #3b5998;
-  color:#fff;
-  @include border-radius (3px);
-}
-.login-form form a{
-  display: inline-block;
-  margin-left: 5px;
-}
-@media(max-width:320px){
-  .login-form form a{
-    margin-top: 10px;
-  }
-}
-
+@import "login-register-page";
 /****************testimonials(moved to _testimonials-snippet.scss )***********************/
 
 /****clients (carousel)***/
-#clients-carousel{
+#clients-carousel {
   background-color: #424242;
   padding: 90px 0;
-}
-#clients-carousel.light{
-  background-color: #222;
-}
-#clients-carousel.light h3.heading{
-  color:#fff;
-}
-#clients-carousel .center-heading h2{
-  color:#fff;
-}
-#clients-carousel .item{
-  text-align: center;
-}
-#clients-carousel p{
-  color:#bbb;
+  &.light {
+    background-color: #222;
+    h3.heading {
+      color: #fff;
+    }
+  }
+  .item {
+    text-align: center;
+  }
+  p {
+    color: #bbb;
+  }
+  .center-heading h2 {
+    color: #fff;
+  }
 }
 
-
-/*cta-1 and cta-2 are adjacent to footer, see career.html and element.html*/
+/*cta-1 and cta-2 are adjacent to footer, see career.html and element.html, 类似宣言*/
 #cta-1{
   padding: 40px 0;
   background-color: $skincolor;
@@ -599,42 +538,13 @@ label span{
   line-height: 30px;
   text-transform: uppercase;
 }
-#cta-2{
-  padding: 30px 0;
-  background-color: #f2f2f2;
-  text-align: center;
-}
-#cta-2 h1{
-  color:#333;
-  margin-bottom: 15px;
-  font-weight: 400;
-}
 
 
 /*****accordions****/
 @import "accordian-snippet";
 
 /****************elements.html******************/
-.grid-wrap h4{
-  display: block;
-  line-height: 35px;
-  text-align: center;
-  background-color: #f9f9fa;
-  border:1px solid #ddd;
-}
-.element-buttons a{
-  margin-bottom: 10px;
-  margin-right: 5px;
-}
-// only found in element.html
-.popover-test button{
-  margin: 5px;
-}
-// .form-element can only be found in element.html
-.form-element .form-control{
-  height: 31px;
-}
-
+@import "element-page";
 
 /*****************bootstrap tabs overrides: moved to _basic.scss*********************/
 
@@ -642,7 +552,6 @@ label span{
 /**********found in home-video.html ********
 ******************************/
 @import "home-video-page";
-
 
 /****************************************************************
 Version v1.1 css*
@@ -656,42 +565,31 @@ Version v1.1 css*
   color:$skincolor;
 }
 /**********************sidenav: found in side-nav.html *********************/
-.side-nav li{
+.side-nav li {
   border-bottom: 1px solid #e9e9e9;
-}
-.side-nav li a{
-  padding: 10px 15px;
-  display: inline-block;
-  width: 100%;
-  position: relative;
-}
-.side-nav li a.active{
-  color:$skincolor;
-}
-.side-nav li a i{
-  margin-right: 10px;
+  a {
+    padding: 10px 15px;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    &.active {
+      color: $skincolor;
+    }
+    i {
+      margin-right: 10px;
+    }
+  }
 }
 
-/*************pagination, found in gallery.html ***********/
+/*************.gallery-bottom is only found in gallery.html ***********/
 .gallery-bottom .pagination{
   margin-top: 0px;
 }
-.pagination>li>a, .pagination>li>span{
-  background-color: #ccc;
-  padding: 3px 9px;
-  color:#fff;
-  border: 0px;
-}
-.pagination>li>a{
-  margin-right: 5px;
-}
-.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus{
-  background-color: $skincolor;
-}
+/* some pagination code is moved to basics*/
 
+// following is for accordian in career.html
 .jobs-row h4.panel-title{
   font-weight: 400;
-
   text-align: left;
 }
 .jobs-row h4.panel-title a{
@@ -726,7 +624,7 @@ Version v1.1 css*
 //@import "process";
 
 /*******************Process inline*****/
-//moved into "_home-parallax.scss"
+//moved into "_home-parallax-page.scss"
 
 /**********************invoice page************************/
 @import "invoice-page";
@@ -780,11 +678,8 @@ Version v1.1 css*
   text-decoration: underline;
 }
 
-
-
 /************maintenance page***************/
 @import "maintenance-page";
-
 
 /************************************ version v1.2.1 css *****************/
 /***home-boxed.html related***/
@@ -967,7 +862,8 @@ ASSAN SHOP CSS STARTS FROM BELOW
   font-weight: 700;
 }
 
-/*******************portfolio with new hover style********************/
+/******portfolio with new hover style, image new hover moved to _basic.scss*********/
+
 // .featured-work only found in home-carousel.html
 .featured-work{
   background-color: #f5f5f5;
@@ -994,7 +890,7 @@ ASSAN SHOP CSS STARTS FROM BELOW
   opacity: 0.5;
 }
 
-// .work-wrap found in home-carousel.html & home-carousel.html
+// .work-wrap found in home-carousel.html & portfolio-single-2.html
 .work-wrap{
   position: relative;
   display: block;
@@ -1073,29 +969,6 @@ ASSAN SHOP CSS STARTS FROM BELOW
 }
 .work-wrap:hover .img-overlay .inner-overlay a {
   @include transform (translate3d(0, 0, 0));
-}
-
-
-/***theme features box***/
-.assan-box{
-  margin-bottom: 30px;
-}
-.assan-box img{
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-}
-.assan-box h4{
-  padding: 0px 15px;
-  text-transform: capitalize;
-  font-weight: 400;
-  color:#000;
-  margin:0px;
-  line-height: 55px;
-}
-.assan-box p{
-  padding: 0px 20px;
-
 }
 
 
