@@ -6,71 +6,73 @@ block additionalCSS
 block renderBody
   include snippets/breadcrum
   .container
-    //- .row
-      .col-xs-10.col-xs-offset-1
-        h3.heading topic icons
-    .divide30
-    .row
-      .col-xs-11.col-xs-offset-1
-        | Topic Icons &nbsp;&nbsp;&nbsp;
+    form(method="post")
+      //- .row
+        .col-xs-10.col-xs-offset-1
+          h3.heading topic icons
+      .divide30
+      .row
+        .col-xs-11.col-xs-offset-1
+          | Topic Icons &nbsp;&nbsp;&nbsp;
 
-        label.radio-inline
-          input#inlineRadio1(type='radio', name='inlineRadioOptions', value='option1')
-          |  None
-        label.radio-inline
-          input#inlineRadio2(type='radio', name='inlineRadioOptions', value='option2')
-          |  Icon1
-        label.radio-inline
-          input#inlineRadio3(type='radio', name='inlineRadioOptions', value='option3')
-          |  Icon2
-        label.radio-inline
-          input#inlineRadio4(type='radio', name='inlineRadioOptions', value='option4')
-          |  Icon3
-        label.radio-inline
-          input#inlineRadio5(type='radio', name='inlineRadioOptions', value='option5')
-          |  Icon4
-        label.radio-inline
-          input#inlineRadio6(type='radio', name='inlineRadioOptions', value='option6')
-          |  Icon5
-    .divide30
-    .row
-      .col-xs-10.col-xs-offset-1
-        input.form-control(type='text', name='subject', placeholder='Question subject')
-    .divide20
-    .row.toolbar-row
-      .col-xs-10.col-xs-offset-1
-        //- #toolbar
-        //-   a.btn.border-black.btn-xs.text-center(data-wysihtml5-command='bold')
-        //-     span.fa.fa-bold
-        //-   a.btn.border-black.btn-xs(data-wysihtml5-command='italic')
-        //-     span.fa.fa-italic
-        //-   a.btn.border-black.btn-xs(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='h1')
-        //-     span.fa.fa-header
-        //-   a.btn.border-black.btn-xs(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='p')
-        //-     span.fa.fa-paragraph
+          label.radio-inline
+            input#inlineRadio1(type='radio', name='post_cat', value='1')
+            |  None
+          label.radio-inline
+            input#inlineRadio2(type='radio', name='post_cat', value='2')
+            |  Icon1
+          label.radio-inline
+            input#inlineRadio3(type='radio', name='post_cat', value='3')
+            |  Icon2
+          label.radio-inline
+            input#inlineRadio4(type='radio', name='post_cat', value='4')
+            |  Icon3
+          label.radio-inline
+            input#inlineRadio5(type='radio', name='post_cat', value='5')
+            |  Icon4
+          label.radio-inline
+            input#inlineRadio6(type='radio', name='post_cat', value='6')
+            |  Icon5
+      .divide30
+      .row
+        .col-xs-10.col-xs-offset-1
+          input.form-control(type='text', name='title', placeholder='Question subject')
+      .divide20
+      .row.toolbar-row
+        .col-xs-10.col-xs-offset-1
+          //- #toolbar
+          //-   a.btn.border-black.btn-xs.text-center(data-wysihtml5-command='bold')
+          //-     span.fa.fa-bold
+          //-   a.btn.border-black.btn-xs(data-wysihtml5-command='italic')
+          //-     span.fa.fa-italic
+          //-   a.btn.border-black.btn-xs(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='h1')
+          //-     span.fa.fa-header
+          //-   a.btn.border-black.btn-xs(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='p')
+          //-     span.fa.fa-paragraph
 
-        .btn-group#toolbar(role='group', aria-label='First group')
-          button.btn.btn-default(type='button', data-wysihtml5-command='bold')
-            span.fa.fa-bold
-          button.btn.btn-default(type='button', data-wysihtml5-command='italic')
-            span.fa.fa-italic
-          button.btn.btn-default(type='button', data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='h1')
-            span.fa.fa-header
-          button.btn.btn-default(type='button', data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='p')
-            span.fa.fa-paragraph
+          .btn-group#toolbar(role='group', aria-label='First group')
+            button.btn.btn-default(type='button', data-wysihtml5-command='bold')
+              span.fa.fa-bold
+            button.btn.btn-default(type='button', data-wysihtml5-command='italic')
+              span.fa.fa-italic
+            button.btn.btn-default(type='button', data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='h1')
+              span.fa.fa-header
+            button.btn.btn-default(type='button', data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='p')
+              span.fa.fa-paragraph
 
 
-    .row.textarea-row
-      .col-xs-10.col-xs-offset-1
-        textarea#editor(data-placeholder='Go on, start editing...')
-    .divide20
-    .row.final-buttons
-      .col-xs-11.col-xs-offset-1
-        a.btn.border-black(href='#') Save draft
+      .row.textarea-row
+        .col-xs-10.col-xs-offset-1
+          textarea#editor(data-placeholder='Go on, start editing...' , name="content" )
+      .divide20
+      .row.final-buttons
+        .col-xs-11.col-xs-offset-1
+          a.btn.border-black(href='#') Save draft
 
-        a.btn.border-black(href='#') preview
+          a.btn.border-black(href='#') preview
 
-        a.btn.btn-theme-bg(href='#') Submit
+          button.btn.btn-theme-bg(type="submit", formmethod="post") Submit
+    
     .divide20
       
 
