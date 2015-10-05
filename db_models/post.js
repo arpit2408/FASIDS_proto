@@ -4,6 +4,7 @@ var post_schema = new mongoose.Schema({
   "role":Number, // 1 means main_post, 2 means reply
   "post_id":String,
   "poster_id":mongoose.Schema.ObjectId,
+  "poster_fullname":String,
   "post_cat":{type:Number, min:0, max:4},   // used for the icons
   "post_title":String,
   "post_time": Date,
@@ -29,9 +30,12 @@ post_schema.static({
       Model.find({"reply_to_mainpost": main_post_id}).sort({"post_time":-1}).exec(callback);
     });
   },
-  getAllMainPost: function ( callback) {   // I can put sort parameter here
+
+
+
+  getAllMainPosts: function ( callback) {   // I can put sort parameter here
     var Model = this;
-    Model.find({"post_cat":1}).sort({"post_time":-1}).exec(callback);
+    Model.find({"role":1}).sort({"post_time":-1}).exec(callback);
   }
 });
 
