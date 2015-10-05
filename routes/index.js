@@ -30,13 +30,29 @@ router.get('/', function (req, res, next) {
   });
 });
 
+/*visit the qa forum*/
 router.get('/qa', function (req, res, next){
-  res.render('qa', {title:'Question and Answers | FASIDS',
-    breadcrumTitle:"Interactive Questions and Answers",
-    pathToHere:"qa",
-    activePage:'Questions',
-    isAuthenticated: req.isAuthenticated(),
-    user: processReqUser(req.user)
+
+  /*
+  callback: function (err, instances){
+    if (err) next (err);
+    
+  }
+  */
+
+  req.DB_POST.getAllMainPosts(function (err, posts){
+    if (err) next(err);
+    posts.forEach(function(element, index, ar){
+      ar[index] = element.toObject();
+    });
+    res.render('qa', {title:'Question and Answers | FASIDS',
+      breadcrumTitle:"Interactive Questions and Answers",
+      pathToHere:"qa",
+      activePage:'Questions',
+      isAuthenticated: req.isAuthenticated(),
+      user: processReqUser(req.user),
+      posts:posts
+    });
   });
 });
 
@@ -65,7 +81,6 @@ router.get('/qa/question',function (req, res, next){
   "content":String*/
 router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
   console.log("$$$$$$posting:$$$");
-  console.log(req.user._id);
   var currentDate = new Date();
   var post_id = (currentDate.getFullYear()%2000).toString() + (currentDate.getMonth()+1).toString() + currentDate.getDay().toString() + currentDate.getHours().toString();
   post_id += currentDate.getMinutes().toString() + currentDate.getSeconds().toString() + currentDate.getMilliseconds().toString();
@@ -77,7 +92,8 @@ router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
     post_cat:(req.body.post_cat)?parseInt(req.body.post_cat):1,
     post_title:req.body.title,
     post_time:currentDate,
-    content: req.body.content
+    content: req.body.content,
+    poster_fullname: req.user.displayName()
   };
   newPost = new req.DB_POST(newPost);
   newPost.save( function (error){
