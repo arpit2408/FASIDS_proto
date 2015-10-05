@@ -5,6 +5,8 @@ block additionalCSS
 
 
 block renderBody
+  include snippets/breadcrum
+
   .container-fluid.qa-summary
     .row
       .col-md-6.qa-slider
@@ -18,13 +20,27 @@ block renderBody
   .divide30
 
   .container.qa-post-titles
+    .row
+      .col-xs-10.col-xs-offset-1
+        h3.heading Current Posts
+    .row
+      .col-xs-10.col-xs-offset-1
+        a.btn.btn.btn-theme-dark(href="/qa/posting") 
+          i.fa.fa-plus
+          | NEW QUESTION
+    .divide25
     .row.qa-post-title-header
       .col-sm-1
-      .col-sm-7 TOPIC
-      .col-sm-1 REPLY
-      .col-sm-1 VIEW
-      .col-sm-2 LAST REPLY
+      .col-sm-7
+        strong TOPICS
+      .col-sm-1 
+        strong REPLIES
+      .col-sm-1
+        strong VIEWS
+      .col-sm-2
+        strong LAST REPLY
     .divide30
+    
     .qa-post-titles
       .row.qa-post-title-row
         .col-sm-1 ICON
@@ -33,8 +49,10 @@ block renderBody
             .col-xs-12 Dummy title here, China Man Basketball team beat Iran
           .row
             .col-xs-12.text-muted Posted by wsliubw, 1 week ago
-        .col-sm-1 15
-        .col-sm-1 345
+        .col-sm-1 
+          i.fa.fa-comment-o
+          | 15
+        .col-sm-1 345 views
         .col-sm-2
           .row
             .col-xs-4 ProI
@@ -45,15 +63,17 @@ block renderBody
               .row
                 .col-xs-12
                   | 3 days ago
-      .row.qa-post-title-row
+      .row.qa-post-title-row.even-numbered-post-row
         .col-sm-1 ICON
         .col-sm-7
           .row
             .col-xs-12 Dummy title here, China Man Basketball team beat Iran
           .row
             .col-xs-12.text-muted Posted by wsliubw, 1 week ago
-        .col-sm-1 15
-        .col-sm-1 345
+        .col-sm-1 
+          i.fa.fa-comment-o
+          | 15
+        .col-sm-1 345 views
         .col-sm-2
           .row
             .col-xs-4 ProI
@@ -64,10 +84,29 @@ block renderBody
               .row
                 .col-xs-12
                   | 3 days ago
-
     .divide30
+    //- put pagination down
+    .row
+      .col-xs-10.col-xs-offset-1
+        div
+          ul.pagination
+            li
+              a(href='#') «
+            li.active
+              a(href='#') 1
+            li
+              a(href='#') 2
+            li
+              a(href='#') 3
+            li
+              a(href='#') 4
+            li
+              a(href='#') 5
+            li
+              a(href='#') »
+    //- put filter row here
     .row.qa-post-title-filter
-      .col-sm-8.col-sm-offset-2
+      .col-sm-8.col-sm-offset-1
         form(method='post')
           | Display topics from previous:
           .btn-group
@@ -95,7 +134,7 @@ block renderBody
                 a(href='#') Replies
               li: a(href = "#") Subjects
           |&nbsp;&nbsp;
-          .btn-group
+          .btn-group.marginRight10
             button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
               | Descending
               span.caret
@@ -107,7 +146,7 @@ block renderBody
 
 
           // div.btn-group ends
-          button.btn.btn-primary(type='button') Go
+          button.btn.btn-primary(type='button', id="filter-go-btn") Go
   .divide60
 
 

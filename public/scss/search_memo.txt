@@ -1,4 +1,4 @@
-[\s"]parallax[\s"]
+[\s"]pagination[\s"]
 
 
 [\s"]dropdown-submenu[\s"]

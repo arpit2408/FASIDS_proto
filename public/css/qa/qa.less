@@ -1,6 +1,19 @@
-﻿body {
-    .qa-slider{
-        height:300px;
+﻿@import "../base";
+body {
+  .qa-slider{
+      height:300px;
+      background-color: @very-light-grey;
+  }
+  .qa-post-titles{
+    .qa-post-title-row{
+      padding: 15px 0px;
     }
 
+    .even-numbered-post-row{
+      background-color: @very-light-grey;
+    }
+  }
+  #filter-go-btn{
+    margin-left: 10px;
+  }
 }
