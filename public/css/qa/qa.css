@@ -1,3 +1,6 @@
+body {
+  /*modifying post page*/
+}
 body .qa-slider {
   height: 300px;
   background-color: #f7f9fa;
@@ -10,4 +13,13 @@ body .qa-post-titles .even-numbered-post-row {
 }
 body #filter-go-btn {
   margin-left: 10px;
+}
+body .toolbar-row a.btn {
+  margin-right: 10px;
+}
+body .textarea-row textarea {
+  width: 100%;
+}
+body .row.final-buttons a.btn {
+  margin-right: 10px;
 }
