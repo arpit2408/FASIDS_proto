@@ -1,0 +1,73 @@
+extends layout
+
+block additionalCSS
+  link(href='/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
+
+block renderBody
+  include snippets/breadcrum
+  .container.posts-regarding-question
+    .divide20
+    .row
+      .col-xs-12
+        a.btn.btn-theme-bg.margin-right-10(href='#') Post reply
+        a.btn.btn-theme-dark(href='#') print
+    
+
+    .row.post-row
+      .col-md-3.one-post-author-info-col
+        .row
+          .col-xs-12.one-post-displayname
+            | Bowei
+        .row
+          .col-xs-12.text-muted.one-post-usercat
+            | site maintainer
+
+        .row
+          .col-xs-12.one-post-userprofile
+            | [user profile here]
+
+      .col-md-9
+        .row.one-post-time-number
+          .col-xs-10
+            | [ICON] one month ago
+          .col-xs-1
+            | #1
+        hr
+        .row
+          .col-xs-12.one-post-content-col
+            | Hello rang near flexibly absentmindedly far strewed this sniffed reproachful saddled this and inescapable out 
+            | however jokingly some more as indescribable consistent sobbed gradually alas bee elephant hey yet jeez less foresaw tactful a hen darn urchin a crane.
+            | Rethought far across imitative before browbeat dived as nauseating ethic nefariously majestic gosh and this notable this led crud yikes oh stunningly 
+    
+    .row.post-row
+      .col-md-3.one-post-author-info-col
+        .row
+          .col-xs-12.one-post-displayname
+            | Reza
+        .row
+          .col-xs-12.text-muted.one-post-usercat
+            | site maintainer
+
+        .row
+          .col-xs-12.one-post-userprofile
+            | [user profile here]
+
+      .col-md-9
+        .row.one-post-time-number
+          .col-xs-10
+            | [ICON] one day ago
+          .col-xs-1
+            | #2
+        hr
+        .row
+          .col-xs-12.one-post-content-col
+            | Hello rang near flexibly absentmindedly far strewed this sniffed reproachful saddled this and inescapable out 
+            | however jokingly some more as indescribable consistent sobbed gradually alas bee elephant hey yet jeez less foresaw tactful a hen darn urchin a crane.
+            | Rethought far across imitative before browbeat dived as nauseating ethic nefariously majestic gosh and this notable this led crud yikes oh stunningly 
+  .divide20
+
+
+
+
+
+block additionalJS

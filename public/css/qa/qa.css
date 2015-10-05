@@ -1,5 +1,6 @@
 body {
   /*modifying post page*/
+  /*modifying one post, one can see this in specific question*/
 }
 body .qa-slider {
   height: 300px;
@@ -22,4 +23,14 @@ body .textarea-row textarea {
 }
 body .row.final-buttons a.btn {
   margin-right: 10px;
+}
+body .post-row {
+  margin-top: 15px;
+  border: 1px solid #d8e1e6;
+}
+body .post-row .one-post-author-info-col {
+  border-right: 1px solid #d8e1e6;
+}
+body .post-row .one-post-content-col {
+  padding-bottom: 20px;
 }

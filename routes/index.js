@@ -30,10 +30,23 @@ router.get('/', function (req, res, next) {
   });
 });
 
-router.get('/questions', function (req, res, next){
+router.get('/qa', function (req, res, next){
   res.render('qa', {title:'Question and Answers | FASIDS',
     breadcrumTitle:"Interactive Questions and Answers",
-    pathToHere:"questions",
+    pathToHere:"qa",
+    activePage:'Questions',
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user)
+  });
+});
+
+/* /qa/question?qid=123  */
+router.get('/qa/question',function (req, res, next){
+  console.log(req.query.qid);
+  res.render('question',{
+    breadcrumTitle:"Question title(TODO: retrieve from DB)",
+    pathToHere:"qa / question?id=12345678",
+    title: 'QA POSTING | FASIDS',
     activePage:'Questions',
     isAuthenticated: req.isAuthenticated(),
     user: processReqUser(req.user)
@@ -41,7 +54,6 @@ router.get('/questions', function (req, res, next){
 });
 
 router.get('/qa/posting', ensureAuthenticated,function (req, res, next){
-
   res.render('postquestion',{
     breadcrumTitle:"POST A NEW QUESTION",
     pathToHere:"qa / posting",
