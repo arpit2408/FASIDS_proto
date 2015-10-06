@@ -5,6 +5,12 @@ block additionalCSS
 
 
 block renderBody
+  -function getDataString(date){
+    -return date.getFullYear()+'-'+(date.getMonth()+1).toString() + '-' + date.getDate().toString() +" " + date.getHours() +":" + date.getMinutes();
+  -}
+  mixin dateString(date)
+    | [ICON] #{date.getFullYear()+'-'+(date.getMonth()+1).toString() + '-' + date.getDate().toString() +" " + date.getHours() +":" + date.getMinutes()}
+
   include snippets/breadcrum
 
   .container-fluid.qa-summary
@@ -53,21 +59,21 @@ block renderBody
                 .col-xs-12
                   a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
               .row
-                .col-xs-12.text-muted Posted by #{post.poster_fullname}, 1 week ago
+                .col-xs-12.text-muted Posted by #{post.poster_fullname} at #{getDataString(post.post_time)}
             .col-sm-1 
               i.fa.fa-comment-o
-              | 15
-            .col-sm-1 345 views
+              | &nbsp;&nbsp;#{post.replied_post}
+            .col-sm-1 #{post.post_viewed} views
             .col-sm-2
               .row
-                .col-xs-4 ProI
+                .col-xs-4 [ICON]
                 .col-xs-8
                   .row
                     .col-xs-12
-                      | Username
+                      | #{post.last_replier_displayname}
                   .row
                     .col-xs-12
-                      | 3 days ago
+                      //- | 3 days ago
         else
           .row.qa-post-title-row
             .col-sm-1 ICON
@@ -76,21 +82,21 @@ block renderBody
                 .col-xs-12 
                   a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
               .row
-                .col-xs-12.text-muted Posted by #{post.poster_fullname}, 1 week ago
+                .col-xs-12.text-muted Posted by #{post.poster_fullname} at #{getDataString(post.post_time)}
             .col-sm-1 
               i.fa.fa-comment-o
-              | 15
-            .col-sm-1 345 views
+              | &nbsp;&nbsp;#{post.replied_post}
+            .col-sm-1 #{post.post_viewed} views
             .col-sm-2
               .row
-                .col-xs-4 ProI
+                .col-xs-4 [ICON]
                 .col-xs-8
                   .row
                     .col-xs-12
-                      | Username
+                      | #{post.last_replier_displayname}
                   .row
                     .col-xs-12
-                      | 3 days ago
+                      //- | 3 days ago
 
 
     .divide30

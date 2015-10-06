@@ -9,6 +9,8 @@ var post_schema = new mongoose.Schema({
   "post_title":String,
   "post_time": Date,
   "post_viewed":Number,
+  "replied_post":Number,
+  "last_replier":mongoose.Schema.ObjectId,
   "reply_to_post":String,// post created to reply specific post
   "reply_to_mainpost":String,
   "content":String
@@ -51,6 +53,17 @@ post_schema.method({
     } else{
       post.post_viewed = 1;
     }
+    post.save(saveCB);
+  },
+  updateData: function (reply_number, newest_reply){
+    this.replied_post = reply_number;
+    this.last_replier = newest_reply.poster_id;
+    this.save(saveCB);
+  },
+  setReplyNumber: function (reply_number){
+    var post = this;
+    if (post.role !== 1) {throw ("only main post can add reply number");} 
+    post.replied_post = reply_number;
     post.save(saveCB);
   }
 });

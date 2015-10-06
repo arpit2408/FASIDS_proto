@@ -16,5 +16,7 @@ qa href: /qa/question?qid=15101153335863
   "__v" : 0
 }
 
+ db.post.find({role:1}).pretty()
+
 
 OPENSHIFT_MONGODB_DB_URL=mongodb://admin:d7ZAK1AAiw-g@127.8.238.130:27017/
