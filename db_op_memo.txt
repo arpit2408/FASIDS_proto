@@ -19,4 +19,6 @@ qa href: /qa/question?qid=15101153335863
  db.post.find({role:1}).pretty()
 
 
+ db.post.remove({role:{$ne:1}});
+
 OPENSHIFT_MONGODB_DB_URL=mongodb://admin:d7ZAK1AAiw-g@127.8.238.130:27017/

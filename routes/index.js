@@ -133,7 +133,7 @@ router.get('/qa/question',function (req, res, next){
     //Converts this document into a plain javascript object, ready for storage in MongoDB.
     target_post.addOneView();
     target_post = target_post.toObject();
-    req.DB_POST.getAllFollowUps(post_id, function (err, replies){
+    req.DB_POST.getAllFollowUps(post_id, function whenRepliesReady (err, replies){
       if (err) next(err);
       // var number_reply = replies.length;
       res.render('question.jade',{
