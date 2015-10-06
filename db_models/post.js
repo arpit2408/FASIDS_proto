@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var _ = require('underscore');
+var Promise = require('promise');
+var fs = require('fs');
 var post_schema = new mongoose.Schema({
   "role":Number, // 1 means main_post, 2 means reply
   "post_id":String,
@@ -68,6 +70,36 @@ post_schema.method({
   }
 });
 
+/*example promise*/
+function readFile(filename, enc){
+  return new Promise(function (fulfill, reject){
+    fs.readFile(filename, enc, function (err, res){
+      if (err) reject(err);
+      else fulfill(res);
+    });
+  });
+}
+function errHandler(err){
+  throw(err);
+}
+function linkPostWithUser(mongoArray ) {
+  return new Promise(function wrappedCodeBlock (fulfill, reject){
+    if (mongoArray.length ===0){
+      fulfill(mongoArray);
+    }
+    else {
+      mongoArray.forEach(function(element, index, ar){
+        User.findOne({_id:element.poster_id},null,{},function userFoundCB(err, user){
+          if (err) reject(err);
+          ar[index].poster = user.toObject();
+          if (index === mongoArray.length -1){
+            fulfill(ar);
+          }
+        });
+      });
+    }  
+  });
+}
 
 post_schema.static({
   getAllFollowUps: function( main_post_id, callback){
@@ -79,16 +111,23 @@ post_schema.static({
       }
       Model.find({"reply_to_mainpost": main_post_id}).sort({"post_time":1}).exec(function findRepliesCB(err, replies){
         if (err) throw (err);
-        replies.forEach(function (element, index, ar){
-          User.findOne({_id:element.poster_id}, null, {}, function userFindOneCB(err, user){
-            if (err) throw (err);
-            ar[index].poster = user.toObject();
-            /* wait until all the reply in replies are updated*/
-            if (index === replies.length -1){
-              callback(null, ar);
-            }
-          });
-        });
+
+        //asynchronously update the array, the only input should be the mongoArray
+        // replies.forEach(function (element, index, ar){
+        //   User.findOne({_id:element.poster_id}, null, {}, function userFindOneCB(err, user){
+        //     if (err) throw (err);
+        //     ar[index].poster = user.toObject();
+        //     /* wait until all the reply in replies are updated*/
+            
+        //     // asynchronous updating completed now
+        //     if (index === replies.length -1){
+        //       callback(null, ar);
+        //     }
+        //   });
+        // });
+        linkPostWithUser(replies).then(function(res){
+          callback(null, res);
+        }).catch(errHandler);
 
       });  // callback should take err, and instances
     });
