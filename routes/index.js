@@ -57,6 +57,8 @@ router.get('/qa', function (req, res, next){
     posts.forEach(function(element, index, ar){
       // ar[index] = element.toObject();
       req.DB_USER.findOne({_id:ar[index].last_replier}, null, {}, function (err, user){
+        if (err) return next(err);
+        if (!user) return next(new Error("no such user"));
         toBeRenderedPosts[index] = ar[index].toObject();
         toBeRenderedPosts[index].last_replier_displayname = user.displayName();
         console.log("add last last_replier name");
@@ -173,6 +175,8 @@ router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
     post_title:req.body.title,
     post_time:currentDate,
     post_viewed:0,
+    replied_post:0,
+    last_replier:req.user._id,
     content: req.body.content,
     poster_fullname: req.user.displayName()
   };
