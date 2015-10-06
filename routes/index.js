@@ -38,8 +38,6 @@ router.get('/', function (req, res, next) {
 
 /*visit the qa forum*/
 router.get('/qa', function (req, res, next){
-
-
   req.DB_POST.getAllMainPosts(function (err, posts){
     if (err) next(err);
     toBeRenderedPosts = [];

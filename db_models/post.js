@@ -15,7 +15,7 @@ var post_schema = new mongoose.Schema({
   "reply_to_mainpost":String,
   "content":String
 },{ collection:'post'});
-
+var User = require('./user.js');
 /*regarding main post*/
 // {
 //   "role":1, // 1 means main_post, 2 means reply
@@ -72,12 +72,25 @@ post_schema.method({
 post_schema.static({
   getAllFollowUps: function( main_post_id, callback){
     var Model = this;
-    Model.findOne({"post_id": main_post_id}, null,{},function (err, instance){
+    Model.findOne({"post_id": main_post_id}, null,{},function findMainPostCB(err, instance){
       if (err) throw (err);
       if (instance.role !== 1){
         throw ("only main post can have follow ups");
       }
-      Model.find({"reply_to_mainpost": main_post_id}).sort({"post_time":1}).exec(callback);  // callback should take err, and instances
+      Model.find({"reply_to_mainpost": main_post_id}).sort({"post_time":1}).exec(function findRepliesCB(err, replies){
+        if (err) throw (err);
+        replies.forEach(function (element, index, ar){
+          User.findOne({_id:element.poster_id}, null, {}, function userFindOneCB(err, user){
+            if (err) throw (err);
+            ar[index].poster = user.toObject();
+            /* wait until all the reply in replies are updated*/
+            if (index === replies.length -1){
+              callback(null, ar);
+            }
+          });
+        });
+
+      });  // callback should take err, and instances
     });
   },
 
@@ -95,3 +108,20 @@ var saveCB = function( err, instance){
 };
 
 module.exports = mongoose.model('Post',post_schema);
+
+// function readJSON(filename){
+//   return new Promise(function (fulfill, reject){
+
+//     readFile(filename, 'utf8').done(
+//       function (res){
+//         try {
+//           fulfill(JSON.parse(res));
+//         } catch (ex) {
+//           reject(ex);
+//         }
+//       }
+//       , reject
+//     );
+
+//   });
+// }
