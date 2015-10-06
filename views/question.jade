@@ -6,7 +6,7 @@ block additionalCSS
 block renderBody
 
   mixin dateString(date)
-    | [ICON] #{date.getFullYear()+'-'+(date.getMonth()+1).toString() + '-' + date.getDate().toString() +"," + date.getHours() +":" + date.getMinutes()}
+    | [ICON] #{date.getFullYear()+'-'+(date.getMonth()+1).toString() + '-' + date.getDate().toString() +" " + date.getHours() +":" + date.getMinutes()}
   //- breadcrumTitle:target_post.post_title,
   //- pathToHere:"qa / question?qid="+post_id.toString(),
   //- title: 'QA QUESTION | FASIDS',

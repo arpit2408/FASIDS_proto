@@ -39,26 +39,33 @@ router.get('/', function (req, res, next) {
 /*visit the qa forum*/
 router.get('/qa', function (req, res, next){
 
-  /*
-  callback: function (err, instances){
-    if (err) next (err);
-    
-  }
-  */
 
   req.DB_POST.getAllMainPosts(function (err, posts){
     if (err) next(err);
+    toBeRenderedPosts = [];
     posts.forEach(function(element, index, ar){
-      ar[index] = element.toObject();
+      // ar[index] = element.toObject();
+      req.DB_USER.findOne({_id:ar[index].last_replier}, null, {}, function (err, user){
+        toBeRenderedPosts[index] = ar[index].toObject();
+        toBeRenderedPosts[index].last_replier_displayname = user.displayName();
+        console.log("add last last_replier name");
+
+        if (toBeRenderedPosts.length === posts.length){
+          // can render now 
+          res.render('qa', {title:'Question and Answers | FASIDS',
+            breadcrumTitle:"Interactive Questions and Answers",
+            pathToHere:"qa",
+            activePage:'Questions',
+            isAuthenticated: req.isAuthenticated(),
+            user: processReqUser(req.user),
+            posts:toBeRenderedPosts
+          });
+        }
+      })
     });
-    res.render('qa', {title:'Question and Answers | FASIDS',
-      breadcrumTitle:"Interactive Questions and Answers",
-      pathToHere:"qa",
-      activePage:'Questions',
-      isAuthenticated: req.isAuthenticated(),
-      user: processReqUser(req.user),
-      posts:posts
-    });
+
+
+    // console.log("qa rendered");
   });
 });
 
@@ -89,6 +96,16 @@ router.post('/qa/question', function (req, res, next) {
   reply = new req.DB_POST(reply);
   reply.save( function (error){
     if (error) return next(error);
+    // at current scope, reply is saved successfully 
+
+    req.DB_POST.getAllFollowUps(req.query.qid,function setReplyNumber(err , replies){
+      if (err) return next(err);
+      req.DB_POST.findOne({post_id: req.query.qid}, null, {}, function (err, main_post){
+        if (err) return next(err);
+        main_post.updateData(replies.length, replies[replies.length-1]);
+
+      });
+    });
     return res.redirect('/qa/question?qid='+req.query.qid);
   });
 });
@@ -103,11 +120,11 @@ router.get('/qa/question',function (req, res, next){
   req.DB_POST.findOne({post_id:post_id},null,{}, function (err, target_post){
     if (err) next(err);
     //Converts this document into a plain javascript object, ready for storage in MongoDB.
+    target_post.addOneView();
     target_post = target_post.toObject();
     req.DB_POST.getAllFollowUps(post_id, function (err, replies){
       if (err) next(err);
-      var number_reply = replies.length;
-      
+      // var number_reply = replies.length;
       res.render('question.jade',{
         breadcrumTitle:target_post.post_title,
         pathToHere:"qa / question?qid="+post_id.toString(),
@@ -131,7 +148,8 @@ router.get('/qa/question',function (req, res, next){
   "post_time": Date,
   "reply_to_post":String,// post created to reply specific post
   "reply_to_mainpost":String,
-  "content":String*/
+  "content":String
+*/
 router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
   console.log("$$$$$$posting:$$$");
   var currentDate = new Date();
