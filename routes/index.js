@@ -43,6 +43,17 @@ router.get('/qa', function (req, res, next){
   req.DB_POST.getAllMainPosts(function (err, posts){
     if (err) next(err);
     toBeRenderedPosts = [];
+    if (posts.length === 0){
+      res.render('qa', {title:'Question and Answers | FASIDS',
+        breadcrumTitle:"Interactive Questions and Answers",
+        pathToHere:"qa",
+        activePage:'Questions',
+        isAuthenticated: req.isAuthenticated(),
+        user: processReqUser(req.user),
+        posts:toBeRenderedPosts
+      });
+      return;
+    }
     posts.forEach(function(element, index, ar){
       // ar[index] = element.toObject();
       req.DB_USER.findOne({_id:ar[index].last_replier}, null, {}, function (err, user){
