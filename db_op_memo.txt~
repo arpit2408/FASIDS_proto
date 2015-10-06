@@ -1,0 +1,4 @@
+/*remove all */
+db.user.remove({})
+
+OPENSHIFT_MONGODB_DB_URL=mongodb://admin:d7ZAK1AAiw-g@127.8.238.130:27017/

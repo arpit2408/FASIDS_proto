@@ -1,6 +1,7 @@
 body {
   /*modifying post page*/
   /*modifying one post, one can see this in specific question*/
+  /*modifying the reply input editor*/
 }
 body .qa-slider {
   height: 300px;
@@ -33,4 +34,10 @@ body .post-row .one-post-author-info-col {
 }
 body .post-row .one-post-content-col {
   padding-bottom: 20px;
+}
+body .reply-editor-row textarea {
+  width: 100%;
+}
+body .reply-editor-row .reply-buttons-row .btn + .btn {
+  margin-left: 10px;
 }

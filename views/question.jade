@@ -4,6 +4,17 @@ block additionalCSS
   link(href='/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
 
 block renderBody
+
+  mixin dateString(date)
+    | [ICON] #{date.getFullYear()+'-'+(date.getMonth()+1).toString() + '-' + date.getDate().toString() +"," + date.getHours() +":" + date.getMinutes()}
+  //- breadcrumTitle:target_post.post_title,
+  //- pathToHere:"qa / question?qid="+post_id.toString(),
+  //- title: 'QA QUESTION | FASIDS',
+  //- activePage:'Questions',
+  //- isAuthenticated: req.isAuthenticated(),
+  //- user: processReqUser(req.user),
+  //- main_post: target_post,
+  //- replies:replies  //- all mongoose doc instances
   include snippets/breadcrum
   .container.posts-regarding-question
     .divide20
@@ -13,14 +24,15 @@ block renderBody
         a.btn.btn-theme-dark(href='#') print
     
 
+    //- for main_post
     .row.post-row
       .col-md-3.one-post-author-info-col
         .row
           .col-xs-12.one-post-displayname
-            | Bowei
+            | #{main_post.poster_fullname}
         .row
           .col-xs-12.text-muted.one-post-usercat
-            | site maintainer
+            | [user role]
 
         .row
           .col-xs-12.one-post-userprofile
@@ -29,45 +41,81 @@ block renderBody
       .col-md-9
         .row.one-post-time-number
           .col-xs-10
-            | [ICON] one month ago
+            +dateString(main_post.post_time)
           .col-xs-1
             | #1
         hr
         .row
-          .col-xs-12.one-post-content-col
-            | Hello dd rang near flexibly absentmindedly far strewed this sniffed reproachful saddled this and inescapable out 
-            | however jokingly some more as indescribable consistent sobbed gradually alas bee elephant hey yet jeez less foresaw tactful a hen darn urchin a crane.
-            | Rethought far across imitative before browbeat dived as nauseating ethic nefariously majestic gosh and this notable this led crud yikes oh stunningly 
+          .col-xs-12.one-post-content-col!=main_post.content
     
-    .row.post-row
-      .col-md-3.one-post-author-info-col
-        .row
-          .col-xs-12.one-post-displayname
-            | Reza
-        .row
-          .col-xs-12.text-muted.one-post-usercat
-            | site maintainer
+    //- reply is one Post object, 
+    each reply, index in replies
+      .row.post-row
+        .col-md-3.one-post-author-info-col
+          .row
+            .col-xs-12.one-post-displayname
+              | #{reply.poster_fullname}
+          .row
+            .col-xs-12.text-muted.one-post-usercat
+              | [user role]
 
-        .row
-          .col-xs-12.one-post-userprofile
-            | [user profile pic here]
+          .row
+            .col-xs-12.one-post-userprofile
+              | [user profile pic here]
 
-      .col-md-9
-        .row.one-post-time-number
-          .col-xs-10
-            | [ICON] one day ago
-          .col-xs-1
-            | #2
-        hr
-        .row
-          .col-xs-12.one-post-content-col
-            | Hello rang near flexibly absentmindedly far strewed this sniffed reproachful saddled this and inescapable out 
-            | however jokingly some more as indescribable consistent sobbed gradually alas bee elephant hey yet jeez less foresaw tactful a hen darn urchin a crane.
-            | Rethought far across imitative before browbeat dived as nauseating ethic nefariously majestic gosh and this notable this led crud yikes oh stunningly 
-  .divide20
+        .col-md-9
+          .row.one-post-time-number
+            .col-xs-10
+              +dateString(reply.post_time)
+            .col-xs-1
+              | ##{index+2}
+          hr
+          .row
+            .col-xs-12.one-post-content-col!=reply.content
+
+  .divide30
+  if(isAuthenticated)
+    .container
+      .row.reply-editor-row
+        .col-md-2
+          [user profile here]
+        .col-md-10
+          form(method="post")
+            .row
+              .col-xs-12.toolbar
+                .btn-group#toolbar(role='group', aria-label='First group')
+                  button.btn.btn-default(type='button', data-wysihtml5-command='bold')
+                    span.fa.fa-bold
+                  button.btn.btn-default(type='button', data-wysihtml5-command='italic')
+                    span.fa.fa-italic
+                  button.btn.btn-default(type='button', data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='h1')
+                    span.fa.fa-header
+                  button.btn.btn-default(type='button', data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='p')
+                    span.fa.fa-paragraph
+
+
+            .row
+              .col-xs-12
+                textarea#editor(name="content")
+            .divide15
+            .row.reply-buttons-row
+              .col-xs-12
+                //- a.btn.border-black(href='#') Save draft
+                a.btn.border-black(href='#') PREIVEW
+                button.btn.btn-theme-bg(type='submit', formmethod='post') SUBMIT
+            .divide15
+
+
 
 
 
 
 
 block additionalJS
+  script(src="/wysihtml/dist/wysihtml5x-toolbar.min.js")
+  script(src="/wysihtml/parser_rules/advanced_and_extended.js")
+  script.
+    var editor = new wysihtml5.Editor('editor', {
+      toolbar: 'toolbar',
+      parserRules:  wysihtml5ParserRules
+    });
