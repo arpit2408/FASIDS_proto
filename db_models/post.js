@@ -8,14 +8,51 @@ var post_schema = new mongoose.Schema({
   "post_cat":{type:Number, min:0, max:4},   // used for the icons
   "post_title":String,
   "post_time": Date,
+  "post_viewed":Number,
   "reply_to_post":String,// post created to reply specific post
   "reply_to_mainpost":String,
   "content":String
 },{ collection:'post'});
 
+/*regarding main post*/
+// {
+//   "role":1, // 1 means main_post, 2 means reply
+//   "post_id":String,
+//   "poster_id":mongoose.Schema.ObjectId,
+//   "poster_fullname":String,
+//   "post_cat":{type:Number, min:0, max:4},   // used for the icons
+//   "post_title":String,
+//   "post_time": Date,
+//   "post_viewed":Number,
+//   "reply_to_post":String,// post created to reply specific post
+//   "reply_to_mainpost":String,
+//   "content":String
+// }
+
+/*regardomh followups*/
+// {
+//   "role":2, // 1 means main_post, 2 means reply
+//   "post_id":String,
+//   "poster_id":mongoose.Schema.ObjectId,
+//   "poster_fullname":String,
+//   "post_time": Date,
+//   "reply_to_post":String,// post created to reply specific post
+//   "reply_to_mainpost":String,
+//   "content":String
+// }
+
 // define instance methods
 post_schema.method({
-
+  addOneView: function(){
+    var post = this;
+    if (post.role !== 1) {throw ("only main post can add view number");} 
+    if (post.post_viewed){
+      post.post_viewed += 1;
+    } else{
+      post.post_viewed = 1;
+    }
+    post.save(saveCB);
+  }
 });
 
 
@@ -27,10 +64,9 @@ post_schema.static({
       if (instance.role !== 1){
         throw ("only main post can have follow ups");
       }
-      Model.find({"reply_to_mainpost": main_post_id}).sort({"post_time":-1}).exec(callback);
+      Model.find({"reply_to_mainpost": main_post_id}).sort({"post_time":1}).exec(callback);  // callback should take err, and instances
     });
   },
-
 
 
   getAllMainPosts: function ( callback) {   // I can put sort parameter here

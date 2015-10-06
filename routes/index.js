@@ -20,6 +20,12 @@ function processReqUser ( req_user){
   return temp_user;
 }
 
+function genPostId(){
+  var currentDate = new Date();
+  var post_id = (currentDate.getFullYear()%2000).toString() + (currentDate.getMonth()+1).toString() + currentDate.getDay().toString() + currentDate.getHours().toString();
+  post_id += currentDate.getMinutes().toString() + currentDate.getSeconds().toString() + currentDate.getMilliseconds().toString();
+  return post_id;
+}
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { 
@@ -56,16 +62,63 @@ router.get('/qa', function (req, res, next){
   });
 });
 
+
+router.post('/qa/question', function (req, res, next) {
+  // var main_post_id = parseInt(req.query.qid);
+// /*regardomh followups*/
+// {
+//   "role":2, // 1 means main_post, 2 means reply
+//   "post_id":String,
+//   "poster_id":mongoose.Schema.ObjectId,
+//   "poster_fullname":String,
+//   "post_time": Date,
+//   "reply_to_post":String,// post created to reply specific post
+//   "reply_to_mainpost":String,
+//   "content":String
+// }
+  var reply = {
+    role:2,
+    post_id:genPostId(),
+    poster_id: req.user._id,
+    poster_fullname: req.user.displayName(),
+    post_time: new Date(),
+    reply_to_post: (req.query.replyto)?req.query.replyto:"none",
+    reply_to_mainpost:req.query.qid,
+    content: req.body.content
+  };
+  reply = new req.DB_POST(reply);
+  reply.save( function (error){
+    if (error) return next(error);
+    return res.redirect('/qa/question?qid='+req.query.qid);
+  });
+});
+
 /* /qa/question?qid=123  */
 router.get('/qa/question',function (req, res, next){
-  console.log(req.query.qid);
-  res.render('question.jade',{
-    breadcrumTitle:"Question title(TODO: retrieve from DB)",
-    pathToHere:"qa / question?id=12345678",
-    title: 'QA POSTING | FASIDS',
-    activePage:'Questions',
-    isAuthenticated: req.isAuthenticated(),
-    user: processReqUser(req.user)
+  // console.log(req.query.qid);
+  if (!req.query.qid){
+    return next( new Error('illegal queries'));
+  }
+  var post_id = req.query.qid;
+  req.DB_POST.findOne({post_id:post_id},null,{}, function (err, target_post){
+    if (err) next(err);
+    //Converts this document into a plain javascript object, ready for storage in MongoDB.
+    target_post = target_post.toObject();
+    req.DB_POST.getAllFollowUps(post_id, function (err, replies){
+      if (err) next(err);
+      var number_reply = replies.length;
+      
+      res.render('question.jade',{
+        breadcrumTitle:target_post.post_title,
+        pathToHere:"qa / question?qid="+post_id.toString(),
+        title: 'QA QUESTION | FASIDS',
+        activePage:'Questions',
+        isAuthenticated: req.isAuthenticated(),
+        user: processReqUser(req.user),
+        main_post: target_post,
+        replies:replies
+      });
+    });
   });
 });
 
@@ -82,9 +135,7 @@ router.get('/qa/question',function (req, res, next){
 router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
   console.log("$$$$$$posting:$$$");
   var currentDate = new Date();
-  var post_id = (currentDate.getFullYear()%2000).toString() + (currentDate.getMonth()+1).toString() + currentDate.getDay().toString() + currentDate.getHours().toString();
-  post_id += currentDate.getMinutes().toString() + currentDate.getSeconds().toString() + currentDate.getMilliseconds().toString();
-
+  var post_id = genPostId();
   var newPost = {
     role:1,
     post_id:post_id,
@@ -92,6 +143,7 @@ router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
     post_cat:(req.body.post_cat)?parseInt(req.body.post_cat):1,
     post_title:req.body.title,
     post_time:currentDate,
+    post_viewed:0,
     content: req.body.content,
     poster_fullname: req.user.displayName()
   };
