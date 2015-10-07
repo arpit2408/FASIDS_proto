@@ -18,7 +18,10 @@ body {
 
 /*basic partial scss includes "resetting" and "dividers" and nav overrides, 
   form elements, buttons, image hover effect(both old and new)*/
--d
+/*
+/*-----------------------------------------------------------------------------------*/
+/*  RESET
+/*-----------------------------------------------------------------------------------*/
 *,
 *:before,
 *:after {
@@ -2477,6 +2480,7 @@ ol.breadcrumb {
   ol.breadcrumb li {
     font-weight: 400;
     font-size: 13px;
+    text-transform: capitalize;
     letter-spacing: 1px; }
     ol.breadcrumb li a {
       color: #333; }

@@ -9,5 +9,7 @@ export PATH
 sass style.scss style.css
 cp style.css -t ../css -f
 cp style.css.map -t ../css -f
+rm style.css
+rm style.css.map
 
 exit 0
