@@ -109,11 +109,15 @@ post_schema.static({
       else {
         mongoArray.forEach(function(element, index, ar){
           User.findOne({_id:element.poster_id},null,{},function userFoundCB(err, user){
-            if (err) reject(err);
+            if (err) {
+              reject(err);
+              return;
+            }
             ar[index].poster = user;
             if (index === mongoArray.length -1){
               fulfill(ar);
             }
+
           });
         });
       }  
@@ -127,9 +131,11 @@ post_schema.static({
       }
       else {
         main_posts.forEach(function(element, index, ar){
-
           User.findOne({_id:element.last_replier},null,{},function userFoundCB(err, user){
-            if (err) reject(err);
+            if (err) {
+              reject(err);
+              return;
+            }
             ar[index].last_replier_obj = user;  // link last replier to that main_post
             if (index === main_posts.length -1){
               fulfill(ar);
