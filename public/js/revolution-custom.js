@@ -16,7 +16,7 @@ jQuery(document).ready(function () {
                 startheight: 600,
                 hideThumbs: 10,
                 fullWidth: "on",
-                forceFullWidth: "on",
+                forceFullWidth: "off",
                 navigationStyle: "preview4"
             });
 
@@ -172,8 +172,4 @@ jQuery(document).ready(function () {
                 hideAllCaptionAtLilmit: 0,
                 startWithSlide: 0
             });
-
-
-
-
 });	//ready
