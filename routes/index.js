@@ -29,6 +29,25 @@ function genPostId(){
   return post_id;
 }
 
+function sanityCheckPosts(posts){
+  if ( typeof(posts)==='undefined' || posts ===null){
+    return false;
+  }
+  var i = 0;
+  for (i=0; i < posts.length; i++){
+    var post = posts[i];
+    if (post.role === 1){
+      if (typeof (post.last_replier_obj) === 'undefined'){
+        return false;
+      }
+    }
+    if  (typeof (post.poster) === 'undefined'){
+      return false;
+    }
+  }
+  return true;
+}
+
 /*routes
 get    "/"
 //********* Q & A **********
@@ -92,7 +111,11 @@ router.get('/qa', function (req, res, next){
     //     }
     //   })
     // });
+  
     req.DB_POST.staticLinkPostWithUser(posts).then(req.DB_POST.staticLinkLastReplier).then(function (posts){
+      if ( !sanityCheckPosts(posts) ){
+        return next(new Error("posts sanity check failed"));
+      }
       res.render('qa', {title:'Question and Answers | FASIDS',
         breadcrumTitle:"Interactive Questions and Answers",
         pathToHere:"qa",
