@@ -6,10 +6,10 @@ block additionalCSS
 
 block renderBody
   -function getDataString(date){
-    -return date.getFullYear()+'-'+(date.getMonth()+1).toString() + '-' + date.getDate().toString() +" " + date.getHours() +":" + date.getMinutes();
+    -return momentlib(date).fromNow();
   -}
   mixin dateString(date)
-    | [ICON] #{date.getFullYear()+'-'+(date.getMonth()+1).toString() + '-' + date.getDate().toString() +" " + date.getHours() +":" + date.getMinutes()}
+    | [ICON] #{momentlib(date).fromNow()}
 
   include snippets/breadcrum
 

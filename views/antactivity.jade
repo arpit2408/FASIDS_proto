@@ -1,0 +1,29 @@
+extends layout
+
+block additionalCSS
+  link(href='/assets/fullcalendar-2.4.0/fullcalendar.css', rel='stylesheet', type='text/css', media='screen')
+
+block renderBody
+  include snippets/breadcrum
+  .divide20
+  .container
+    .row
+      .col-md-10.col-md-offset-1#calendar
+  .divide30
+
+
+
+block additionalJS
+
+  //- 35.4kb
+  script(src='/assets/moment/moment.min.js')
+  script(src='/assets/fullcalendar-2.4.0/fullcalendar.min.js')
+  script.
+    $(document).ready(function(){
+
+
+      $('#calendar').fullCalendar({
+          // put your options and callbacks here
+      })
+    });
+

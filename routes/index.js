@@ -1,4 +1,5 @@
 var express = require('express');
+var moment = require('moment');
 var router = express.Router();
 
 
@@ -9,6 +10,7 @@ function ensureAuthenticated(req, res, next) {
     // var my_error = new Error("Unauthorized behaviro");
     // my_error.status = 401;
     // next(my_error);
+    // 
     res.status(401).send("Unauthorized action, login required");
   }
 }
@@ -26,6 +28,21 @@ function genPostId(){
   post_id += currentDate.getMinutes().toString() + currentDate.getSeconds().toString() + currentDate.getMilliseconds().toString();
   return post_id;
 }
+
+/*routes
+get    "/"
+//********* Q & A **********
+get    "/qa"
+post   "/qa/question?qid=xxxx"
+get    "/qa/question?qid=xxxxx"
+post   "/qa/posting"
+get    "/qa/[pstomh"
+
+//********* Ant Activity **********
+
+
+*/
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { 
@@ -69,7 +86,8 @@ router.get('/qa', function (req, res, next){
             activePage:'Questions',
             isAuthenticated: req.isAuthenticated(),
             user: processReqUser(req.user),
-            posts:toBeRenderedPosts
+            posts:toBeRenderedPosts,
+            momentlib:moment
           });
         }
       })
@@ -80,20 +98,8 @@ router.get('/qa', function (req, res, next){
   });
 });
 
-
 router.post('/qa/question', function (req, res, next) {
-  // var main_post_id = parseInt(req.query.qid);
-// /*regardomh followups*/
-// {
-//   "role":2, // 1 means main_post, 2 means reply
-//   "post_id":String,
-//   "poster_id":mongoose.Schema.ObjectId,
-//   "poster_fullname":String,
-//   "post_time": Date,
-//   "reply_to_post":String,// post created to reply specific post
-//   "reply_to_mainpost":String,
-//   "content":String
-// }
+
   var reply = {
     role:2,
     post_id:genPostId(),
@@ -143,8 +149,9 @@ router.get('/qa/question',function (req, res, next){
         activePage:'Questions',
         isAuthenticated: req.isAuthenticated(),
         user: processReqUser(req.user),
+        momentlib:moment,
         main_post: target_post,
-        replies:replies
+        replies:replies,
       });
     });
   });
@@ -194,6 +201,16 @@ router.get('/qa/posting', ensureAuthenticated,function (req, res, next){
     isAuthenticated: req.isAuthenticated(),
     user: processReqUser(req.user)
   });
+});
+
+
+/* */
+router.get('/antactivity', function (req, res, next){
+  res.render("antactivity",{
+    breadcrumTitle:"FIREANT ACTIVITY FORECAST",
+    pathToHere:"antactivity",
+    momentlib:moment
+  })
 });
 
 module.exports = router;
