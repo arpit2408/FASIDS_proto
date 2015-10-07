@@ -107,9 +107,9 @@ post_schema.static({
         fulfill(mongoArray);
       }
       else {
+        var dueCallbackStack = [];
         for (var i = 0; i <= mongoArray.length - 1; i++){
-          if (i === mongoArray.length) break;
-
+          dueCallbackStack.push(i);
           User.findOne({_id:mongoArray[i].poster_id},null,{},(function userFoundCB(err, user){
             if (err) {
               reject(err);
@@ -120,8 +120,9 @@ post_schema.static({
               return;
             }
             mongoArray[this.icontext].poster = user;
-            /*I assume async callback order is kept*/
-            if (this.icontext === mongoArray.length -1){
+            dueCallbackStack.pop();
+            /*I do not assume async callbacks order can be kept*/
+            if (dueCallbackStack.length === 0){
               fulfill(mongoArray);
             }
           }).bind({icontext:i}));
@@ -136,8 +137,9 @@ post_schema.static({
         fulfill(main_posts);
       }
       else {
+        var dueCallbackStack = [];
         for(var i = 0; i < main_posts.length ;i++){
-
+          dueCallbackStack.push(i);
           User.findOne({_id:main_posts[i].last_replier},null,{}, (function userFoundCB(err, user){
             if (err) {
               reject(err);
@@ -148,7 +150,8 @@ post_schema.static({
               return;
             }
             main_posts[this.icontext].last_replier_obj = user;  // link last replier to that main_post
-            if (this.icontext === main_posts.length -1){
+            dueCallbackStack.pop();
+            if (dueCallbackStack.length ===0){
               fulfill(main_posts);
             }
           }).bind({icontext:i}));
