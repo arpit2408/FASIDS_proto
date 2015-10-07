@@ -59,7 +59,7 @@ block renderBody
                 .col-xs-12
                   a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
               .row
-                .col-xs-12.text-muted Posted by #{post.poster_fullname} at #{getDataString(post.post_time)}
+                .col-xs-12.text-muted Posted by #{post.poster.displayName()} at #{getDataString(post.post_time)}
             .col-sm-1 
               i.fa.fa-comment-o
               | &nbsp;&nbsp;#{post.replied_post}
@@ -70,7 +70,7 @@ block renderBody
                 .col-xs-8
                   .row
                     .col-xs-12
-                      | #{post.last_replier_displayname}
+                      | #{post.last_replier_obj.displayName()}
                   .row
                     .col-xs-12
                       //- | 3 days ago
@@ -82,7 +82,7 @@ block renderBody
                 .col-xs-12 
                   a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
               .row
-                .col-xs-12.text-muted Posted by #{post.poster_fullname} at #{getDataString(post.post_time)}
+                .col-xs-12.text-muted Posted by #{post.poster.displayName()} at #{getDataString(post.post_time)}
             .col-sm-1 
               i.fa.fa-comment-o
               | &nbsp;&nbsp;#{post.replied_post}
@@ -93,7 +93,7 @@ block renderBody
                 .col-xs-8
                   .row
                     .col-xs-12
-                      | #{post.last_replier_displayname}
+                      | #{post.last_replier_obj.displayName()}
                   .row
                     .col-xs-12
                       //- | 3 days ago

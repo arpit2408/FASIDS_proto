@@ -91,7 +91,7 @@ function linkPostWithUser(mongoArray ) {
       mongoArray.forEach(function(element, index, ar){
         User.findOne({_id:element.poster_id},null,{},function userFoundCB(err, user){
           if (err) reject(err);
-          ar[index].poster = user.toObject();
+          ar[index].poster = user;
           if (index === mongoArray.length -1){
             fulfill(ar);
           }
@@ -133,6 +133,47 @@ post_schema.static({
     });
   },
 
+  staticLinkPostWithUser:function(mongoArray){
+    // callback must take one parameter res
+    // linkPostWithUser(posts).then(callback).catch(errHandler);
+
+    return new Promise(function wrappedCodeBlock (fulfill, reject){
+      if (mongoArray.length ===0){
+        fulfill(mongoArray);
+      }
+      else {
+        mongoArray.forEach(function(element, index, ar){
+          User.findOne({_id:element.poster_id},null,{},function userFoundCB(err, user){
+            if (err) reject(err);
+            ar[index].poster = user;
+            if (index === mongoArray.length -1){
+              fulfill(ar);
+            }
+          });
+        });
+      }  
+    });
+    
+  },
+  staticLinkLastReplier:function( main_posts ){
+    return new Promise(function wrappedCodeBlock (fulfill, reject){
+      if (main_posts.length ===0){
+        fulfill(main_posts);
+      }
+      else {
+        main_posts.forEach(function(element, index, ar){
+
+          User.findOne({_id:element.last_replier},null,{},function userFoundCB(err, user){
+            if (err) reject(err);
+            ar[index].last_replier_obj = user;  // link last replier to that main_post
+            if (index === main_posts.length -1){
+              fulfill(ar);
+            }
+          });
+        });
+      }  
+    });
+  },
 
   getAllMainPosts: function ( callback) {   // I can put sort parameter here
     var Model = this;
