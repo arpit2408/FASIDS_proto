@@ -82,24 +82,6 @@ function readFile(filename, enc){
 function errHandler(err){
   throw(err);
 }
-function linkPostWithUser(mongoArray ) {
-  return new Promise(function wrappedCodeBlock (fulfill, reject){
-    if (mongoArray.length ===0){
-      fulfill(mongoArray);
-    }
-    else {
-      mongoArray.forEach(function(element, index, ar){
-        User.findOne({_id:element.poster_id},null,{},function userFoundCB(err, user){
-          if (err) reject(err);
-          ar[index].poster = user;
-          if (index === mongoArray.length -1){
-            fulfill(ar);
-          }
-        });
-      });
-    }  
-  });
-}
 
 post_schema.static({
   getAllFollowUps: function( main_post_id, callback){
@@ -111,21 +93,7 @@ post_schema.static({
       }
       Model.find({"reply_to_mainpost": main_post_id}).sort({"post_time":1}).exec(function findRepliesCB(err, replies){
         if (err) throw (err);
-
-        //asynchronously update the array, the only input should be the mongoArray
-        // replies.forEach(function (element, index, ar){
-        //   User.findOne({_id:element.poster_id}, null, {}, function userFindOneCB(err, user){
-        //     if (err) throw (err);
-        //     ar[index].poster = user.toObject();
-        //     /* wait until all the reply in replies are updated*/
-            
-        //     // asynchronous updating completed now
-        //     if (index === replies.length -1){
-        //       callback(null, ar);
-        //     }
-        //   });
-        // });
-        linkPostWithUser(replies).then(function(res){
+        Model.staticLinkPostWithUser(replies).then(function(res){
           callback(null, res);
         }).catch(errHandler);
 
@@ -134,9 +102,6 @@ post_schema.static({
   },
 
   staticLinkPostWithUser:function(mongoArray){
-    // callback must take one parameter res
-    // linkPostWithUser(posts).then(callback).catch(errHandler);
-
     return new Promise(function wrappedCodeBlock (fulfill, reject){
       if (mongoArray.length ===0){
         fulfill(mongoArray);
