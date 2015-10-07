@@ -4,6 +4,16 @@ block additionalCSS
   link(href='/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
 
 block renderBody
+  mixin userCatString(usercat)
+    case usercat 
+      when 1
+        | admin
+      when 2
+        | user
+      when 3
+        | premium user
+      default
+        | unknown user category
 
   mixin dateString(date)
     | [ICON] #{momentlib(date).fromNow()}
@@ -54,10 +64,11 @@ block renderBody
         .col-md-3.one-post-author-info-col
           .row
             .col-xs-12.one-post-displayname
-              | #{reply.poster_fullname}
+              | #{reply.poster.displayName()}
           .row
             .col-xs-12.text-muted.one-post-usercat
-              | #{reply.poster.usercat}
+              //- | #{reply.poster.usercat}
+              +userCatString(reply.poster.usercat)
 
           .row
             .col-xs-12.one-post-userprofile
