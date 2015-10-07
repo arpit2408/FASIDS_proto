@@ -209,6 +209,7 @@ router.get('/antactivity', function (req, res, next){
   res.render("antactivity",{
     breadcrumTitle:"FIREANT ACTIVITY FORECAST",
     pathToHere:"antactivity",
+    activePage:'Ants',
     momentlib:moment
   })
 });
