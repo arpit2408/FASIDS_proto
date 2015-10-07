@@ -107,19 +107,25 @@ post_schema.static({
         fulfill(mongoArray);
       }
       else {
-        mongoArray.forEach(function(element, index, ar){
-          User.findOne({_id:element.poster_id},null,{},function userFoundCB(err, user){
+        for (var i = 0; i <= mongoArray.length - 1; i++){
+          if (i === mongoArray.length) break;
+
+          User.findOne({_id:mongoArray[i].poster_id},null,{},(function userFoundCB(err, user){
             if (err) {
               reject(err);
               return;
             }
-            ar[index].poster = user;
-            if (index === mongoArray.length -1){
-              fulfill(ar);
+            if (!user){
+              reject( new Error("did not find corresponding poster for: " + mongoArray[this.icontext]._id));
+              return;
             }
-
-          });
-        });
+            mongoArray[this.icontext].poster = user;
+            /*I assume async callback order is kept*/
+            if (this.icontext === mongoArray.length -1){
+              fulfill(mongoArray);
+            }
+          }).bind({icontext:i}));
+        }
       }  
     });
     
@@ -130,18 +136,24 @@ post_schema.static({
         fulfill(main_posts);
       }
       else {
-        main_posts.forEach(function(element, index, ar){
-          User.findOne({_id:element.last_replier},null,{},function userFoundCB(err, user){
+        for(var i = 0; i < main_posts.length ;i++){
+
+          User.findOne({_id:main_posts[i].last_replier},null,{}, (function userFoundCB(err, user){
             if (err) {
               reject(err);
               return;
             }
-            ar[index].last_replier_obj = user;  // link last replier to that main_post
-            if (index === main_posts.length -1){
-              fulfill(ar);
+            if (!user){
+              reject(new Error("did not find replier for: " + main_posts[this.icontext]._id));
+              return;
             }
-          });
-        });
+            main_posts[this.icontext].last_replier_obj = user;  // link last replier to that main_post
+            if (this.icontext === main_posts.length -1){
+              fulfill(main_posts);
+            }
+          }).bind({icontext:i}));
+
+        };
       }  
     });
   },

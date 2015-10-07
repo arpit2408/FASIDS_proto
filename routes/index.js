@@ -75,7 +75,8 @@ router.get('/', function (req, res, next) {
 /*visit the qa forum*/
 router.get('/qa', function (req, res, next){
   req.DB_POST.getAllMainPosts(function (err, posts){
-    if (err) next(err);
+    if (err) {return next(err);}
+    if (!posts) {return next(new Error("did not find posts"));}
     toBeRenderedPosts = [];
     if (posts.length === 0){
       res.render('qa', {title:'Question and Answers | FASIDS',
