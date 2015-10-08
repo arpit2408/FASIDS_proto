@@ -24,8 +24,10 @@ body {
     }
   }
   .textarea-row{
-    textarea{
-      width: 100%;
+    #editor{
+      width:100%;
+      border:1px solid darken(@very-light-grey, 10%) ;
+      min-height: 200px;
     }
   }
   .row.final-buttons{
@@ -51,8 +53,11 @@ body {
 
   /*modifying the reply input editor*/
   .reply-editor-row{
-    textarea{
+    #editor{
       width:100%;
+      border:1px solid darken(@very-light-grey, 10%) ;
+      min-height: 200px;
+
     }
     .reply-buttons-row{
       .btn{

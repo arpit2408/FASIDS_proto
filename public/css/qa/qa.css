@@ -19,8 +19,10 @@ body #filter-go-btn {
 body .toolbar-row a.btn {
   margin-right: 10px;
 }
-body .textarea-row textarea {
+body .textarea-row #editor {
   width: 100%;
+  border: 1px solid #d8e1e6;
+  min-height: 200px;
 }
 body .row.final-buttons a.btn {
   margin-right: 10px;
@@ -35,8 +37,10 @@ body .post-row .one-post-author-info-col {
 body .post-row .one-post-content-col {
   padding-bottom: 20px;
 }
-body .reply-editor-row textarea {
+body .reply-editor-row #editor {
   width: 100%;
+  border: 1px solid #d8e1e6;
+  min-height: 200px;
 }
 body .reply-editor-row .reply-buttons-row .btn + .btn {
   margin-left: 10px;
