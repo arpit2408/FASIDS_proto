@@ -1,0 +1,74 @@
+.row
+  .col-xs-12.toolbar
+    #toolbar.fasids-editor-toolbar
+
+      .grouper
+        button.btn.default(type='button', data-wysihtml5-command='bold', title="bold")
+          span.fa.fa-bold
+        button.btn.default(type='button', data-wysihtml5-command='italic', title="italic")
+          span.fa.fa-italic
+        button.btn.default(type="button", data-wysihtml5-command='underline', title="underline")
+          span.fa.fa-underline
+      .grouper
+        .btn-group
+          button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+            span.fa.fa-paragraph
+            span.caret
+          ul.dropdown-menu
+            li
+              a(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='h1',unselectable='on') Title
+            li
+              a(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='h2',unselectable='on' ) Heading
+            li
+              a(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='h3',unselectable='on') Subheading
+            li
+              a(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='p',unselectable='on') Normal text
+            li
+              a(data-wysihtml5-command='formatBlock', data-wysihtml5-command-value='blockquote',unselectable='on') Quote block
+      .grouper
+        .btn-group
+          button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', data-behavior="showfontsizes", aria-haspopup='true', aria-expanded='false')
+            span.fa.fa-text-height
+            span.caret
+          ul.dropdown-menu
+            li
+              a(data-wysihtml5-command="fontSize", data-wysihtml5-command-value="xx-small",unselectable='on') xx-small
+            li
+              a(data-wysihtml5-command="fontSize", data-wysihtml5-command-value="x-small",unselectable='on' ) x-small
+            li
+              a(data-wysihtml5-command="fontSize", data-wysihtml5-command-value="small",unselectable='on') small
+            li
+              a(data-wysihtml5-command="fontSize", data-wysihtml5-command-value="medium",unselectable='on') medium
+            li
+              a(data-wysihtml5-command="fontSize", data-wysihtml5-command-value="large",unselectable='on') large
+            li
+              a(data-wysihtml5-command="fontSize", data-wysihtml5-command-value="x-large",unselectable='on') x-large
+            li
+              a(data-wysihtml5-command="fontSize", data-wysihtml5-command-value="xx-large",unselectable='on') xx-large
+      .grouper
+        .btn-group
+          button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', data-behavior='foreColor' ,aria-expanded='false')
+            span.fa.fa-font
+          ul.dropdown-menu(data-wysihtml5-command-group="foreColor")
+            li
+              a(data-wysihtml5-command='foreColor', data-wysihtml5-command-value='', style='background-color: rgb(255,255,255);', unselectable='on') None
+            li
+              a(data-wysihtml5-command='foreColor', data-wysihtml5-command-value='white', style='background-color: rgb(255,255,255);', unselectable='on') white
+            li
+              a(data-wysihtml5-command='foreColor',  data-wysihtml5-command-value="blue", style='background-color: rgb(0,255,255);', unselectable='on') blue
+      .grouper
+        button.btn.default(type='button', data-wysihtml5-command='justifyLeft', title='Align left', unselectable='on')
+          span.fa.fa-lg.fa-align-left
+        button.btn.default(type='button', data-wysihtml5-command='justifyCenter', title='Align center', unselectable='on')
+          span.fa.fa-lg.fa-align-center
+        button.btn.default(type="button", data-wysihtml5-command='justifyRight', title="Align right")
+          span.fa.fa-lg.fa-align-right
+      .grouper
+        button.btn.default(type='button', data-wysihtml5-command='insertUnorderedList', title='insert unordered list', unselectable='on')
+          span.fa.fa-lg.fa-list-ul
+        button.btn.default(type="button", data-wysihtml5-command='insertOrderedList', title="insert ordered list", unselectable='on')
+          span.fa.fa-lg.fa-list-ol
+.row
+  .col-xs-12
+    #editor
+    textarea.hidden#content(name='content')

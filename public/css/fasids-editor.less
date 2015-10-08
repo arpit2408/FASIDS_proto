@@ -1,0 +1,39 @@
+.fasids-editor-toolbar{
+  .btn.wysihtml5-command-active{
+    background-color: darken(@default-button-color, 5%)
+  }
+  .btn-group{
+    .btn.btn-default{
+      background-color: @default-button-color;
+      .border-radius(0px);
+      border:none;
+      height: 100%;
+      border-top: 1px solid @default-button-color;
+      border-bottom: 1px solid @default-button-color;
+      &:hover{
+        background-color: darken(@default-button-color, 15%)
+      }
+    }
+  }
+
+  .btn.default{
+    .border-radius(0px);
+    &:hover{
+      background-color: darken(@default-button-color, 15%)
+    }
+  }
+
+  .grouper{
+    display: inline-block;
+    border-left: 1px solid darken(@default-button-color,15%);
+    border-right: 1px solid darken(@default-button-color,15%);
+    + .grouper{
+      border-left: none;  //if its left is .grouper, then no border left
+    }
+  }
+}
+#editor{
+  width:100%;
+  border:1px solid darken(@very-light-grey, 10%) ;
+  min-height: 200px;
+}

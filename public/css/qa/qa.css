@@ -1,3 +1,42 @@
+.fasids-editor-toolbar .btn.wysihtml5-command-active {
+  background-color: #d0d0d0;
+}
+.fasids-editor-toolbar .btn-group .btn.btn-default {
+  background-color: #dddddd;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  border-radius: 0px;
+  border: none;
+  height: 100%;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+}
+.fasids-editor-toolbar .btn-group .btn.btn-default:hover {
+  background-color: #b7b7b7;
+}
+.fasids-editor-toolbar .btn.default {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  border-radius: 0px;
+}
+.fasids-editor-toolbar .btn.default:hover {
+  background-color: #b7b7b7;
+}
+.fasids-editor-toolbar .grouper {
+  display: inline-block;
+  border-left: 1px solid #b7b7b7;
+  border-right: 1px solid #b7b7b7;
+}
+.fasids-editor-toolbar .grouper + .grouper {
+  border-left: none;
+}
+#editor {
+  width: 100%;
+  border: 1px solid #d8e1e6;
+  min-height: 200px;
+}
 body {
   /*modifying post page*/
   /*modifying one post, one can see this in specific question*/
@@ -16,14 +55,6 @@ body .qa-post-titles .even-numbered-post-row {
 body #filter-go-btn {
   margin-left: 10px;
 }
-body .toolbar-row a.btn {
-  margin-right: 10px;
-}
-body .textarea-row #editor {
-  width: 100%;
-  border: 1px solid #d8e1e6;
-  min-height: 200px;
-}
 body .row.final-buttons a.btn {
   margin-right: 10px;
 }
@@ -37,45 +68,6 @@ body .post-row .one-post-author-info-col {
 body .post-row .one-post-content-col {
   padding-bottom: 20px;
 }
-body .reply-editor-row #editor {
-  width: 100%;
-  border: 1px solid #d8e1e6;
-  min-height: 200px;
-}
 body .reply-editor-row .reply-buttons-row .btn + .btn {
   margin-left: 10px;
-}
-body .fasids-editor-toolbar .btn.wysihtml5-command-active {
-  background-color: #d0d0d0;
-}
-body .fasids-editor-toolbar .btn-group .btn.btn-default {
-  background-color: #dddddd;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  border-radius: 0px;
-  border: none;
-  height: 100%;
-  border-top: 1px solid #dddddd;
-  border-bottom: 1px solid #dddddd;
-}
-body .fasids-editor-toolbar .btn-group .btn.btn-default:hover {
-  background-color: #b7b7b7;
-}
-body .fasids-editor-toolbar .btn.default {
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  border-radius: 0px;
-}
-body .fasids-editor-toolbar .btn.default:hover {
-  background-color: #b7b7b7;
-}
-body .fasids-editor-toolbar .grouper {
-  display: inline-block;
-  border-left: 1px solid #b7b7b7;
-  border-right: 1px solid #b7b7b7;
-}
-body .fasids-editor-toolbar .grouper + .grouper {
-  border-left: none;
 }
