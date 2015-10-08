@@ -45,6 +45,17 @@ var User = require('./user.js');
 //   "content":String
 // }
 // define instance methods
+//http://stackoverflow.com/questions/13851088/how-to-bind-function-arguments-without-binding-this
+function bindWithoutThis(cb) {
+    var bindArgs = Array.prototype.slice.call(arguments, 1);
+
+    return function () {
+        var internalArgs = Array.prototype.slice.call(arguments, 0);
+        var args = Array.prototype.concat(bindArgs, internalArgs);
+        return cb.apply(this, args);
+    };
+}
+
 post_schema.method({
   addOneView: function(){
     var post = this;
@@ -109,9 +120,7 @@ post_schema.static({
         var dueCallbackStack = [];
         for(var i = 0; i <= mongoArray.length - 1; i++){
           dueCallbackStack.push(i);
-          User.findOne({_id:mongoArray[i].poster_id},null,{}, function userFoundCB(err, user){
-
-            var i = dueCallbackStack.pop();
+          User.findOne({_id:mongoArray[i].poster_id},null,{}, bindWithoutThis(  function userFoundCB(i,err, user){
             if (err) {
               reject(err);
               return;
@@ -121,11 +130,12 @@ post_schema.static({
               return;
             }
             mongoArray[i].poster = user;
+            dueCallbackStack.pop();
             /*I do not assume async callbacks order can be kept*/
             if (dueCallbackStack.length === 0){
               fulfill(mongoArray);
             }
-          });
+          },i)  );
         }// end of for
       }  
     });
@@ -139,8 +149,7 @@ post_schema.static({
         var dueCallbackStack = [];
         for(var i = 0; i < main_posts.length ;i++){
           dueCallbackStack.push(i);
-          User.findOne({_id:main_posts[i].last_replier},null,{}, function userFoundCB(err, user){
-            var i = dueCallbackStack.pop();
+          User.findOne({_id:main_posts[i].last_replier},null,{}, bindWithoutThis(  function userFoundCB(i, err, user){
             if (err) {
               reject(err);
               return;
@@ -150,10 +159,11 @@ post_schema.static({
               return;
             }
             main_posts[i].last_replier_obj = user;  // link last replier to that main_post
+            dueCallbackStack.pop();
             if (dueCallbackStack.length === 0){
               fulfill(main_posts);
             }
-          });
+          },i) );
         };
       }  
     });
