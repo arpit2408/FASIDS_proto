@@ -18,10 +18,7 @@ body {
 
 /*basic partial scss includes "resetting" and "dividers" and nav overrides, 
   form elements, buttons, image hover effect(both old and new)*/
-/*
-/*-----------------------------------------------------------------------------------*/
-/*  RESET
-/*-----------------------------------------------------------------------------------*/
+-d
 *,
 *:before,
 *:after {
@@ -35,16 +32,6 @@ body {
 iframe {
   border: none;
   width: 100%; }
-
-::selection {
-  background: #fefac7;
-  /* Safari */
-  color: #555555; }
-
-::-moz-selection {
-  background: #fefac7;
-  /* Firefox */
-  color: #555555; }
 
 strong, b {
   font-family: 'Raleway', sans-serif;
@@ -2480,7 +2467,6 @@ ol.breadcrumb {
   ol.breadcrumb li {
     font-weight: 400;
     font-size: 13px;
-    text-transform: capitalize;
     letter-spacing: 1px; }
     ol.breadcrumb li a {
       color: #333; }
