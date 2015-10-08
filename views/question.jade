@@ -42,7 +42,7 @@ block renderBody
             | #{main_post.poster_fullname}
         .row
           .col-xs-12.text-muted.one-post-usercat
-            | [user role]
+            +userCatString(main_post.poster.usercat)
 
         .row
           .col-xs-12.one-post-userprofile
@@ -89,7 +89,7 @@ block renderBody
     .container
       .row.reply-editor-row
         .col-md-2
-          [user profile here]
+          | [user profile here]
         .col-md-10
           form(method="post")
             .row

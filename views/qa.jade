@@ -37,13 +37,13 @@ block renderBody
     .divide25
     .row.qa-post-title-header
       .col-sm-1
-      .col-sm-7
+      .col-sm-6
         strong TOPICS
       .col-sm-1 
         strong REPLIES
       .col-sm-1
         strong VIEWS
-      .col-sm-2
+      .col-sm-3
         strong LAST REPLY
     hr
     .qa-post-titles
@@ -52,7 +52,7 @@ block renderBody
         if index % 2 === 1
           .row.qa-post-title-row.even-numbered-post-row
             .col-sm-1 ICON
-            .col-sm-7
+            .col-sm-6
               .row
                 .col-xs-12
                   a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
@@ -62,20 +62,20 @@ block renderBody
               i.fa.fa-comment-o
               | &nbsp;&nbsp;#{post.replied_post}
             .col-sm-1 #{post.post_viewed} views
-            .col-sm-2
+            .col-sm-3
               .row
-                .col-xs-4 [ICON]
-                .col-xs-8
+                .col-xs-3 [ICON]
+                .col-xs-9
                   .row
                     .col-xs-12
-                      | #{post.last_replier_obj.displayName()}
+                      | #{(post['last_reply'].poster_fullname)? post['last_reply'].poster_fullname: "error"}
                   .row
                     .col-xs-12
-                      //- | 3 days ago
+                      | #{getDataString( (post['last_reply'].post_time)? post['last_reply'].post_time: "error time")}
         else
           .row.qa-post-title-row
             .col-sm-1 ICON
-            .col-sm-7
+            .col-sm-6
               .row
                 .col-xs-12 
                   a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
@@ -85,16 +85,16 @@ block renderBody
               i.fa.fa-comment-o
               | &nbsp;&nbsp;#{post.replied_post}
             .col-sm-1 #{post.post_viewed} views
-            .col-sm-2
+            .col-sm-3
               .row
-                .col-xs-4 [ICON]
-                .col-xs-8
+                .col-xs-3 [ICON]
+                .col-xs-9
                   .row
                     .col-xs-12
-                      | #{post.last_replier_obj.displayName()}
+                      | #{(post['last_reply'].poster_fullname)? post['last_reply'].poster_fullname: "error"}
                   .row
                     .col-xs-12
-                      //- | 3 days ago
+                      | #{getDataString( (post['last_reply'].post_time)? post['last_reply'].post_time: "error time")}
 
 
     .divide10
