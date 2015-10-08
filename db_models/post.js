@@ -7,12 +7,15 @@ var post_schema = new mongoose.Schema({
   "post_id":String,
   "poster_id":mongoose.Schema.ObjectId,
   "poster_fullname":String,
+  //"poster"   // this is a virtual field which only be fullfilled when rendered 
   "post_cat":{type:Number, min:0, max:4},   // used for the icons
   "post_title":String,
   "post_time": Date,
   "post_viewed":Number,
   "replied_post":Number,
-  "last_replier":mongoose.Schema.ObjectId,
+  //"last_reply"  // this is a virtual field which only be fullfilled when rendered 
+  "last_reply_id":String,  // keep track of last reply post_id
+
   "reply_to_post":String,// post created to reply specific post
   "reply_to_mainpost":String,
   "content":String
@@ -69,7 +72,7 @@ post_schema.method({
   },
   updateData: function (reply_number, newest_reply){
     this.replied_post = reply_number;
-    this.last_replier = newest_reply.poster_id;
+    this.last_reply_id = newest_reply.post_id;
     this.save(saveCB);
   },
   setReplyNumber: function (reply_number){
@@ -110,8 +113,8 @@ post_schema.static({
       });  // callback should take err, and instances
     });
   },
-
   staticLinkPostWithUser:function(mongoArray){
+    // console.log(this);
     return new Promise(function wrappedCodeBlock (fulfill, reject){
       if (mongoArray.length ===0){
         fulfill(mongoArray);
@@ -129,7 +132,7 @@ post_schema.static({
               reject( new Error("did not find corresponding poster for: " + mongoArray[i]._id));
               return;
             }
-            mongoArray[i].poster = user;
+            mongoArray[i]['poster'] = user;
             dueCallbackStack.pop();
             /*I do not assume async callbacks order can be kept*/
             if (dueCallbackStack.length === 0){
@@ -140,7 +143,10 @@ post_schema.static({
       }  
     });
   },
-  staticLinkLastReplier:function( main_posts ){
+  staticLinkLastReply:function( main_posts ){
+    var POST = this;
+    // console.log("arrived staticLinkLastReply#################");
+    // console.log(this)
     return new Promise(function wrappedCodeBlock (fulfill, reject){
       if (main_posts.length ===0){
         fulfill(main_posts);
@@ -149,18 +155,20 @@ post_schema.static({
         var dueCallbackStack = [];
         for(var i = 0; i < main_posts.length ;i++){
           dueCallbackStack.push(i);
-          User.findOne({_id:main_posts[i].last_replier},null,{}, bindWithoutThis(  function userFoundCB(i, err, user){
+          POST.findOne({ "post_id":main_posts[i].last_reply_id},null,{}, bindWithoutThis(  function userFoundCB(i, err, reply){
             if (err) {
               reject(err);
               return;
             }
-            if (!user){
-              reject(new Error("did not find replier for: " + main_posts[i]._id));
+            if (!reply){
+              reject(new Error("did not last reply for: " + main_posts[i]._id));
               return;
             }
-            main_posts[i].last_replier_obj = user;  // link last replier to that main_post
+
+            main_posts[i]['last_reply'] = reply;  // link last replier to that main_post
             dueCallbackStack.pop();
             if (dueCallbackStack.length === 0){
+              // console.log("fulfill" + fulfill);
               fulfill(main_posts);
             }
           },i) );

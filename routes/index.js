@@ -28,24 +28,28 @@ function genPostId(){
   post_id += currentDate.getMinutes().toString() + currentDate.getSeconds().toString() + currentDate.getMilliseconds().toString();
   return post_id;
 }
+// callback of promise catch
+function thisError(err){
+  return next(err);
+}
 
 function sanityCheckPosts(posts){
   if ( typeof(posts)==='undefined' || posts ===null){
-    return false;
+    return -3;
   }
   var i = 0;
   for (i=0; i < posts.length; i++){
     var post = posts[i];
     if (post.role === 1){
-      if (typeof (post.last_replier_obj) === 'undefined'){
-        return false;
+      if (typeof (post['last_reply']) === 'undefined'){
+        return -2;
       }
     }
-    if  (typeof (post.poster) === 'undefined'){
-      return false;
+    if  (typeof (post['poster']) === 'undefined'){
+      return -1;
     }
   }
-  return true;
+  return 1;
 }
 
 /*routes
@@ -89,10 +93,10 @@ router.get('/qa', function (req, res, next){
       });
       return;
     }
-  
-    req.DB_POST.staticLinkPostWithUser(posts).then(req.DB_POST.staticLinkLastReplier).then(function (posts){
-      if ( !sanityCheckPosts(posts) ){
-        return next(new Error("posts sanity check failed"));
+    req.DB_POST.staticLinkPostWithUser(posts).then(  req.DB_POST.staticLinkLastReply.bind(req.DB_POST)  ).then(function (processed_posts){
+      var sanityCheckSig =   sanityCheckPosts(processed_posts)
+      if ( sanityCheckSig !== 1){
+          return next(new Error("posts sanity check failed with code: " + sanityCheckSig));
       }
       res.render('qa', {title:'Question and Answers | FASIDS',
         breadcrumTitle:"Interactive Questions and Answers",
@@ -100,7 +104,7 @@ router.get('/qa', function (req, res, next){
         activePage:'Questions',
         isAuthenticated: req.isAuthenticated(),
         user: processReqUser(req.user),
-        posts:posts,
+        posts:processed_posts,
         momentlib:moment
       }).catch(function(err){
         return next(err);
@@ -111,7 +115,6 @@ router.get('/qa', function (req, res, next){
 });
 
 router.post('/qa/question', function (req, res, next) {
-
   var reply = {
     role:2,
     post_id:genPostId(),
@@ -149,23 +152,30 @@ router.get('/qa/question',function (req, res, next){
   req.DB_POST.findOne({post_id:post_id},null,{}, function (err, target_post){
     if (err) next(err);
     //Converts this document into a plain javascript object, ready for storage in MongoDB.
+
+
     target_post.addOneView();
-    target_post = target_post.toObject();
-    req.DB_POST.getAllFollowUps(post_id, function whenRepliesReady (err, replies){
-      if (err) next(err);
-      // var number_reply = replies.length;
-      res.render('question.jade',{
-        breadcrumTitle:target_post.post_title,
-        pathToHere:"qa / question?qid="+post_id.toString(),
-        title: 'QA QUESTION | FASIDS',
-        activePage:'Questions',
-        isAuthenticated: req.isAuthenticated(),
-        user: processReqUser(req.user),
-        momentlib:moment,
-        main_post: target_post,
-        replies:replies,
+    req.DB_POST.staticLinkPostWithUser([target_post]).then(function (result){
+      var result = result[0];
+      req.DB_POST.getAllFollowUps(result.post_id, function whenRepliesReady (err, replies){
+        if (err) throw err;
+        // var number_reply = replies.length;
+        res.render('question.jade',{
+          breadcrumTitle:target_post.post_title,
+          pathToHere:"qa / question?qid="+post_id.toString(),
+          title: 'QA QUESTION | FASIDS',
+          activePage:'Questions',
+          isAuthenticated: req.isAuthenticated(),
+          user: processReqUser(req.user),
+          momentlib:moment,
+          main_post: result,
+          replies:replies,
+        });
       });
-    });
+    }).catch(thisError);
+
+
+
   });
 });
 
@@ -193,7 +203,7 @@ router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
     post_time:currentDate,
     post_viewed:0,
     replied_post:0,
-    last_replier:req.user._id,
+    last_reply_id:post_id,  // last reply is itself, when this is just posted
     content: req.body.content,
     poster_fullname: req.user.displayName()
   };
