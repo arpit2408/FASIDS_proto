@@ -89,29 +89,6 @@ router.get('/qa', function (req, res, next){
       });
       return;
     }
-    // posts.forEach(function(element, index, ar){
-    //   // ar[index] = element.toObject();
-    //   req.DB_USER.findOne({_id:ar[index].last_replier}, null, {}, function (err, user){
-    //     if (err) return next(err);
-    //     if (!user) return next(new Error("no such user"));
-    //     toBeRenderedPosts[index] = ar[index].toObject();
-    //     toBeRenderedPosts[index].last_replier_displayname = user.displayName();
-    //     console.log("add last last_replier name");
-
-    //     if (toBeRenderedPosts.length === posts.length){
-    //       // can render now 
-    //       res.render('qa', {title:'Question and Answers | FASIDS',
-    //         breadcrumTitle:"Interactive Questions and Answers",
-    //         pathToHere:"qa",
-    //         activePage:'Questions',
-    //         isAuthenticated: req.isAuthenticated(),
-    //         user: processReqUser(req.user),
-    //         posts:toBeRenderedPosts,
-    //         momentlib:moment
-    //       });
-    //     }
-    //   })
-    // });
   
     req.DB_POST.staticLinkPostWithUser(posts).then(req.DB_POST.staticLinkLastReplier).then(function (posts){
       if ( !sanityCheckPosts(posts) ){

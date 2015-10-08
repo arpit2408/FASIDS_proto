@@ -44,7 +44,6 @@ var User = require('./user.js');
 //   "reply_to_mainpost":String,
 //   "content":String
 // }
-
 // define instance methods
 post_schema.method({
   addOneView: function(){
@@ -108,28 +107,28 @@ post_schema.static({
       }
       else {
         var dueCallbackStack = [];
-        for (var i = 0; i <= mongoArray.length - 1; i++){
+        for(var i = 0; i <= mongoArray.length - 1; i++){
           dueCallbackStack.push(i);
-          User.findOne({_id:mongoArray[i].poster_id},null,{},(function userFoundCB(err, user){
+          User.findOne({_id:mongoArray[i].poster_id},null,{}, function userFoundCB(err, user){
+
+            var i = dueCallbackStack.pop();
             if (err) {
               reject(err);
               return;
             }
             if (!user){
-              reject( new Error("did not find corresponding poster for: " + mongoArray[this.icontext]._id));
+              reject( new Error("did not find corresponding poster for: " + mongoArray[i]._id));
               return;
             }
-            mongoArray[this.icontext].poster = user;
-            dueCallbackStack.pop();
+            mongoArray[i].poster = user;
             /*I do not assume async callbacks order can be kept*/
             if (dueCallbackStack.length === 0){
               fulfill(mongoArray);
             }
-          }).bind({icontext:i}));
-        }
+          });
+        }// end of for
       }  
     });
-    
   },
   staticLinkLastReplier:function( main_posts ){
     return new Promise(function wrappedCodeBlock (fulfill, reject){
@@ -140,22 +139,21 @@ post_schema.static({
         var dueCallbackStack = [];
         for(var i = 0; i < main_posts.length ;i++){
           dueCallbackStack.push(i);
-          User.findOne({_id:main_posts[i].last_replier},null,{}, (function userFoundCB(err, user){
+          User.findOne({_id:main_posts[i].last_replier},null,{}, function userFoundCB(err, user){
+            var i = dueCallbackStack.pop();
             if (err) {
               reject(err);
               return;
             }
             if (!user){
-              reject(new Error("did not find replier for: " + main_posts[this.icontext]._id));
+              reject(new Error("did not find replier for: " + main_posts[i]._id));
               return;
             }
-            main_posts[this.icontext].last_replier_obj = user;  // link last replier to that main_post
-            dueCallbackStack.pop();
-            if (dueCallbackStack.length ===0){
+            main_posts[i].last_replier_obj = user;  // link last replier to that main_post
+            if (dueCallbackStack.length === 0){
               fulfill(main_posts);
             }
-          }).bind({icontext:i}));
-
+          });
         };
       }  
     });
