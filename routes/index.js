@@ -174,8 +174,6 @@ router.get('/qa/question',function (req, res, next){
       });
     }).catch(thisError);
 
-
-
   });
 });
 
