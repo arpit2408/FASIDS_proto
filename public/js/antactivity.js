@@ -147,5 +147,20 @@ $(document).ready(function(){
     helper_util.refresh();
     console.log("refresh-btn clicked");
   });
+  $("#query-place-ipt").keyup(function (event){
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if (keycode  ===  13){
+      console.log("haha");
+      if ($("#query-place-ipt").val() ==""){
+        helper_util.get_query.q = "college station,tx,us";
+      } else{
+        var q = $("#query-place-ipt").val().toLowerCase();
+        helper_util.get_query.q = q;
+      }
+
+      helper_util.refresh();
+
+    }
+  });
   
 });
