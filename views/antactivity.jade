@@ -8,6 +8,14 @@ block renderBody
   .divide20
   .container
     .row
+      .col-md-6.col-md-offset-1.form-element
+        .input-group
+          input.form-control(type='text', id="query-place-ipt" ,placeholder="city, state, country, like, college station, tx, us")
+          span.input-group-btn
+            button.btn.btn-default(type='button', id="refresh-btn" ) Fire Ant Activity Forecast
+
+    .divide30
+    .row
       .col-md-10.col-md-offset-1#calendar
   .divide30
 
@@ -20,15 +28,6 @@ block additionalJS
   script(src='/assets/fullcalendar-2.4.0/fullcalendar.min.js')
   script(src='/underscorejs/underscore-min.js')
   //- script(src='/simpleWeather/jquery.simpleWeather.min.js')
-  script.
-    $(document).ready(function(){
 
-      // following might take time
-      $('#calendar').fullCalendar({
-          // put your options and callbacks here
-      });
-
-
-    });
 
   script(src='/js/antactivity.js')
