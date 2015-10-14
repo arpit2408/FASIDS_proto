@@ -22,3 +22,9 @@ qa href: /qa/question?qid=15101153335863
  db.post.remove({role:{$ne:1}});
 
 OPENSHIFT_MONGODB_DB_URL=mongodb://admin:d7ZAK1AAiw-g@127.8.238.130:27017/
+
+
+
+weahter memo
+provider: http://openweathermap.org/api
+64bb5bb6fbdeb48105b321b7c6ddae37

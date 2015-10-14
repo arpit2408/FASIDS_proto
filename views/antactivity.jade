@@ -18,12 +18,17 @@ block additionalJS
   //- 35.4kb
   script(src='/assets/moment/moment.min.js')
   script(src='/assets/fullcalendar-2.4.0/fullcalendar.min.js')
+  script(src='/underscorejs/underscore-min.js')
+  //- script(src='/simpleWeather/jquery.simpleWeather.min.js')
   script.
     $(document).ready(function(){
 
-
+      // following might take time
       $('#calendar').fullCalendar({
           // put your options and callbacks here
-      })
+      });
+
+
     });
 
+  script(src='/js/antactivity.js')
