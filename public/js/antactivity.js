@@ -140,7 +140,8 @@ $(document).ready(function(){
     if ($("#query-place-ipt").val() ==""){
       helper_util.get_query.q = "college station,tx,us";
     } else{
-      helper_util.get_query.q = $("#query-place-ipt").val();
+      var q = $("#query-place-ipt").val().toLowerCase();
+      helper_util.get_query.q = q;
     }
 
     helper_util.refresh();
