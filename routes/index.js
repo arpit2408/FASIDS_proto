@@ -224,7 +224,7 @@ router.get('/qa/posting', ensureAuthenticated,function (req, res, next){
 });
 
 
-/* */
+/* anti activity */
 router.get('/antactivity', function (req, res, next){
   res.render("antactivity",{
     breadcrumTitle:"FIREANT ACTIVITY FORECAST",
@@ -232,6 +232,13 @@ router.get('/antactivity', function (req, res, next){
     activePage:'Ants',
     momentlib:moment
   })
+});
+
+/*map applications */
+router.get('/landscape/homeownermng', function (req, res, next) {
+  res.render("landscape/homeownermng.jade",{
+    
+  });
 });
 
 module.exports = router;
