@@ -8,12 +8,22 @@ block renderBody
   //-include ../snippets/breadcrum
   .mapcover#mapcover
     .mapcover-map#mapcover-map
-
+    .mc-static2mapcontainer.panel#map-tools-box
+      .row
+        .col-xs-4 
+          span.btn.btn-default.fa.fa-mouse-pointer#map-tool-area-pointer
+        .col-xs-4
+          span.btn.btn-default.fa.fa-undo#map-tool-undo
+      .row
+        .col-xs-4
+          span.btn.btn-default#map-tool-hole hole
+        .col-xs-4
+          span.btn.btn-default#map-tool-cancel cancel
 
 
 
 block additionalJS
-  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY')
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
   script(src="/underscorejs/underscore-min.js")
   script(src="/js/backbone-min.js")
   // mapcover depends on backbone.js and underscore.js

@@ -240,7 +240,7 @@ $(document).ready(function readyCB(){
               break;
           }
         } else{
-          console.log("no valid context_menu");
+          //console.log("no valid context_menu");
         } 
       },
 
