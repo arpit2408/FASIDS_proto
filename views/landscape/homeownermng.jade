@@ -11,14 +11,17 @@ block renderBody
     .mc-static2mapcontainer.panel#map-tools-box
       .row
         .col-xs-4 
-          span.btn.btn-default.fa.fa-mouse-pointer#map-tool-area-pointer
+          span.btn.btn-default.fa.fa-mouse-pointer#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
         .col-xs-4
           span.btn.btn-default.fa.fa-undo#map-tool-undo
       .row
         .col-xs-4
-          span.btn.btn-default#map-tool-hole hole
+          span.btn.btn-default#map-tool-hole(data-operation = "map_tool_holing") hole
         .col-xs-4
           span.btn.btn-default#map-tool-cancel cancel
+      .row
+        .col-xs-4
+          span.btn.btn-default#map-tool-editpolygon(data-operation="map_tool_editpolygon") edit
 
 
 

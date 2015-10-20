@@ -14,3 +14,6 @@
   -ms-box-shadow: 3px 3px 3px #aaaaaa;
   box-shadow: 3px 3px 3px #aaaaaa;
 }
+#map-tools-box .row + .row {
+  margin-top: 10px;
+}
