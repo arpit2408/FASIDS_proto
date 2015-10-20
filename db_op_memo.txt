@@ -32,3 +32,8 @@ provider: http://openweathermap.org/api
 
 
 /
+      var paths = this_polygon.getPaths();
+      var last_path = paths.getAt(paths.getLength()-1);
+      last_path.push(event.latLng);
+      paths.setAt(paths.getLength()-1, last_path);
+      this.setPaths( paths);
