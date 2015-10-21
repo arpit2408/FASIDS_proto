@@ -14,6 +14,7 @@ $(document).ready(function(){
       panControl:false,     //left top corner: 
       mapTypeControl:false  //right top corner: "map|satellite"
   });
+
   function mapToolOpUpdating (){
     // this is the clicked element
     var target_property = $(this).attr("data-operation");
@@ -24,11 +25,8 @@ $(document).ready(function(){
       map_tool_register.set(target_property, true);
     }
   }
-
-  $("#map-tool-hole").click( mapToolOpUpdating);
-  $("#map-tool-area-pointer").click(mapToolOpUpdating);
-  $("#map-tool-editpolygon").click(mapToolOpUpdating);
-
+  // map tool functioning populating
+  $("#map-tool-editpolygon,#map-tool-editpurpose,#map-tool-area-pointer,#map-tool-hole").click(mapToolOpUpdating);
   $("#map-tool-cancel").click(function (){
     map_tool_register.clearAllStatus();
     temp_latlngs = [];
@@ -37,21 +35,43 @@ $(document).ready(function(){
     }
     polygons = [];
   });
+  // preparing modal
+  $("#savepurpose").click(function savepurpose (){
+    var str = $("form#purpose").serialize();
+    str = str.split("=");
+    if (target_polygon !== null ){
+      target_polygon[str[0]] = str[1];
+      console.log(target_polygon[str[0]]);
+      map_tool_register.renderPolygonProperly(target_polygon);
+      target_polygon = null;
+      $("#purpose-modal").modal("hide");
+    } else{
+      throw "target_polygon is null when savepurpose() is invoked";
+    }
+  });
 
   var gmap = mapcover.model.get("map");
-  
+  var temp_startmarker = new google.maps.Marker({
+    icon:{
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 2,
+      strokeColor:'#FF0000'
+    }
+  });  
   var temp_latlngs = [];
   var polygons = [];  
   var spherical = google.maps.geometry.spherical;
+  var circle_symbol = { path:google.maps.SymbolPath.CIRCLE}; 
   var drawingPath = new google.maps.Polyline({
     path: temp_latlngs,
     geodesic: false,
     strokeColor: '#FF0000',
     strokeOpacity: 1.0,
-    strokeWeight: 2
+    strokeWeight: 2,
+    icons:[{icon: circle_symbol , offset:"0%"}],
+    map:gmap
   });
   var target_polygon = null;  // when drawing circle on certain polygon, this polygon will be filled with the polygon which is being operated
-  drawingPath.setMap(gmap);
 
   function polygonClicked (event) {
     // "this" scope is set to the polygon 
@@ -60,8 +80,20 @@ $(document).ready(function(){
       target_polygon = this_polygon;
       temp_latlngs.push(event.latLng);
       drawingPath.setPath(temp_latlngs);
+
+      if (temp_latlngs.length === 1){
+        temp_startmarker.setPosition(temp_latlngs[0]);
+        temp_startmarker.setMap(gmap);
+      } else{
+        temp_startmarker.setMap(null);
+      }
     } else if  ( map_tool_register.get("map_tool_editpolygon") === true) {
       this_polygon.setEditable(true);
+    } else if ( map_tool_register.get("map_tool_editpurpose") === true){
+      target_polygon = this_polygon;
+      // modal show, reset options 
+      $("#purpose-modal").modal("show");
+
     }
 
     else {
@@ -86,6 +118,13 @@ $(document).ready(function(){
       console.log("drawing something");
       temp_latlngs.push(event.latLng);
       drawingPath.setPath(temp_latlngs);
+
+      if (temp_latlngs.length === 1){
+        temp_startmarker.setPosition(temp_latlngs[0]);
+        temp_startmarker.setMap(gmap);
+      } else{
+        temp_startmarker.setMap(null);
+      }
     }
   });
   var map_tool_register = new (Backbone.Model.extend({
@@ -98,9 +137,35 @@ $(document).ready(function(){
       var ClassRef = this;
       ClassRef.set({
         map_tool_area_drawing:false,
-        map_tool_holing:false
+        map_tool_holing:false,
+        map_tool_editpolygon:false,
+        map_tool_editpurpose:false
       });
     },
+    renderPolygonProperly: function( to_be_rendered_polygon){
+      if (to_be_rendered_polygon.hasOwnProperty("landusage")){
+        switch(to_be_rendered_polygon["landusage"]){
+          case "housebuilding":
+            to_be_rendered_polygon.setOptions({
+              fillColor:"#0000FF"
+            });
+            break;
+          case "lawnturf":
+            to_be_rendered_polygon.setOptions({
+              fillColor:"#FFFF00"
+            });
+            break;
+          case "vegetablegarden":
+            to_be_rendered_polygon.setOptions({
+              fillColor:"#33CC33"
+            });
+            break;
+          default:
+
+        }
+      }
+    },
+
     initialize: function (){
       var ClassRef = this;
       this.on("change:map_tool_area_drawing", function (){
@@ -162,8 +227,16 @@ $(document).ready(function(){
           });
         }
       });
+
+      this.on("change:map_tool_editpurpose", function (){
+        if (ClassRef.get("map_tool_editpurpose")  === true){
+          $("#map-tool-editpurpose").addClass("active");
+        } else {
+          $("#map-tool-editpurpose").removeClass("active");
+        }    
+      });
     }
-  }) ) ();
+  }) ) ();  // initialize a new 
 
 
 
