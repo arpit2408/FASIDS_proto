@@ -3,7 +3,7 @@ $(document).ready(function(){
     // The reason might because the nav bar gives padding 70,
     var mapcontainer_height = $(window).height() - 1.5 * $(".navbar").height();
     $("#mapcover").height(mapcontainer_height);
-  })();
+  })();  
   
   var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,    { 
       draggingCursor:"move",
@@ -35,6 +35,7 @@ $(document).ready(function(){
     }
     polygons = [];
   });
+
   // preparing modal
   $("#savepurpose").click(function savepurpose (){
     var str = $("form#purpose").serialize();
@@ -54,10 +55,18 @@ $(document).ready(function(){
   var temp_startmarker = new google.maps.Marker({
     icon:{
       path: google.maps.SymbolPath.CIRCLE,
-      scale: 2,
+      scale: 3,
       strokeColor:'#FF0000'
     }
   });  
+  temp_startmarker.addListener('click',function onTempStartMarkerClicked(){
+    console.log("onTempStartMarkerClicking() invoked");
+    if ( map_tool_register.get("map_tool_area_drawing") === true ) {
+      map_tool_register.set("map_tool_area_drawing",false);
+    } else if ( map_tool_register.get("map_tool_holing") === true ) {
+      map_tool_register.set("map_tool_holing",false);
+    }
+  });
   var temp_latlngs = [];
   var polygons = [];  
   var spherical = google.maps.geometry.spherical;
@@ -68,11 +77,11 @@ $(document).ready(function(){
     strokeColor: '#FF0000',
     strokeOpacity: 1.0,
     strokeWeight: 2,
-    icons:[{icon: circle_symbol , offset:"0%"}],
+    //icons:[{icon: circle_symbol , offset:"0%"}],
     map:gmap
   });
   var target_polygon = null;  // when drawing circle on certain polygon, this polygon will be filled with the polygon which is being operated
-
+  var deleteMenu = new DeleteMenu();
   function polygonClicked (event) {
     // "this" scope is set to the polygon 
     var this_polygon = this;
@@ -84,8 +93,6 @@ $(document).ready(function(){
       if (temp_latlngs.length === 1){
         temp_startmarker.setPosition(temp_latlngs[0]);
         temp_startmarker.setMap(gmap);
-      } else{
-        temp_startmarker.setMap(null);
       }
     } else if  ( map_tool_register.get("map_tool_editpolygon") === true) {
       this_polygon.setEditable(true);
@@ -109,9 +116,16 @@ $(document).ready(function(){
         console.log( spherical.computeSignedArea(paths.getAt(i)) );  
       }
       console.log("shadowed area is: " + sum.toString() + " sqaure meter.");
+      console.log("shadowed area is designated for " + this_polygon["landusage"] + " landusage");
     }
   }
-
+  function polygonRightClicked (event){
+    var this_polygon = this;
+    if (event.vertex == undefined || event.path == undefined){
+      return;
+    }
+    deleteMenu.open(gmap, this_polygon.getPaths().getAt(event.path) ,event.vertex);
+  }
   gmap.addListener('click', function mapClkCb (event){
     // console.log("at least clicked");
     if (map_tool_register.get("map_tool_area_drawing")){
@@ -122,8 +136,6 @@ $(document).ready(function(){
       if (temp_latlngs.length === 1){
         temp_startmarker.setPosition(temp_latlngs[0]);
         temp_startmarker.setMap(gmap);
-      } else{
-        temp_startmarker.setMap(null);
       }
     }
   });
@@ -131,7 +143,8 @@ $(document).ready(function(){
     defaults: {
       map_tool_area_drawing: false,
       map_tool_holing:false,
-      map_tool_editpolygon:false
+      map_tool_editpolygon:false,
+      map_tool_editpurpose:false
     },
     clearAllStatus:function(){
       var ClassRef = this;
@@ -185,11 +198,13 @@ $(document).ready(function(){
             });
             temp_polygon.setMap(gmap);
             temp_polygon.addListener("click",  polygonClicked);
+            temp_polygon.addListener("rightclick", polygonRightClicked);
             polygons.push( temp_polygon);
           }
           // reseting
           temp_latlngs = [];
           drawingPath.setPath(temp_latlngs);
+          temp_startmarker.setMap(null);
         }
       });
       this.on("change:map_tool_holing", function(){
@@ -214,6 +229,7 @@ $(document).ready(function(){
           // reseting
           temp_latlngs = [];
           drawingPath.setPath(temp_latlngs);
+          temp_startmarker.setMap(null);
         }
       });
 
