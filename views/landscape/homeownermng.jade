@@ -12,19 +12,20 @@ block renderBody
       .row
         .col-xs-4 
           span.btn.btn-default.fa.fa-mouse-pointer#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
-        .col-xs-4
-          span.btn.btn-default.fa.fa-undo#map-tool-undo
+        //- .col-xs-4
+        //-   span.btn.btn-default.fa.fa-undo#map-tool-undo
       .row
         .col-xs-4
           span.btn.btn-default#map-tool-hole(data-operation = "map_tool_holing") hole
-        .col-xs-4
-          span.btn.btn-default#map-tool-cancel cancel
       .row
         .col-xs-12
           span.btn.btn-default#map-tool-editpolygon(data-operation="map_tool_editpolygon") edit shape
       .row
         .col-xs-12
           span.btn.btn-default#map-tool-editpurpose(data-operation="map_tool_editpurpose") edit purpose
+      .row
+        .col-xs-4
+          span.btn.btn-default#map-tool-cancel cancel
   .modal-container
     #purpose-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
       .modal-dialog(role='document')
@@ -57,5 +58,6 @@ block additionalJS
   script(src="/js/backbone-min.js")
   // mapcover depends on backbone.js and underscore.js
   script(src="/assets/mapcover/js/mapcover.js")
+  script(src="/js/landscape/DeleteMenu.js")
   script(src="/js/landscape/homeownermng.js" )
 
