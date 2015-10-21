@@ -29,7 +29,7 @@ $(document).ready(function(){
   $("#map-tool-editpolygon,#map-tool-editpurpose,#map-tool-area-pointer,#map-tool-hole").click(mapToolOpUpdating);
   $("#map-tool-cancel").click(function (){
     map_tool_register.clearAllStatus();
-    temp_latlngs = [];
+    drawingPath.setPath([]);
     for (var i = 0; i < polygons.length; i++){
       polygons[i].setMap(null);
     }
@@ -67,12 +67,11 @@ $(document).ready(function(){
       map_tool_register.set("map_tool_holing",false);
     }
   });
-  var temp_latlngs = [];
   var polygons = [];  
   var spherical = google.maps.geometry.spherical;
   var circle_symbol = { path:google.maps.SymbolPath.CIRCLE}; 
   var drawingPath = new google.maps.Polyline({
-    path: temp_latlngs,
+    path: [],
     geodesic: false,
     strokeColor: '#FF0000',
     strokeOpacity: 1.0,
@@ -87,11 +86,9 @@ $(document).ready(function(){
     var this_polygon = this;
     if (map_tool_register.get("map_tool_holing") === true ) {
       target_polygon = this_polygon;
-      temp_latlngs.push(event.latLng);
-      drawingPath.setPath(temp_latlngs);
-
-      if (temp_latlngs.length === 1){
-        temp_startmarker.setPosition(temp_latlngs[0]);
+      drawingPath.getPath().push(event.latLng);
+      if ( drawingPath.getPath().getLength() === 1){
+        temp_startmarker.setPosition(event.latLng);
         temp_startmarker.setMap(gmap);
       }
     } else if  ( map_tool_register.get("map_tool_editpolygon") === true) {
@@ -129,12 +126,11 @@ $(document).ready(function(){
   gmap.addListener('click', function mapClkCb (event){
     // console.log("at least clicked");
     if (map_tool_register.get("map_tool_area_drawing")){
-      console.log("drawing something");
-      temp_latlngs.push(event.latLng);
-      drawingPath.setPath(temp_latlngs);
 
-      if (temp_latlngs.length === 1){
-        temp_startmarker.setPosition(temp_latlngs[0]);
+      drawingPath.getPath().push(event.latLng)
+
+      if (drawingPath.getPath().getLength() === 1){
+        temp_startmarker.setPosition(event.latLng);
         temp_startmarker.setMap(gmap);
       }
     }
@@ -187,9 +183,9 @@ $(document).ready(function(){
         } else{
           $("#map-tool-area-pointer").removeClass("active");
           // turn current area into polygon
-          if (temp_latlngs.length > 2){
+          if (drawingPath.getPath().getLength() > 2){
             var temp_polygon = new google.maps.Polygon({
-              path: temp_latlngs,
+              path: drawingPath.getPath(),
               geodesic: false,
               strokeColor: '#FF0000',
               strokeOpacity: 1.0,
@@ -202,8 +198,7 @@ $(document).ready(function(){
             polygons.push( temp_polygon);
           }
           // reseting
-          temp_latlngs = [];
-          drawingPath.setPath(temp_latlngs);
+          drawingPath.setPath([]);
           temp_startmarker.setMap(null);
         }
       });
@@ -212,23 +207,22 @@ $(document).ready(function(){
           $("#map-tool-hole").addClass("active");
         } else{
           $("#map-tool-hole").removeClass("active");
-          if (temp_latlngs.length > 2){
+          if (drawingPath.getPath().getLength() > 2){
             var paths = target_polygon.getPaths();
             var direction0  =  spherical.computeSignedArea(paths.getAt(0));
-            var direction1 = spherical.computeSignedArea(temp_latlngs);
+            var direction1 = spherical.computeSignedArea( drawingPath.getPath() );
             if (direction1 * direction0 > 0) {
               var temp_latlngs2 = []
-              while (temp_latlngs.length >0){
-                temp_latlngs2.push(temp_latlngs.pop());
+              while (drawingPath.getPath().getLength() >0){
+                temp_latlngs2.push(drawingPath.getPath().pop());
               }
-              temp_latlngs = temp_latlngs2;
+              drawingPath.setPath(temp_latlngs2);
             }
-            paths.push( new google.maps.MVCArray(temp_latlngs));
-            target_polygon.setPaths(paths);
+            paths.push( drawingPath.getPath());
+            // target_polygon.setPaths(paths);
           }
           // reseting
-          temp_latlngs = [];
-          drawingPath.setPath(temp_latlngs);
+          drawingPath.setPath([]);
           temp_startmarker.setMap(null);
         }
       });
