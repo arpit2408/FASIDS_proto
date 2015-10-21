@@ -20,8 +20,34 @@ block renderBody
         .col-xs-4
           span.btn.btn-default#map-tool-cancel cancel
       .row
-        .col-xs-4
-          span.btn.btn-default#map-tool-editpolygon(data-operation="map_tool_editpolygon") edit
+        .col-xs-12
+          span.btn.btn-default#map-tool-editpolygon(data-operation="map_tool_editpolygon") edit shape
+      .row
+        .col-xs-12
+          span.btn.btn-default#map-tool-editpurpose(data-operation="map_tool_editpurpose") edit purpose
+  .modal-container
+    #purpose-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+            h4#myModalLabel.modal-title Choose usage of this area
+          .modal-body
+            form#purpose
+              label.radio-inline
+                input#housebuilding-radio(type='radio', name='landusage', value='housebuilding')
+                |  House &amp; Building
+              label.radio-inline
+                input#lawnturf-radio(type='radio', name='landusage', value='lawnturf')
+                |  Lawn &amp; Turf
+              label.radio-inline
+                input#vegetablegarden-radio(type='radio', name='landusage', value='vegetablegarden')
+                |  Vegetable Garden
+
+          .modal-footer
+            button.btn.btn-default(type='button', data-dismiss='modal') Close
+            button.btn.btn-primary#savepurpose(type='button') Save changes
 
 
 
