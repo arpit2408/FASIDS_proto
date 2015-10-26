@@ -240,6 +240,15 @@ router.get('/landscape/homeownermng', function (req, res, next) {
   
   });
 });
+
+router.post('/landscape/treatment', function (req, res,next){
+  var geojson = req.body.geojson;
+  if (typeof req.body.geojson == "string"){
+    geojson = JSON.parse(geojson);
+  }
+  //** TODO I have geojson here, I need to use the information to retireve corresponding products
+  res.send(req.body.geojson);
+});
 /* this route is used to display products*/
 router.get('/landscape/fire_ant_products', function(req, res, next){
   req.db_models.FireAntProduct.find({},null,{}, function exec(error, products ){

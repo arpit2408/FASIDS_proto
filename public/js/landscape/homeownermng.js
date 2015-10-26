@@ -26,7 +26,7 @@ $(document).ready(function(){
     }
   }
   // map tool functioning populating
-  $("#map-tool-editpolygon,#map-tool-editpurpose,#map-tool-area-pointer,#map-tool-hole").click(mapToolOpUpdating);
+  $("#map-tool-editpolygon,#map-tool-settreatment,#map-tool-area-pointer,#map-tool-hole, #map-tool-genresult").click(mapToolOpUpdating);
   $("#map-tool-cancel").click(function (){
     map_tool_register.clearAllStatus();
     drawingPath.setPath([]);
@@ -37,17 +37,28 @@ $(document).ready(function(){
   });
 
   // preparing modal
-  $("#savepurpose").click(function savepurpose (){
-    var str = $("form#purpose").serialize();
-    str = str.split("=");
+  $("#save-prepared-treatment").click(function savePreparedTreatment(){
+
+    var formdata = $("form#purpose").serializeArray();
+    var data = {};
+    _.each(formdata, function(element){
+    // Return all of the values of the object's properties.
+      var value = _.values(element);
+    // name : value 
+      data[value[0]] = value[1];
+    });
+    // console.log(data);
     if (target_polygon !== null ){
-      target_polygon[str[0]] = str[1];
-      console.log(target_polygon[str[0]]);
+      _.keys(data).forEach(function(keyname,index, arr) {
+        target_polygon[keyname] = data[keyname];
+        console.log("target_polygon."+keyname+" : " + target_polygon[keyname]);
+      });
+      
       map_tool_register.renderPolygonProperly(target_polygon);
       target_polygon = null;
       $("#purpose-modal").modal("hide");
     } else{
-      throw "target_polygon is null when savepurpose() is invoked";
+      throw "target_polygon is null when savePreparedTreatment() is invoked";
     }
   });
 
@@ -69,14 +80,12 @@ $(document).ready(function(){
   });
   var polygons = [];  
   var spherical = google.maps.geometry.spherical;
-  var circle_symbol = { path:google.maps.SymbolPath.CIRCLE}; 
   var drawingPath = new google.maps.Polyline({
     path: [],
     geodesic: false,
     strokeColor: '#FF0000',
     strokeOpacity: 1.0,
     strokeWeight: 2,
-    //icons:[{icon: circle_symbol , offset:"0%"}],
     map:gmap
   });
   var target_polygon = null;  // when drawing circle on certain polygon, this polygon will be filled with the polygon which is being operated
@@ -93,14 +102,20 @@ $(document).ready(function(){
       }
     } else if  ( map_tool_register.get("map_tool_editpolygon") === true) {
       this_polygon.setEditable(true);
-    } else if ( map_tool_register.get("map_tool_editpurpose") === true){
+    } else if ( map_tool_register.get("map_tool_settreatment") === true){
       target_polygon = this_polygon;
       // modal show, reset options 
       $("#purpose-modal").modal("show");
 
+    } else if ( map_tool_register.get("map_tool_genresult") === true){
+      var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
+      $('input#geojson').val(JSON.stringify(geoJsonPolygon));
+      $('form#treatment').submit();
     }
 
     else {
+      
+
       var paths = this_polygon.getPaths();
       var i = 0;
       var sum = 0
@@ -114,6 +129,7 @@ $(document).ready(function(){
       }
       console.log("shadowed area is: " + sum.toString() + " sqaure meter.");
       console.log("shadowed area is designated for " + this_polygon["landusage"] + " landusage");
+      console.log("shadowed area is going to use " + this_polygon["treatment"] + " method");
     }
   }
   function polygonRightClicked (event){
@@ -135,22 +151,24 @@ $(document).ready(function(){
       }
     }
   });
+
+
   var map_tool_register = new (Backbone.Model.extend({
     defaults: {
       map_tool_area_drawing: false,
       map_tool_holing:false,
       map_tool_editpolygon:false,
-      map_tool_editpurpose:false
+      map_tool_settreatment:false,
+      map_tool_genresult:false
     },
     clearAllStatus:function(){
       var ClassRef = this;
-      ClassRef.set({
-        map_tool_area_drawing:false,
-        map_tool_holing:false,
-        map_tool_editpolygon:false,
-        map_tool_editpurpose:false
+      // ClassRef.keys() return an array: ["map_tool_area_drawing", "map_tool_holing", "map_tool_editpolygon", "map_tool_settreatment", "map_tool_genresult"]
+      _.each(ClassRef.keys(), function iteratee(element, index, list){
+        ClassRef.set(element, false);
       });
     },
+
     renderPolygonProperly: function( to_be_rendered_polygon){
       if (to_be_rendered_polygon.hasOwnProperty("landusage")){
         switch(to_be_rendered_polygon["landusage"]){
@@ -238,16 +256,94 @@ $(document).ready(function(){
         }
       });
 
-      this.on("change:map_tool_editpurpose", function (){
-        if (ClassRef.get("map_tool_editpurpose")  === true){
-          $("#map-tool-editpurpose").addClass("active");
+      this.on("change:map_tool_settreatment", function (){
+        if (ClassRef.get("map_tool_settreatment")  === true){
+          $("#map-tool-settreatment").addClass("active");
         } else {
-          $("#map-tool-editpurpose").removeClass("active");
+          $("#map-tool-settreatment").removeClass("active");
+        }    
+      });
+
+      this.on("change:map_tool_genresult", function (){
+        if (ClassRef.get("map_tool_genresult")  === true){
+          $("#map-tool-genresult").addClass("active");
+        } else {
+          $("#map-tool-genresult").removeClass("active");
         }    
       });
     }
   }) ) ();  // initialize a new 
 
+  var map_tool_helper = {
+
+
+    convertPaths:function(MVCArray, tbr_a){
+      var ClassRef = this;
+      console.log("asdf");
+      if ( MVCArray.getAt(0).hasOwnProperty("lat")  ){
+        // arrived deepest Array level
+        MVCArray.forEach(function (element, index){
+          tbr_a.push( ClassRef.convertGoogleLatLngToGeoJLonLat(MVCArray.getAt(index)));
+        });
+        // assuming above forEach is blocking
+        tbr_a.push( ClassRef.convertGoogleLatLngToGeoJLonLat(MVCArray.getAt(0))  );
+      }
+      else{
+        MVCArray.forEach( function (element, index){
+          tbr_a[index] = [];
+          ClassRef.convertPaths(element, tbr_a[index]);
+        });
+      }
+      return tbr_a;
+    },
+    convertGoogleLatLngToGeoJLonLat: function ( googleLatLng){
+      return [Number(googleLatLng.lng().toFixed(6)), Number(googleLatLng.lat().toFixed(6))];
+    },
+    geoJsonize:function(googleMapShapeObject , type){
+      // type can be "polygon"
+      var ClassRef = this;
+      if (type === "polygon")
+      {
+        var tempGeoJPolygon = 
+            {
+               //"type":"Feature",
+               "geometry":{
+                  "type":"Polygon",
+                  "coordinates":[
+                     [
+                        [100.0,0.0],
+                        [101.0,0.0],
+                        [101.0,1.0],
+                        [100.0,1.0],
+                        [100.0,0.0]
+                     ],
+                     [
+                        [100.2,0.2],
+                        [100.5,0.0],
+                        [100.5,1.0],
+                        [100.2,0.2]
+                     ]
+                  ]
+               },
+               "properties":{
+                  "prop0":"value0",
+                  "prop1":"value1"
+               }
+            };
+
+        tempGeoJPolygon.geometry.coordinates = ClassRef.convertPaths(googleMapShapeObject.getPaths(), []);
+        if (googleMapShapeObject.landusage)
+          tempGeoJPolygon.properties.landusage = googleMapShapeObject.landusage;
+        if (googleMapShapeObject.treatment)
+          tempGeoJPolygon.properties.treatment = googleMapShapeObject.treatment;
+        // console.log(JSON.stringify(tempGeoJPolygon));
+        return tempGeoJPolygon;
+      }
+    }
+
+  };
+
+  // please remember that in GeoJson, [longtitude , latitude]
 
 
 });

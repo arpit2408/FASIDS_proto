@@ -37,3 +37,69 @@ provider: http://openweathermap.org/api
       last_path.push(event.latLng);
       paths.setAt(paths.getLength()-1, last_path);
       this.setPaths( paths);
+
+
+
+{
+   "type":"FeatureCollection",
+   "features":[
+      {
+         "type":"Feature",
+         "geometry":{
+            "type":"Polygon",
+            "coordinates":[
+               [
+                  [100.0,0.0],
+                  [101.0,0.0],
+                  [101.0,1.0],
+                  [100.0,1.0],
+                  [100.0,0.0]
+               ],
+               [
+                  [100.2,0.2],
+                  [100.5,0.0],
+                  [100.5,1.0],
+                  [100.2,0.2]
+               ]
+            ]
+         },
+         "properties":{
+            "prop0":"value0",
+            "prop1":{
+               "this":"that"
+            }
+         }
+      }
+   ]
+}
+
+    mockPolygon:{
+     "type":"FeatureCollection",
+     "features":[
+        {
+           "type":"Feature",
+           "geometry":{
+              "type":"Polygon",
+              "coordinates":[
+                 [
+                    [100.0,0.0],
+                    [101.0,0.0],
+                    [101.0,1.0],
+                    [100.0,1.0],
+                    [100.0,0.0]
+                 ],
+                 [
+                    [100.2,0.2],
+                    [100.5,0.0],
+                    [100.5,1.0],
+                    [100.2,0.2]
+                 ]
+              ]
+           },
+           "properties":{
+              "prop0":"value0",
+              "prop1":"value1"
+           }
+        }
+     ]
+    },
