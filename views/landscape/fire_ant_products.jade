@@ -1,0 +1,43 @@
+extends ../layout
+
+block additionalCSS
+
+block renderBody
+  //- put mixins here
+  mixin tabledatarow(product)
+    tr
+      td= product.product_id
+      td= product.product_name
+      td= product.manufacturer
+      td= product.usage
+      if product.coverage
+        case product.usage
+          when "IMT"
+            td= product.coverage + " mnds"
+          when "Broadcast"
+            td!= product.coverage + " m<sup>2</sup>"
+          when "Line"
+            td= product.coverage + " m"
+          default
+            td="unknown unit due to unknown usage"
+      else
+        td= "No Data"
+
+  include ../snippets/breadcrum
+  .divide30
+  .container
+    .row
+      .col-xs-12
+        table.table.table-striped.table-bordered
+          thead
+            tr
+              th Product ID
+              th Product Name
+              th Brand
+              th Usage
+              th Coverage
+          tbody
+            each product, index in products
+              +tabledatarow(product)
+
+block additionalJS
