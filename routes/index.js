@@ -237,7 +237,20 @@ router.get('/antactivity', function (req, res, next){
 /*map applications */
 router.get('/landscape/homeownermng', function (req, res, next) {
   res.render("landscape/homeownermng.jade",{
+  
+  });
+});
+/* this route is used to display products*/
+router.get('/landscape/fire_ant_products', function(req, res, next){
+  req.db_models.FireAntProduct.find({},null,{}, function exec(error, products ){
+    if (error) return next(error);
     
+    res.render(("landscape/fire_ant_products.jade"),{
+      breadcrumTitle:"FIRE ANT PRODUCTS",
+      pathToHere:"landscape / fire_ant_products",
+      activePage:'Landscape',
+      products: products
+    });
   });
 });
 

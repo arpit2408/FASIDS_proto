@@ -44,6 +44,7 @@ var passport = require('./components/processedPassport.js').addPassport(app, db_
 app.use(function(req, res, next){
   req.DB_USER = db_models.User;
   req.DB_POST = db_models.Post;
+  req.db_models = db_models;
   return next();
 });
 

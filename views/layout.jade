@@ -50,17 +50,17 @@ body
             // Home
             a(href='/' ) Home
           // menu home li end here
-          li.dropdown
+          li(class='#{(activePage=="Landscape")?"active dropdown":"dropdown"}')
             a.dropdown-toggle(href='#', class="", data-toggle="dropdown")
               | INTERACTIVE LANDSCAPE
               i.fa.fa-angle-down
             ul.dropdown-menu(role='menu')
               li
-                a(href='/landscape/landscapemng') Landscape Management Tool
-              li
                 a(href='/landscape/homeownermng') Home Owner Management Tool
               li
                 a(href='/landscape/antdistribution') Texas Ant Distribution Map
+              li
+                a(href='/landscape/fire_ant_products') Fire Ant Products
           // menu Portfolio li end here
           li(class='#{(activePage=="Reports")?"active dropdown":"dropdown"}')
             a.dropdown-toggle(href='#', class='', data-toggle="dropdown")
