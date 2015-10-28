@@ -1,0 +1,71 @@
+extends ../layout
+
+block additionalCSS
+  //- I just share the use of this homeownermng.less
+  link(href='/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
+
+block renderBody
+
+  mixin tabledatarow(product)
+    tr
+      td= product.product_id
+      td= product.product_name
+      td= product.application_type
+      if product.coverage
+        
+        case product.usage
+          when "IMT"
+            td= product.coverage + " mnds"
+            td= product.amount + " units"
+          when "Broadcast"
+            td!= product.coverage + " m<sup>2</sup>"
+            td= product.amount + " units"
+          when "Line"
+            td= product.coverage + " m"
+            td= product.amount 
+          default
+            td="unknown unit due to unknown usage"
+            td= product.amount 
+      else
+        td= "No Data"
+        td= product.amount 
+
+  include ../snippets/breadcrum
+  .container
+    //- following class should 400 px height
+    meta#target-polygon(name="target-polygon", content="#{JSON.stringify(geojson)}")
+    .divide30
+    .mapcontainer#mapcontainer
+    //- .debugger= JSON.stringify(products)
+    .divide30
+    hr
+    .row.situation-summary
+      .col-xs-12
+        h4 Selected #{geojson.properties.treatment} Method
+        p 
+          | The total area is #{ geojson.properties.total_area.toFixed(1) } m
+          sup 2
+        if geojson.properties.treatment.toLowerCase() === "imt"
+          p 
+            | Mound density is #{geojson.properties.mound_density} / m
+            sup 2
+    hr
+    .comparison-table-container
+      table.table.table-striped
+        thead
+          tr
+            th #
+            th Product Name
+            th Application Type
+            th Coverage per unit
+            th Amount
+        tbody
+          each product, index in products
+            +tabledatarow(product)
+
+
+block additionalJS
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
+  script(src="/underscorejs/underscore-min.js")
+  script(src="/js/backbone-min.js")
+  script(src="/js/landscape/treatment.js" )

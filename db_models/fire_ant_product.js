@@ -23,8 +23,34 @@ var fire_ant_product_schema = new mongoose.Schema({
 
 // define instance methods
 fire_ant_product_schema.method({
+  getAmount: function (totalarea, density){
+    var product = this;
+    var amount =""
+    if (product.coverage){
+      switch(product.usage){
+        case "IMT":
+          amount =  (totalarea / 100 * density / product.coverage).toFixed(1); 
+          break;
+        case "Broadcast":
+          amount = (totalarea / product.coverage).toFixed(1);
+          break;
+        case "Line":
+          amount = "No data for perimeter";
+          break;
+        default:
+          amount = "No valid coverage";
+
+      } 
+
+    } else {
+      amount = "No Data"
+    }
+    return amount;
+  }
 
 });
+
+
 
 // helper function of schema
 var saveCB = function( err, instance){

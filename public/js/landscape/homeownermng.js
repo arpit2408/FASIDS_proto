@@ -5,6 +5,18 @@ $(document).ready(function(){
     $("#mapcover").height(mapcontainer_height);
   })();  
   
+  google.maps.Polygon.prototype.my_getBounds=function(){
+      var bounds = new google.maps.LatLngBounds();
+      this.getPath().forEach(function(element,index){
+        console.log("DEBUGG:" + element.toString());
+        bounds.extend(element);
+      })
+      if (bounds.isEmpty()){alert("FK")}
+      console.log(bounds.toString());
+      console.log(bounds.getCenter().toString());
+      return bounds;
+  }
+
   var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,    { 
       draggingCursor:"move",
       draggableCursor:"auto",
@@ -108,30 +120,42 @@ $(document).ready(function(){
       $("#purpose-modal").modal("show");
 
     } else if ( map_tool_register.get("map_tool_genresult") === true){
-      var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
-      $('input#geojson').val(JSON.stringify(geoJsonPolygon));
-      $('form#treatment').submit();
-    }
 
-    else {
-      
 
       var paths = this_polygon.getPaths();
       var i = 0;
-      var sum = 0
+      var sum = 0;
       for( i =0; i < paths.getLength(); i++){
         if (i ===0){
           sum = Math.abs(spherical.computeSignedArea(paths.getAt(i)) );
         }else {
           sum -= Math.abs(spherical.computeSignedArea(paths.getAt(i)) );
         }
-        console.log( spherical.computeSignedArea(paths.getAt(i)) );  
       }
-      console.log("shadowed area is: " + sum.toString() + " sqaure meter.");
-      console.log("shadowed area is designated for " + this_polygon["landusage"] + " landusage");
-      console.log("shadowed area is going to use " + this_polygon["treatment"] + " method");
+      var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
+      geoJsonPolygon.properties.total_area = sum;
+
+      // This is just temporary quick fix, Bowei pay attention here
+      if (geoJsonPolygon.properties.treatment === "imt"){
+        geoJsonPolygon.properties.mound_density = 5;
+      }
+      var temp_bounds = this_polygon.my_getBounds();
+      geoJsonPolygon.properties.bounds ={  
+        sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
+        ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
+      };
+      $('input#geojson').val(JSON.stringify(geoJsonPolygon));
+      
+      console.log( JSON.stringify(geoJsonPolygon) );
+      $('form#treatment').submit();
+    }
+
+    else {
+      
+
     }
   }
+
   function polygonRightClicked (event){
     var this_polygon = this;
     if (event.vertex == undefined || event.path == undefined){
@@ -306,7 +330,7 @@ $(document).ready(function(){
       {
         var tempGeoJPolygon = 
             {
-               //"type":"Feature",
+               "type":"Feature",
                "geometry":{
                   "type":"Polygon",
                   "coordinates":[

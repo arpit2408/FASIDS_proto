@@ -34,3 +34,10 @@
 .delete-menu:hover {
   background: #eee;
 }
+.mapcontainer {
+  height: 400px;
+  background-color: #CCFF99;
+}
+.situation-summary p {
+  margin-bottom: 0px;
+}
