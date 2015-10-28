@@ -86,3 +86,4 @@ DeleteMenu.prototype.removeVertex = function() {
   }
   this.close();
 };
+

@@ -241,13 +241,38 @@ router.get('/landscape/homeownermng', function (req, res, next) {
   });
 });
 
+var field_name_map = {"imt": "IMT", "broadcast":"Broadcast"};
+
 router.post('/landscape/treatment', function (req, res,next){
   var geojson = req.body.geojson;
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
   }
-  //** TODO I have geojson here, I need to use the information to retireve corresponding products
-  res.send(req.body.geojson);
+  // var geojson = {"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-96.329777,30.619817],[-96.326988,30.619319],[-96.330721,30.616807],[-96.331773,30.618672],[-96.329777,30.619817]]]},"properties":{"prop0":"value0","prop1":"value1","landusage":"lawnturf","treatment":"imt","total_area":73543.85682681292,"mound_density":5,"bounds":{"sw":{"lat":30.61680733107116,"lng":-96.33177280426025},"ne":{"lat":30.61981729366712,"lng":-96.32698774337769}}}};
+  // geojson.properties.mound_density = 5;
+  // geojson.properties.total_area = 5000;
+  geojson.properties.treatment = field_name_map[geojson.properties.treatment ];
+
+  req.db_models.FireAntProduct.find( { "usage": geojson.properties.treatment}, null, {}, function exec(error, products){
+    if (error) return next(error);
+    //** TODO I have geojson here, I need to use the information to retireve corresponding products
+    // do simple calculation here
+    products.forEach(function iteratee (product, index, al){
+      products[index].amount= product.getAmount(geojson.properties.total_area, geojson.properties.mound_density);
+      console.log(products[index].amount);
+    });
+
+
+    console.log("DEBUG: " + products.length  );
+    res.render('landscape/treatment.jade',{
+      geojson:geojson,
+      products: products,
+      breadcrumTitle:"LAND TREATMENT",
+      pathToHere:"landscape / treatment"
+    }); 
+  });
+
+
 });
 /* this route is used to display products*/
 router.get('/landscape/fire_ant_products', function(req, res, next){
