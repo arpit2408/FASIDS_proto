@@ -8,6 +8,27 @@ block renderBody
   //-include ../snippets/breadcrum
   .mapcover#mapcover
     .mapcover-map#mapcover-map
+    .mc-static2mapcontainer.panel#map-geosearch
+      .row.search-row
+        .col-xs-12
+          .input-group
+            //- span.input-group-addon Search
+            input.form-control#map-input-geosearch(type='text', placeholder='Search FASIDS using address, aipcode...')
+            span.input-group-btn
+              //- button.btn#map-input-geosearch-btn(data-toggle="tooltip", data-placement="bottom" ,title="Search")
+              button.btn#map-input-geosearch-btn()
+                span.fa.fa-search()
+        .col-xs-12.errormessage-container.hidden
+          .alert-danger.alert
+            button.close(type='button', data-dismiss='alert') ×
+            | Error Message.
+
+
+          
+
+
+
+
     .mc-static2mapcontainer.panel#map-tools-box
       .row
         .col-xs-4 

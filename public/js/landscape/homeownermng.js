@@ -75,6 +75,7 @@ $(document).ready(function(){
   });
 
   var gmap = mapcover.model.get("map");
+  var geocoder = new google.maps.Geocoder();
   var temp_startmarker = new google.maps.Marker({
     icon:{
       path: google.maps.SymbolPath.CIRCLE,
@@ -102,6 +103,14 @@ $(document).ready(function(){
   });
   var target_polygon = null;  // when drawing circle on certain polygon, this polygon will be filled with the polygon which is being operated
   var deleteMenu = new DeleteMenu();
+
+  function polygonRightClicked (event){
+    var this_polygon = this;
+    if (event.vertex == undefined || event.path == undefined){
+      return;
+    }
+    deleteMenu.open(gmap, this_polygon.getPaths().getAt(event.path) ,event.vertex);
+  }
   function polygonClicked (event) {
     // "this" scope is set to the polygon 
     var this_polygon = this;
@@ -120,24 +129,12 @@ $(document).ready(function(){
       $("#purpose-modal").modal("show");
 
     } else if ( map_tool_register.get("map_tool_genresult") === true){
-
-
-      var paths = this_polygon.getPaths();
-      var i = 0;
-      var sum = 0;
-      for( i =0; i < paths.getLength(); i++){
-        if (i ===0){
-          sum = Math.abs(spherical.computeSignedArea(paths.getAt(i)) );
-        }else {
-          sum -= Math.abs(spherical.computeSignedArea(paths.getAt(i)) );
-        }
-      }
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
-      geoJsonPolygon.properties.total_area = sum;
+      geoJsonPolygon.properties.total_area =  map_tool_helper.getTotalAreaOf(this_polygon);
 
       // This is just temporary quick fix, Bowei pay attention here
       if (geoJsonPolygon.properties.treatment === "imt"){
-        geoJsonPolygon.properties.mound_density = 5;
+        geoJsonPolygon.properties.mound_density = 1;
       }
       var temp_bounds = this_polygon.my_getBounds();
       geoJsonPolygon.properties.bounds ={  
@@ -156,13 +153,6 @@ $(document).ready(function(){
     }
   }
 
-  function polygonRightClicked (event){
-    var this_polygon = this;
-    if (event.vertex == undefined || event.path == undefined){
-      return;
-    }
-    deleteMenu.open(gmap, this_polygon.getPaths().getAt(event.path) ,event.vertex);
-  }
   gmap.addListener('click', function mapClkCb (event){
     // console.log("at least clicked");
     if (map_tool_register.get("map_tool_area_drawing")){
@@ -301,6 +291,24 @@ $(document).ready(function(){
   var map_tool_helper = {
 
 
+    codeAddress :function ( address) {
+      geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          try{
+            gmap.fitBounds(results[0].geometry.bounds);
+
+          } catch(e){  // possibly there is not bounds
+            console.error(e);
+            gmap.setCenter(results[0].geometry.location);
+          }
+        } else {
+          // alert("Geocode was not successful for the following reason: " + status);
+          $(".errormessage-container").removeClass("hidden");
+          $(".errormessage-container").find(".alert-danger.alert").text("Failure in searching: \"" + address +"\", "+ status);
+        }
+      });
+    },
+
     convertPaths:function(MVCArray, tbr_a){
       var ClassRef = this;
       console.log("asdf");
@@ -322,6 +330,20 @@ $(document).ready(function(){
     },
     convertGoogleLatLngToGeoJLonLat: function ( googleLatLng){
       return [Number(googleLatLng.lng().toFixed(6)), Number(googleLatLng.lat().toFixed(6))];
+    },
+
+    getTotalAreaOf: function (googleMapPolygon){
+      var paths = googleMapPolygon.getPaths();
+      var i = 0;
+      var sum = 0;
+      for( i =0; i < paths.getLength(); i++){
+        if (i ===0){
+          sum = Math.abs(spherical.computeSignedArea(paths.getAt(i)) );
+        }else {
+          sum -= Math.abs(spherical.computeSignedArea(paths.getAt(i)) );
+        }
+      }
+      return sum;
     },
     geoJsonize:function(googleMapShapeObject , type){
       // type can be "polygon"
@@ -350,8 +372,6 @@ $(document).ready(function(){
                   ]
                },
                "properties":{
-                  "prop0":"value0",
-                  "prop1":"value1"
                }
             };
 
@@ -365,9 +385,29 @@ $(document).ready(function(){
       }
     }
 
-  };
+  }; // end of map_tool_helper
 
-  // please remember that in GeoJson, [longtitude , latitude]
+
+
+
+  /*geosearch processing*/
+  $("#map-input-geosearch").keyup(function(e){
+    var code = e.which; // recommended to use e.which, it's normalized across browsers
+    if(code===13)e.preventDefault();
+    if(code===13){
+      console.log("enter");
+      $("#map-input-geosearch-btn").click();
+    } 
+  });
+  $("#map-input-geosearch-btn").click(function (){
+    $(".errormessage-container").addClass("hidden");
+    var input = $("#map-input-geosearch").val();
+    if (!input){
+      return;
+    }
+    map_tool_helper.codeAddress(input);
+
+  });
 
 
 });

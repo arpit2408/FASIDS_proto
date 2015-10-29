@@ -2,17 +2,41 @@
   margin: 0px;
   padding: 0px;
 }
+.search-row .input-group {
+  padding: 3px 0px;
+}
+.search-row .input-group input {
+  border-width: 0px;
+}
+.search-row .input-group .input-group-btn button {
+  height: 34px;
+  color: #aaaaaa;
+  background-color: #fff;
+  border-left: 2px solid #d8e1e6;
+}
+.search-row .errormessage-container .alert-danger.alert {
+  margin: 10px;
+}
+#map-geosearch {
+  top: 20px;
+  left: 20px;
+  width: 400px;
+  -webkit-box-shadow: 2px 2px 2px #bbbbbb;
+  -moz-box-shadow: 2px 2px 2px #bbbbbb;
+  -ms-box-shadow: 2px 2px 2px #bbbbbb;
+  box-shadow: 2px 2px 2px #bbbbbb;
+}
 #map-tools-box {
   padding: 20px 15px 20px 15px;
   left: 20px;
-  top: 20px;
+  top: 150px;
   width: 170px;
   height: 300px;
   background-color: #ffffff;
-  -webkit-box-shadow: 3px 3px 3px #aaaaaa;
-  -moz-box-shadow: 3px 3px 3px #aaaaaa;
-  -ms-box-shadow: 3px 3px 3px #aaaaaa;
-  box-shadow: 3px 3px 3px #aaaaaa;
+  -webkit-box-shadow: 2px 2px 2px #bbbbbb;
+  -moz-box-shadow: 2px 2px 2px #bbbbbb;
+  -ms-box-shadow: 2px 2px 2px #bbbbbb;
+  box-shadow: 2px 2px 2px #bbbbbb;
 }
 #map-tools-box .row + .row {
   margin-top: 10px;
