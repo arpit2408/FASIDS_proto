@@ -1,0 +1,19 @@
+For Landscape management,
+
+Core Data Model:
+  GeoJson Polygon,
+  Specification
+  {
+     "geometry":{
+        "type":"Polygon",
+        "coordinates": [...coordinates...]
+     },
+     "properties":{
+        "prop0":"value0",
+        "prop1":"value1",
+        "landusage":"lawnturf"/"building"/"vegetable garden",
+        "treatment":"imt"/"broadcast",
+        "total_area": Number,
+        ""
+     }
+  }

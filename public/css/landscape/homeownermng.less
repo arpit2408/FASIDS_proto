@@ -1,13 +1,45 @@
 @import "../base";
+.search-row{
+  .input-group{
+    padding: 3px 0px;
+    input{
+      border-width: 0px;
+    }
+    .input-group-btn{
+      button{
+        height: 34px;
+        color: #aaaaaa;
+        background-color: #fff;
+        border-left: 2px solid darken(@very-light-grey, 10%) ;
+      }
+    }
+  }
+  .errormessage-container{
+    .alert-danger.alert{
+      margin:10px;
+    } 
+  }
+
+}
+
+
+#map-geosearch{
+
+  top:20px;
+  left:20px;
+  width:400px;
+  // height:50px;
+  .box-shadow(2px 2px 2px #bbb);
+}
 
 #map-tools-box{
   padding: 20px 15px 20px 15px;
   left:20px;
-  top:20px;
+  top:150px;
   width: 170px;
   height: 300px;
   background-color: #ffffff;
-  .box-shadow(3px 3px 3px #aaa);
+  .box-shadow(2px 2px 2px #bbb);
   span.btn{
     &.active{
       // background-color: #ddd;
