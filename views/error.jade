@@ -1,6 +1,8 @@
 extends layout
 
 block renderBody
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  .container
+    .divide30
+    h1= error.status
+    h2= message
+    pre #{error.stack}

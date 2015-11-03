@@ -107,3 +107,8 @@ provider: http://openweathermap.org/api
 
 // for /landscape/treatment
 {"geometry":{"type":"Polygon","coordinates":[[[-96.32967,30.620187],[-96.328039,30.619411],[-96.330228,30.615829],[-96.331129,30.618211],[-96.330721,30.619633],[-96.32967,30.620187]]]},"properties":{"prop0":"value0","prop1":"value1","landusage":"lawnturf","treatment":"imt", "mound_density":0.25}}
+
+
+http://localhost:3000/landscape/treatment/563906ab826cb74c386b5541
+
+http://localhost:3000/landscape/homeownermng/563906ab826cb74c386b5541

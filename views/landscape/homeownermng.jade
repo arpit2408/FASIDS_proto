@@ -23,30 +23,25 @@ block renderBody
             button.close(type='button', data-dismiss='alert') ×
             | Error Message.
 
-
-          
-
-
-
-
     .mc-static2mapcontainer.panel#map-tools-box
       .row
         .col-xs-4 
-          span.btn.btn-default.fa.fa-mouse-pointer#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
-        //- .col-xs-4
-        //-   span.btn.btn-default.fa.fa-undo#map-tool-undo
+          if page_status.model_op === 'create'
+            span.btn.btn-default.fa.fa-mouse-pointer#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
+          else if page_status.model_op === 'patch'
+            span.btn.btn-default.fa.fa-floppy-o.fa-lg#map-tool-save(data-operation = "map_tool_save")
       .row
         .col-xs-4
           span.btn.btn-default#map-tool-hole(data-operation = "map_tool_holing") Make hole
       .row
         .col-xs-12
-          span.btn.btn-default#map-tool-editpolygon(data-operation="map_tool_editpolygon") edit shape
+          span.btn.btn-default#map-tool-editpolygon(data-operation="map_tool_editpolygon") Edit shape
       .row
         .col-xs-12
-          span.btn.btn-default#map-tool-settreatment(data-operation="map_tool_settreatment") set treatment
+          span.btn.btn-default#map-tool-settreatment(data-operation="map_tool_settreatment") Set treatment
       .row
         .col-xs-12
-          span.btn.btn-default#map-tool-genresult(data-operation="map_tool_genresult") see result
+          span.btn.btn-default#map-tool-genresult(data-operation="map_tool_genresult") See result
 
       .row
         .col-xs-4
@@ -89,15 +84,17 @@ block renderBody
                       .input-group-addon
                         | m
                         sup 2
-
-
-
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal') Close
             button.btn.btn-primary#save-prepared-treatment(type='button') Save changes
   .hidden
     form#treatment(target="_blank",action="/landscape/treatment", method="post")
       input#geojson(type='text', name="geojson")
+    form#patch( action="#{patch_url}", method="post")
+      input(type="text", name="geojson")
+    // This is used to
+    meta(name="page_status", content="#{JSON.stringify(page_status)}")
+    meta(name="target-polygon", content="#{JSON.stringify(geojson)}")
 
 
 

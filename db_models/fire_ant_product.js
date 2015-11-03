@@ -28,13 +28,13 @@ fire_ant_product_schema.method({
     var amount =""
     if (product.coverage){
       switch(product.usage){
-        case "IMT":
+        case "imt":
           amount =  (totalarea / 100 * density / product.coverage).toFixed(1); 
           break;
-        case "Broadcast":
+        case "broadcast":
           amount = (totalarea / product.coverage).toFixed(1);
           break;
-        case "Line":
+        case "line":
           amount = "No data for perimeter";
           break;
         default:

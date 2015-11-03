@@ -3,12 +3,11 @@ $(document).ready(function(){
     // The reason might because the nav bar gives padding 70,
     var mapcontainer_height = $(window).height() - 1.5 * $(".navbar").height();
     $("#mapcover").height(mapcontainer_height);
-  })();  
-  
+  })();    
   google.maps.Polygon.prototype.my_getBounds=function(){
       var bounds = new google.maps.LatLngBounds();
       this.getPath().forEach(function(element,index){
-        console.log("DEBUGG:" + element.toString());
+        // console.log("DEBUGG:" + element.toString());
         bounds.extend(element);
       })
       if (bounds.isEmpty()){alert("FK")}
@@ -16,6 +15,30 @@ $(document).ready(function(){
       console.log(bounds.getCenter().toString());
       return bounds;
   }
+
+  var page_status = JSON.parse($("meta[name=\"page_status\"]").attr("content"));
+
+  // map tool functioning populating
+  $("#map-tools-box .btn:not(:last)").click( function mapToolOpUpdating(){
+    // this is the clicked element
+    var target_property = $(this).attr("data-operation");
+    if (map_tool_register.get(target_property) === true){
+      map_tool_register.set(target_property,false);
+    } else {
+      map_tool_register.clearAllStatus();
+      map_tool_register.set(target_property, true);
+    }
+  });
+  $("#map-tool-cancel").click(function mapToolCanceling (){
+    map_tool_register.clearAllStatus();
+    drawingPath.setPath([]);
+    for (var i = 0; i < polygons.length; i++){
+      polygons[i].setMap(null);
+    }
+    polygons = [];
+  });  
+
+  /*beginning of normal file */
 
   var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,    { 
       draggingCursor:"move",
@@ -27,45 +50,22 @@ $(document).ready(function(){
       mapTypeControl:false  //right top corner: "map|satellite"
   });
 
-  function mapToolOpUpdating (){
-    // this is the clicked element
-    var target_property = $(this).attr("data-operation");
-    if (map_tool_register.get(target_property) === true){
-      map_tool_register.set(target_property,false);
-    } else {
-      map_tool_register.clearAllStatus();
-      map_tool_register.set(target_property, true);
-    }
-  }
-  // map tool functioning populating
-  $("#map-tool-editpolygon,#map-tool-settreatment,#map-tool-area-pointer,#map-tool-hole, #map-tool-genresult").click(mapToolOpUpdating);
-  $("#map-tool-cancel").click(function (){
-    map_tool_register.clearAllStatus();
-    drawingPath.setPath([]);
-    for (var i = 0; i < polygons.length; i++){
-      polygons[i].setMap(null);
-    }
-    polygons = [];
-  });
-
   // preparing modal
   $("#save-prepared-treatment").click(function savePreparedTreatment(){
-
     var formdata = $("form#purpose").serializeArray();
     var data = {};
     _.each(formdata, function(element){
-    // Return all of the values of the object's properties.
       var value = _.values(element);
-      if (value[1].match(/\d+(\.\d)*/ )){
-        value[1] = Number(value[1]);
-      }
-    // name : value 
+      if ( value[1].match(/\d+(\.\d)*/ ) ){ value[1] = Number(value[1]); }
       data[value[0]] = value[1];
     });
     if (target_polygon !== null ){
       _.keys(data).forEach(function(keyname,index, arr) {
-        target_polygon[keyname] = data[keyname];
-        console.log("target_polygon."+keyname+" : " + target_polygon[keyname]);
+        if (!target_polygon.hasOwnProperty("properties")){
+          target_polygon["properties"] = {};
+        }
+        target_polygon.properties[keyname] = data[keyname];
+        console.log("target_polygon.properties."+keyname+" : " + target_polygon.properties[keyname]); 
       });
       
       map_tool_register.renderPolygonProperly(target_polygon);
@@ -78,7 +78,7 @@ $(document).ready(function(){
 
   var gmap = mapcover.model.get("map");
   var geocoder = new google.maps.Geocoder();
-  var temp_startmarker = new google.maps.Marker({
+  var temp_startmarker = new google.maps.Marker({  // used to mark head of path drawing
     icon:{
       path: google.maps.SymbolPath.CIRCLE,
       scale: 3,
@@ -86,7 +86,6 @@ $(document).ready(function(){
     }
   });  
   temp_startmarker.addListener('click',function onTempStartMarkerClicked(){
-    console.log("onTempStartMarkerClicking() invoked");
     if ( map_tool_register.get("map_tool_area_drawing") === true ) {
       map_tool_register.set("map_tool_area_drawing",false);
     } else if ( map_tool_register.get("map_tool_holing") === true ) {
@@ -129,24 +128,17 @@ $(document).ready(function(){
       target_polygon = this_polygon;
       // modal show, reset options 
       $("#purpose-modal").modal("show");
-
     } else if ( map_tool_register.get("map_tool_genresult") === true){
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
-      geoJsonPolygon.properties.total_area =  map_tool_helper.getTotalAreaOf(this_polygon);
-
-      // This is just temporary quick fix, Bowei pay attention here
-      // if (geoJsonPolygon.properties.treatment === "imt"){
-        // geoJsonPolygon.properties.mound_density = 1;
-      // }
-      var temp_bounds = this_polygon.my_getBounds();
-      geoJsonPolygon.properties.bounds ={  
-        sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
-        ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
-      };
       $('input#geojson').val(JSON.stringify(geoJsonPolygon));
       
       console.log( JSON.stringify(geoJsonPolygon) );
       $('form#treatment').submit(); // for dubug
+    } else if (map_tool_register.get("map_tool_save") === true){
+      var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
+      $('form#patch input').val(JSON.stringify(geoJsonPolygon));
+      $('form#patch').submit();
+
     }
 
     else {
@@ -175,7 +167,8 @@ $(document).ready(function(){
       map_tool_holing:false,
       map_tool_editpolygon:false,
       map_tool_settreatment:false,
-      map_tool_genresult:false
+      map_tool_genresult:false,
+      map_tool_save:false
     },
     clearAllStatus:function(){
       var ClassRef = this;
@@ -186,8 +179,8 @@ $(document).ready(function(){
     },
 
     renderPolygonProperly: function( to_be_rendered_polygon){
-      if (to_be_rendered_polygon.hasOwnProperty("landusage")){
-        switch(to_be_rendered_polygon["landusage"]){
+      if (to_be_rendered_polygon.properties.hasOwnProperty("landusage")){
+        switch(to_be_rendered_polygon.properties["landusage"]){
           case "housebuilding":
             to_be_rendered_polygon.setOptions({
               fillColor:"#0000FF"
@@ -287,8 +280,16 @@ $(document).ready(function(){
           $("#map-tool-genresult").removeClass("active");
         }    
       });
+      this.on("change:map_tool_save", function (){
+        if (ClassRef.get("map_tool_save")  === true){
+          $("#map-tool-save").addClass("active");
+        } else {
+          $("#map-tool-save").removeClass("active");
+        }    
+      });
+
     }
-  }) ) ();  // initialize a new 
+  } ) ) ();  // initialize a new 
 
   var map_tool_helper = {
 
@@ -311,6 +312,32 @@ $(document).ready(function(){
       });
     },
 
+    convertToMVCArray : function (array, index_at_parent, parent_array){
+      var ClassRef = this;
+      // prope whether element is Number
+      if ( !Array.isArray(array[0]) ){
+        parent_array[index_at_parent] = ClassRef.geoLatLngToGoogleLatLng(array);
+      }
+      else{
+        array.forEach( function (element, index, ar){
+          ClassRef.convertToMVCArray(element, index, ar);
+          if (typeof index_at_parent !== 'undefined' && index === ar.length-1){
+            parent_array[index_at_parent] = new google.maps.MVCArray(ar);
+          }
+        });
+      }
+      if (typeof index_at_parent !== 'undefined')
+        return array;
+      else{
+        var to_be_return = new google.maps.MVCArray();
+        array.forEach( function(el, index, ar){
+          to_be_return.push(el);
+        });
+        console.log(to_be_return);
+        return to_be_return;
+      }
+    },
+  
     convertPaths:function(MVCArray, tbr_a){
       var ClassRef = this;
       console.log("asdf");
@@ -329,6 +356,12 @@ $(document).ready(function(){
         });
       }
       return tbr_a;
+    },
+    geoLatLngToGoogleLatLng: function (geoLatLngArray){
+     
+      var tmpLatLng = new google.maps.LatLng( geoLatLngArray[1], geoLatLngArray[0] );
+      // console.log(tmpLatLng.toString());
+      return tmpLatLng;
     },
     convertGoogleLatLngToGeoJLonLat: function ( googleLatLng){
       return [Number(googleLatLng.lng().toFixed(6)), Number(googleLatLng.lat().toFixed(6))];
@@ -357,36 +390,61 @@ $(document).ready(function(){
                "type":"Feature",
                "geometry":{
                   "type":"Polygon",
-                  "coordinates":[
-                     [
-                        [100.0,0.0],
-                        [101.0,0.0],
-                        [101.0,1.0],
-                        [100.0,1.0],
-                        [100.0,0.0]
-                     ],
-                     [
-                        [100.2,0.2],
-                        [100.5,0.0],
-                        [100.5,1.0],
-                        [100.2,0.2]
-                     ]
-                  ]
+                  "coordinates":[]
                },
                "properties":{
                }
             };
         tempGeoJPolygon.geometry.coordinates = ClassRef.convertPaths(googleMapShapeObject.getPaths(), []);
-        ["landusage","treatment", "mound_density"].forEach( function (key, index, ar){
-          if (googleMapShapeObject.hasOwnProperty(key)){
-            tempGeoJPolygon.properties[key] = googleMapShapeObject[key];
-          }
-        });
+
+        tempGeoJPolygon.properties.total_area =  ClassRef.getTotalAreaOf(googleMapShapeObject);
+
+        var temp_bounds = googleMapShapeObject.my_getBounds();
+        tempGeoJPolygon.properties.bounds ={  
+          sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
+          ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
+        };
+
+        // ["landusage","treatment", "mound_density"].forEach( function (key, index, ar){
+        //   if (googleMapShapeObject.hasOwnProperty(key)){
+        //     tempGeoJPolygon.properties[key] = googleMapShapeObject[key];
+        //   }
+        // });
+        _.extendOwn(tempGeoJPolygon.properties, googleMapShapeObject.properties);
         return tempGeoJPolygon;
       }
+    },
+    deGeoJsonize:function( Geojson_string){
+      var temp_geojson = JSON.parse(Geojson_string);
+
+      // Key step is covert JS Geojson latlng array into MVCArray instance
+      var ClassRef = this; // map_tool_helper
+      var temp_MVCArray = ClassRef.convertToMVCArray(temp_geojson.geometry.coordinates);
+      // console.log(temp_MVCArray.getAt(0).getAt(0).toString());
+
+      var temp_polygon = new google.maps.Polygon({
+        paths:temp_MVCArray,
+        geodesic: false,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+        editable: false
+      });
+      temp_polygon.properties = {};
+      _.extendOwn(temp_polygon.properties, temp_geojson.properties);
+      temp_polygon.setMap(gmap);
+      temp_polygon.addListener("click",  polygonClicked);
+      temp_polygon.addListener("rightclick", polygonRightClicked);
+      polygons.push( temp_polygon);
+      map_tool_register.renderPolygonProperly(temp_polygon);
+      var bounds = new google.maps.LatLngBounds(temp_polygon.properties.bounds.sw, temp_polygon.properties.bounds.ne);
+      gmap.fitBounds(bounds);
     }
 
   }; // end of map_tool_helper
+
+  if (page_status.model_op === "patch")
+    map_tool_helper.deGeoJsonize( $('meta[name="target-polygon"]').attr("content") );
 
 
 

@@ -14,6 +14,10 @@ var polygon_geojson_schema = new mongoose.Schema({
     total_area:Number,
     mound_density:Number,
     treatment:String,
+    bounds :{  
+      sw:{ lat: Number, lng: Number},
+      ne:{ lat: Number, lng: Number}
+    },
     owner:mongoose.Schema.ObjectId
   }
 },{collection:'polygon_geojson'});
