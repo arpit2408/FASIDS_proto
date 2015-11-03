@@ -78,7 +78,17 @@ block renderBody
                   |  Individual Mound Treatment
                 label.radio-inline
                   input#broadcast-radio(type='radio', name='treatment', value='broadcast')
-                  |  Broadcast baits
+                  |  Broadcast Baits
+              .divide20
+              .row
+                .col-xs-4
+                  .form-group
+                    label(for='mound-density-input') Mound Density
+                    .input-group
+                      input#mound-density-input.form-control(type='number', name='mound_density', placeholder='0.57')
+                      .input-group-addon
+                        | m
+                        sup 2
 
 
 
