@@ -12,15 +12,15 @@ block renderBody
       td= product.product_name
       td= product.application_type
       if product.coverage
-        
+        - product.usage = product.usage.toLowerCase();
         case product.usage
-          when "IMT"
+          when "imt"
             td= product.coverage + " mnds"
             td= product.amount + " units"
-          when "Broadcast"
+          when "broadcast"
             td!= product.coverage + " m<sup>2</sup>"
             td= product.amount + " units"
-          when "Line"
+          when "line"
             td= product.coverage + " m"
             td= product.amount 
           default

@@ -1,6 +1,7 @@
 var express = require('express');
 var moment = require('moment');
 var router = express.Router();
+var _ = require('underscore');
 
 
 function ensureAuthenticated(req, res, next) {
@@ -238,17 +239,104 @@ router.get('/antactivity', function (req, res, next){
 router.get('/landscape/homeownermng', function (req, res, next) {
   res.render("landscape/homeownermng.jade",{
     isAuthenticated: req.isAuthenticated(),
-    user: processReqUser(req.user)
+    user: processReqUser(req.user),
+    page_status:{model_op:"create"}
   });
 });
 
-var field_name_map = {"imt": "IMT", "broadcast":"Broadcast"};
+router.get('/landscape/homeownermng/:geojson_id', function (req, res, next){
+  
+  req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
+    if (error) {
+      if (error.message.search('Cast to ObjectId failed') >=0){
+        var new_error = new Error("could not find resource");
+        new_error.status = 404;
+        return next(new_error);
+      }
+      return next(error);
+    } 
+    if (!the_polygon ) {
+      var e = new Error("requested geojson could not be found");
+      e.status = 404
+      return next(e);
+    }
+
+    // if(the_polygon.properties.owner.toString() !== req.user._id.toString()){
+    //   return res.status(401).send("you are not authorized to view other's polygon");
+    // }
+
+    res.render('landscape/homeownermng.jade',{
+      geojson:the_polygon,
+      isAuthenticated: req.isAuthenticated(),
+      user: processReqUser(req.user),
+      page_status:{model_op:"patch"},
+      patch_url:'/landscape/homeownermng/'+req.params.geojson_id+"/patch"
+    }); 
+  });  // end of findById()
+});
+
+router.post('/landscape/homeownermng/:geojson_id/patch' , function (req, res, next){
+  var geojson = req.body.geojson;
+  if (typeof req.body.geojson == "string"){
+    geojson = JSON.parse(geojson);
+  }
+  req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
+    if (error) return next(error);
+    if (!the_polygon){
+      var e = new Error("requested geojson could not be found");
+      e.status = 404
+      return next(e);
+    }
+    _.each(_.keys(geojson), function (key_name, index, key_list){
+      console.log(key_name);
+      the_polygon[key_name] = geojson[key_name];
+    });
+    the_polygon.save( function(error){
+      if (error) return next(error);
+      res.redirect("/landscape/homeownermng/" + req.params.geojson_id);
+    });
+  });
+});
 
 router.get('/landscape/treatment/:geojson_id', ensureAuthenticated, function (req, res, next){
-  res.send( "You are requesting geojson_id: "+req.params.geojson_id + ", I will implement this page later");
+  req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
+    if (error) {
+      if (error.message.search('Cast to ObjectId failed') >=0){
+        var new_error = new Error("could not find resource");
+        new_error.status = 404;
+        return next(new_error);
+      }
+      return next(error);
+    } 
+    if (!the_polygon ) {
+      var e = new Error("requested geojson could not be found");
+      e.status = 404
+      return next(e);
+    }
+    if(the_polygon.properties.owner.toString() !== req.user._id.toString()){
+      return res.status(401).send("you are not authorized to view other's polygon");
+    }
+    req.db_models.FireAntProduct.find( { "usage": the_polygon.properties.treatment}, null, {}, function exec(error, products){
+      if (error) return next(error);
+      products.forEach(function iteratee (product, index, al){
+        products[index].amount= product.getAmount(the_polygon.properties.total_area, the_polygon.properties.mound_density);
+      });
+
+      res.render('landscape/treatment.jade',{
+        geojson:the_polygon,
+        products: products,
+        breadcrumTitle:"LAND TREATMENT",
+        pathToHere:"landscape / treatment",
+        isAuthenticated: req.isAuthenticated(),
+        user: processReqUser(req.user)
+      }); 
+    }); // end of FireAntProduct.find()
+
+  });  // end of findById()
 });
 
 
+// Responsible for Creation of PolygonGeojson model
 router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next){
   var geojson = req.body.geojson;
   if (typeof req.body.geojson == "string"){
@@ -257,31 +345,10 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
 
   geojson.properties.owner = req.user._id;
   var db_geojson = new req.db_models.PolygonGeojson(geojson);
-  db_geojson.save();
-  // var geojson = {"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-96.329777,30.619817],[-96.326988,30.619319],[-96.330721,30.616807],[-96.331773,30.618672],[-96.329777,30.619817]]]},"properties":{"prop0":"value0","prop1":"value1","landusage":"lawnturf","treatment":"imt","total_area":73543.85682681292,"mound_density":5,"bounds":{"sw":{"lat":30.61680733107116,"lng":-96.33177280426025},"ne":{"lat":30.61981729366712,"lng":-96.32698774337769}}}};
-  // geojson.properties.mound_density = 5;
-  // geojson.properties.total_area = 5000;
-  geojson.properties.treatment = field_name_map[geojson.properties.treatment ];
-
-  req.db_models.FireAntProduct.find( { "usage": geojson.properties.treatment}, null, {}, function exec(error, products){
-    if (error) return next(error);
-    //** TODO I have geojson here, I need to use the information to retireve corresponding products
-    // do simple calculation here
-    products.forEach(function iteratee (product, index, al){
-      products[index].amount= product.getAmount(geojson.properties.total_area, geojson.properties.mound_density);
-    });
-
-    res.render('landscape/treatment.jade',{
-      geojson:geojson,
-      products: products,
-      breadcrumTitle:"LAND TREATMENT",
-      pathToHere:"landscape / treatment",
-      isAuthenticated: req.isAuthenticated(),
-      user: processReqUser(req.user)
-    }); 
+  db_geojson.save( function ( error){
+    return next(error);
+    res.redirect('/landscape/treatment/'+db_geojson._id.toString());
   });
-
-
 });
 /* this route is used to display products*/
 router.get('/landscape/fire_ant_products', function(req, res, next){
