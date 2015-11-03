@@ -237,17 +237,27 @@ router.get('/antactivity', function (req, res, next){
 /*map applications */
 router.get('/landscape/homeownermng', function (req, res, next) {
   res.render("landscape/homeownermng.jade",{
-  
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user)
   });
 });
 
 var field_name_map = {"imt": "IMT", "broadcast":"Broadcast"};
 
-router.post('/landscape/treatment', function (req, res,next){
+router.get('/landscape/treatment/:geojson_id', ensureAuthenticated, function (req, res, next){
+  res.send( "You are requesting geojson_id: "+req.params.geojson_id + ", I will implement this page later");
+});
+
+
+router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next){
   var geojson = req.body.geojson;
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
   }
+
+  geojson.properties.owner = req.user._id;
+  var db_geojson = new req.db_models.PolygonGeojson(geojson);
+  db_geojson.save();
   // var geojson = {"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-96.329777,30.619817],[-96.326988,30.619319],[-96.330721,30.616807],[-96.331773,30.618672],[-96.329777,30.619817]]]},"properties":{"prop0":"value0","prop1":"value1","landusage":"lawnturf","treatment":"imt","total_area":73543.85682681292,"mound_density":5,"bounds":{"sw":{"lat":30.61680733107116,"lng":-96.33177280426025},"ne":{"lat":30.61981729366712,"lng":-96.32698774337769}}}};
   // geojson.properties.mound_density = 5;
   // geojson.properties.total_area = 5000;
@@ -259,16 +269,15 @@ router.post('/landscape/treatment', function (req, res,next){
     // do simple calculation here
     products.forEach(function iteratee (product, index, al){
       products[index].amount= product.getAmount(geojson.properties.total_area, geojson.properties.mound_density);
-      console.log(products[index].amount);
     });
 
-
-    console.log("DEBUG: " + products.length  );
     res.render('landscape/treatment.jade',{
       geojson:geojson,
       products: products,
       breadcrumTitle:"LAND TREATMENT",
-      pathToHere:"landscape / treatment"
+      pathToHere:"landscape / treatment",
+      isAuthenticated: req.isAuthenticated(),
+      user: processReqUser(req.user)
     }); 
   });
 
@@ -283,7 +292,9 @@ router.get('/landscape/fire_ant_products', function(req, res, next){
       breadcrumTitle:"FIRE ANT PRODUCTS",
       pathToHere:"landscape / fire_ant_products",
       activePage:'Landscape',
-      products: products
+      products: products,
+      isAuthenticated: req.isAuthenticated(),
+      user: processReqUser(req.user)
     });
   });
 });

@@ -56,10 +56,12 @@ $(document).ready(function(){
     _.each(formdata, function(element){
     // Return all of the values of the object's properties.
       var value = _.values(element);
+      if (value[1].match(/\d+(\.\d)*/ )){
+        value[1] = Number(value[1]);
+      }
     // name : value 
       data[value[0]] = value[1];
     });
-    // console.log(data);
     if (target_polygon !== null ){
       _.keys(data).forEach(function(keyname,index, arr) {
         target_polygon[keyname] = data[keyname];
@@ -133,9 +135,9 @@ $(document).ready(function(){
       geoJsonPolygon.properties.total_area =  map_tool_helper.getTotalAreaOf(this_polygon);
 
       // This is just temporary quick fix, Bowei pay attention here
-      if (geoJsonPolygon.properties.treatment === "imt"){
-        geoJsonPolygon.properties.mound_density = 1;
-      }
+      // if (geoJsonPolygon.properties.treatment === "imt"){
+        // geoJsonPolygon.properties.mound_density = 1;
+      // }
       var temp_bounds = this_polygon.my_getBounds();
       geoJsonPolygon.properties.bounds ={  
         sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
@@ -144,7 +146,7 @@ $(document).ready(function(){
       $('input#geojson').val(JSON.stringify(geoJsonPolygon));
       
       console.log( JSON.stringify(geoJsonPolygon) );
-      $('form#treatment').submit();
+      $('form#treatment').submit(); // for dubug
     }
 
     else {
@@ -374,13 +376,12 @@ $(document).ready(function(){
                "properties":{
                }
             };
-
         tempGeoJPolygon.geometry.coordinates = ClassRef.convertPaths(googleMapShapeObject.getPaths(), []);
-        if (googleMapShapeObject.landusage)
-          tempGeoJPolygon.properties.landusage = googleMapShapeObject.landusage;
-        if (googleMapShapeObject.treatment)
-          tempGeoJPolygon.properties.treatment = googleMapShapeObject.treatment;
-        // console.log(JSON.stringify(tempGeoJPolygon));
+        ["landusage","treatment", "mound_density"].forEach( function (key, index, ar){
+          if (googleMapShapeObject.hasOwnProperty(key)){
+            tempGeoJPolygon.properties[key] = googleMapShapeObject[key];
+          }
+        });
         return tempGeoJPolygon;
       }
     }
