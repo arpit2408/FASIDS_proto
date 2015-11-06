@@ -61,9 +61,6 @@ $(document).ready(function(){
     });
     if (target_polygon !== null ){
       _.keys(data).forEach(function(keyname,index, arr) {
-        if (!target_polygon.hasOwnProperty("properties")){
-          target_polygon["properties"] = {};
-        }
         target_polygon.properties[keyname] = data[keyname];
         console.log("target_polygon.properties."+keyname+" : " + target_polygon.properties[keyname]); 
       });
@@ -127,32 +124,30 @@ $(document).ready(function(){
     } else if ( map_tool_register.get("map_tool_settreatment") === true){
       target_polygon = this_polygon;
       // modal show, reset options 
+      map_tool_register.fillForm($('form#purpose'), target_polygon);
       $("#purpose-modal").modal("show");
     } else if ( map_tool_register.get("map_tool_genresult") === true){
+      if (page_status.model_op==="patch"){
+        location.href="/landscape/treatment/" + this_polygon._id;
+        return;
+      }
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
       $('input#geojson').val(JSON.stringify(geoJsonPolygon));
-      
       console.log( JSON.stringify(geoJsonPolygon) );
       $('form#treatment').submit(); // for dubug
     } else if (map_tool_register.get("map_tool_save") === true){
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
       $('form#patch input').val(JSON.stringify(geoJsonPolygon));
       $('form#patch').submit();
-
     }
-
     else {
-      
-
     }
   }
 
   gmap.addListener('click', function mapClkCb (event){
     // console.log("at least clicked");
     if (map_tool_register.get("map_tool_area_drawing")){
-
       drawingPath.getPath().push(event.latLng)
-
       if (drawingPath.getPath().getLength() === 1){
         temp_startmarker.setPosition(event.latLng);
         temp_startmarker.setMap(gmap);
@@ -202,6 +197,19 @@ $(document).ready(function(){
       }
     },
 
+    fillForm: function(jq_modal_form, target_polygon){
+      jq_modal_form.find("input[type=radio]").prop("checked",false);
+      jq_modal_form.find("input[type=number]").val("");
+      if (target_polygon.properties.landusage){
+        $('input[name=landusage][value='+ target_polygon.properties.landusage+']').prop("checked", true);
+      } 
+      if (target_polygon.properties.treatment){
+        $('input[name=treatment][value='+ target_polygon.properties.treatment+']').prop("checked", true);
+      } 
+      if (target_polygon.properties.mound_density){
+        $("input#mound-density-input").val(target_polygon.properties.mound_density);
+      }
+    },
     initialize: function (){
       var ClassRef = this;
       this.on("change:map_tool_area_drawing", function (){
@@ -222,6 +230,7 @@ $(document).ready(function(){
             temp_polygon.setMap(gmap);
             temp_polygon.addListener("click",  polygonClicked);
             temp_polygon.addListener("rightclick", polygonRightClicked);
+            temp_polygon.properties = {};
             polygons.push( temp_polygon);
           }
           // reseting
@@ -435,6 +444,7 @@ $(document).ready(function(){
       temp_polygon.setMap(gmap);
       temp_polygon.addListener("click",  polygonClicked);
       temp_polygon.addListener("rightclick", polygonRightClicked);
+      temp_polygon._id = temp_geojson._id;
       polygons.push( temp_polygon);
       map_tool_register.renderPolygonProperly(temp_polygon);
       var bounds = new google.maps.LatLngBounds(temp_polygon.properties.bounds.sw, temp_polygon.properties.bounds.ne);
