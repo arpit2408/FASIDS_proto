@@ -7,6 +7,13 @@ function processReqUser ( req_user){
   delete temp_user.password_hash; 
   return temp_user;
 }
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.status(401).send("Unauthorized action, login required");
+  }
+}
 /* all the routes under "/users"*/
 /* */
 var passport = null;
@@ -53,8 +60,8 @@ router.get('/logout', function (req, res, next){
   res.redirect("back");
 })
 
-router.get("/dashboard", function (req, res, next) {
-  var temp_userid = "5611f401ce5001a4267c83d3";
+router.get("/dashboard",ensureAuthenticated, function (req, res, next) {
+  var temp_userid = req.user._id.toString();
   req.db_models.PolygonGeojson.find({"properties.owner": temp_userid}, null, {}, function exec (error, db_polygons){
     if (error)
       return next(error);
