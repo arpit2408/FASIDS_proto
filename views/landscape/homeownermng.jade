@@ -38,7 +38,7 @@ block renderBody
           span.btn.btn-default#map-tool-editpolygon(data-operation="map_tool_editpolygon") Edit shape
       .row
         .col-xs-12
-          span.btn.btn-default#map-tool-settreatment(data-operation="map_tool_settreatment") Set treatment
+          span.btn.btn-default#map-tool-setproperties(data-operation="map_tool_setproperties") Set Properties
       .row
         .col-xs-12
           if page_status.model_op === "create"
@@ -87,6 +87,23 @@ block renderBody
                       .input-group-addon
                         | m
                         sup 2
+              
+                  .form-group
+                    label(for='polygon-name') Polygon Name
+                    input#polygon-name.form-control(type='text', name='polygon_name', placeholder='The polygon name')
+
+                .col-xs-8
+                  .form-group
+                    label(for='polygon-address') Polygon Address
+                    input#polygon-address.form-control(type='text', name='address', placeholder='The address where the polygon is located')
+
+                  .form-group
+                    label(for='polygon-address') Notes
+                    textarea#polygon-address.form-control( name="notes", row="4" ,placeholder='Brief notes about this polygon')
+
+
+
+
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal') Close
             button.btn.btn-primary#save-prepared-treatment(type='button') Save changes
