@@ -15,8 +15,32 @@
           color: #cacccd;
         }
         padding: 10px 15px;  // (top bottom) & (left right)
-
+        &.active{
+          padding: 10px 15px 5px 15px;
+          border-bottom: 5px solid #cacccd;
+          color:#fff;
+        }
       }
     }
   }  
+}
+
+
+.panel{
+  .panel-heading{
+    font-size: 18px;
+  }
+
+  .polygon-row-dashboard{
+    line-height: 70px;
+    .polygon-operations{
+      a+a{
+        margin-left:25px;
+      }
+    }
+    .polygon-preview {
+      text-align: center;
+    }
+  }
+
 }

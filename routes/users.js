@@ -4,6 +4,7 @@ var router = express.Router();
 function processReqUser ( req_user){  
   if (req_user) var temp_user = req_user.toObject();
   else return null;
+  temp_user.display_name = req_user.displayName();
   delete temp_user.password_hash; 
   return temp_user;
 }
@@ -11,9 +12,10 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.status(401).send("Unauthorized action, login required");
+    res.redirect("/users/signin?referral_url=" + req.originalUrl );
   }
 }
+
 /* all the routes under "/users"*/
 /* */
 var passport = null;
@@ -29,6 +31,14 @@ router.get('/signup', function (req, res, next){
     breadcrumTitle:"sign up",
     pathToHere:"users / signup"
   });
+});
+
+router.get('/signin', function(req,res,next){
+  var referal_url = req.query.referral_url;
+  res.render("users/signin.jade", {
+    dev_mode: true
+  });
+
 });
 
 router.post('/signup', function (req, res, next){

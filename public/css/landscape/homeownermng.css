@@ -41,6 +41,10 @@
 #map-tools-box .row + .row {
   margin-top: 10px;
 }
+#map-tools-box span.btn {
+  text-align: center;
+  width: 100%;
+}
 .delete-menu {
   position: absolute;
   background: white;

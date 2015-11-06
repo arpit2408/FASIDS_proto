@@ -51,6 +51,9 @@ app.use(function(req, res, next){
 // routing
 app.use('/', routes);
 app.post('/users/signin', passport.authenticate('local'),function (req, res, next){
+  if (typeof req.query.referral_url !== "undefined"){
+    return res.redirect(req.query.referral_url);
+  }
   res.redirect("back");
 });
 app.use('/users', users);

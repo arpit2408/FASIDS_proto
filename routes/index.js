@@ -8,7 +8,7 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.status(401).send("Unauthorized action, login required");
+    res.redirect("/users/signin?referral_url=" + req.originalUrl );
   }
 }
 
