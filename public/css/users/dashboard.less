@@ -1,0 +1,22 @@
+@import "../base";
+
+@subnav-color: #565A5C;
+.subnav-container{
+  background-color: @subnav-color;
+  .subnav{
+    .list-inline{
+      margin: 0px;
+      li{
+        // display: inline-block;
+        a{
+          &:hover{
+            color:#fff;
+          }
+          color: #cacccd;
+        }
+        padding: 10px 15px;  // (top bottom) & (left right)
+
+      }
+    }
+  }  
+}

@@ -288,13 +288,32 @@ router.post('/landscape/homeownermng/:geojson_id/patch' , function (req, res, ne
       return next(e);
     }
     _.each(_.keys(geojson), function (key_name, index, key_list){
-      console.log(key_name);
+      // console.log(key_name);
       the_polygon[key_name] = geojson[key_name];
     });
     the_polygon.save( function(error){
       if (error) return next(error);
       res.redirect("/landscape/homeownermng/" + req.params.geojson_id);
     });
+  });
+});
+
+// this is for ajax
+router.delete('/landscape/homeownermng/:geojson_id' , ensureAuthenticated,function (req, res, next){
+  req.db_models.PolygonGeojson.findOne(  {_id: req.params.geojson_id}, null,{}, function execRemoval(error, the_polygon ){
+    if (error) return next(error);
+    if (!the_polygon) {
+      return res.status(404).send("Did not find");
+    }
+    console.log(the_polygon);
+    if (the_polygon.properties.owner.toString() === req.user._id.toString()){
+      the_polygon.remove(function onRemoval(error){
+        if (error){
+          return next (error);
+        }
+        res.send("removal successful"); 
+      } );
+    }
   });
 });
 
@@ -346,7 +365,9 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
   geojson.properties.owner = req.user._id;
   var db_geojson = new req.db_models.PolygonGeojson(geojson);
   db_geojson.save( function ( error){
-    return next(error);
+    if (error) {
+      return next(error);
+    }
     res.redirect('/landscape/treatment/'+db_geojson._id.toString());
   });
 });

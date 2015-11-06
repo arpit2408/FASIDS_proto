@@ -112,3 +112,9 @@ provider: http://openweathermap.org/api
 http://localhost:3000/landscape/treatment/563906ab826cb74c386b5541
 
 http://localhost:3000/landscape/homeownermng/563906ab826cb74c386b5541
+
+
+
+db.fire_ant_product.update({usage:"IMT"}, {$set:{usage:"imt"}}, {multi:true})
+db.fire_ant_product.update({usage:"Broadcast"}, {$set:{usage:"broadcast"}}, {multi:true})
+db.fire_ant_product.update({usage:"Line"}, {$set:{usage:"line"}}, {multi:true})

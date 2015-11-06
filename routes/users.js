@@ -1,6 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
+function processReqUser ( req_user){  
+  if (req_user) var temp_user = req_user.toObject();
+  else return null;
+  delete temp_user.password_hash; 
+  return temp_user;
+}
 /* all the routes under "/users"*/
 /* */
 var passport = null;
@@ -46,6 +52,19 @@ router.get('/logout', function (req, res, next){
   req.logout();
   res.redirect("back");
 })
+
+router.get("/dashboard", function (req, res, next) {
+  var temp_userid = "5611f401ce5001a4267c83d3";
+  req.db_models.PolygonGeojson.find({"properties.owner": temp_userid}, null, {}, function exec (error, db_polygons){
+    if (error)
+      return next(error);
+    res.render("users/dashboard.jade", {
+      polygons:db_polygons,
+      isAuthenticated: req.isAuthenticated(),
+      user: processReqUser(req.user)
+    });
+  });
+});
 
 // for  /users/signin
 // router.post('/signin', passport.authenticate('local'),function (req, res, next){
