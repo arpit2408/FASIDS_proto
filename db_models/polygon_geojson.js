@@ -13,6 +13,8 @@ var polygon_geojson_schema = new mongoose.Schema({
     landusage:String,
     total_area:Number,
     mound_density:Number,
+    polygon_name:String,
+    address:String,
     treatment:String,
     bounds :{  
       sw:{ lat: Number, lng: Number},

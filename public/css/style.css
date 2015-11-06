@@ -33,6 +33,16 @@ iframe {
   border: none;
   width: 100%; }
 
+::selection {
+  background: #fefac7;
+  /* Safari */
+  color: #555555; }
+
+::-moz-selection {
+  background: #fefac7;
+  /* Firefox */
+  color: #555555; }
+
 strong, b {
   font-family: 'Raleway', sans-serif;
   font-weight: 700; }
@@ -2125,14 +2135,10 @@ h3.heading-progress {
   border-radius: 0px; }
 
 .panel-default > .panel-heading {
-  color: #000;
-  background-color: #fff;
-  border-color: #4f82e9 !important;
   padding: 7px 12px; }
 
 .panel-title i {
-  margin-right: 10px;
-  color: #4f82e9; }
+  margin-right: 10px; }
 
 /************************************************* css for footers****************************************/
 /************************************************* css for footers****************************************/

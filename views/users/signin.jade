@@ -1,0 +1,17 @@
+extends ../layout
+block renderBody
+  form#autoSignIn( method="post")
+    input(type="email", name="email", value="#{dev_mode?'bowei_liu@ymail.com':''}")
+    br
+    input(type="password", name="password", value="#{dev_mode?'test':''}")
+    br
+
+    button(type="submit") submit
+
+block additionalJS
+  if dev_mode
+    script.
+      $(document).ready(function onReady(){
+        
+        $("#autoSignIn").submit();
+      });

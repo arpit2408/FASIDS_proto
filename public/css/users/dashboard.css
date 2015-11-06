@@ -17,3 +17,20 @@
 .subnav-container .subnav .list-inline li a:hover {
   color: #fff;
 }
+.subnav-container .subnav .list-inline li.active {
+  padding: 10px 15px 5px 15px;
+  border-bottom: 5px solid #cacccd;
+  color: #fff;
+}
+.panel .panel-heading {
+  font-size: 18px;
+}
+.panel .polygon-row-dashboard {
+  line-height: 70px;
+}
+.panel .polygon-row-dashboard .polygon-operations a + a {
+  margin-left: 25px;
+}
+.panel .polygon-row-dashboard .polygon-preview {
+  text-align: center;
+}

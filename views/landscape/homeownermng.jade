@@ -25,13 +25,13 @@ block renderBody
 
     .mc-static2mapcontainer.panel#map-tools-box
       .row
-        .col-xs-4 
+        .col-xs-12 
           if page_status.model_op === 'create'
             span.btn.btn-default.fa.fa-mouse-pointer#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
           else if page_status.model_op === 'patch'
             span.btn.btn-default.fa.fa-floppy-o.fa-lg#map-tool-save(data-operation = "map_tool_save")
       .row
-        .col-xs-4
+        .col-xs-12
           span.btn.btn-default#map-tool-hole(data-operation = "map_tool_holing") Make hole
       .row
         .col-xs-12
@@ -47,7 +47,7 @@ block renderBody
             span.btn.btn-default#map-tool-genresult(data-operation="map_tool_genresult") See Result
 
       .row
-        .col-xs-4
+        .col-xs-12
           span.btn.btn-default#map-tool-cancel cancel
   .modal-container
     #purpose-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
@@ -83,7 +83,7 @@ block renderBody
                   .form-group
                     label(for='mound-density-input') Mound Density
                     .input-group
-                      input#mound-density-input.form-control(type='number', name='mound_density', placeholder='0.57')
+                      input#mound-density-input.form-control(type='number', name='mound_density', placeholder='Put mound density here')
                       .input-group-addon
                         | m
                         sup 2
