@@ -8,10 +8,6 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    // var my_error = new Error("Unauthorized behaviro");
-    // my_error.status = 401;
-    // next(my_error);
-    // 
     res.status(401).send("Unauthorized action, login required");
   }
 }
