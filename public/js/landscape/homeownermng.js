@@ -53,12 +53,15 @@ $(document).ready(function(){
   // preparing modal
   $("#save-prepared-treatment").click(function savePreparedTreatment(){
     var formdata = $("form#purpose").serializeArray();
+    console.log(JSON.stringify(formdata));
     var data = {};
     _.each(formdata, function(element){
       var value = _.values(element);
-      if ( value[1].match(/\d+(\.\d)*/ ) ){ value[1] = Number(value[1]); }
+
+      if ( value[1].match(/^\d+(\.\d+)*$/g ) ){ value[1] = Number(value[1]); } // whole string match number pattern can be casted into string, otherwise, keep string
       data[value[0]] = value[1];
     });
+    console.log(data);
     if (target_polygon !== null ){
       _.keys(data).forEach(function(keyname,index, arr) {
         target_polygon.properties[keyname] = data[keyname];
@@ -112,6 +115,7 @@ $(document).ready(function(){
   function polygonClicked (event) {
     // "this" scope is set to the polygon 
     var this_polygon = this;
+    target_polygon = this_polygon;
     if (map_tool_register.get("map_tool_holing") === true ) {
       target_polygon = this_polygon;
       drawingPath.getPath().push(event.latLng);
@@ -121,7 +125,7 @@ $(document).ready(function(){
       }
     } else if  ( map_tool_register.get("map_tool_editpolygon") === true) {
       this_polygon.setEditable(true);
-    } else if ( map_tool_register.get("map_tool_settreatment") === true){
+    } else if ( map_tool_register.get("map_tool_setproperties") === true){
       target_polygon = this_polygon;
       // modal show, reset options 
       map_tool_register.fillForm($('form#purpose'), target_polygon);
@@ -137,7 +141,8 @@ $(document).ready(function(){
       $('form#treatment').submit(); // for dubug
     } else if (map_tool_register.get("map_tool_save") === true){
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
-      $('form#patch input').val(JSON.stringify(geoJsonPolygon));
+      $('form#patch input').val(JSON.stringify(geoJsonPolygon) );
+      console.log(JSON.stringify(geoJsonPolygon)  );
       $('form#patch').submit();
     }
     else {
@@ -161,13 +166,13 @@ $(document).ready(function(){
       map_tool_area_drawing: false,
       map_tool_holing:false,
       map_tool_editpolygon:false,
-      map_tool_settreatment:false,
+      map_tool_setproperties:false,
       map_tool_genresult:false,
       map_tool_save:false
     },
     clearAllStatus:function(){
       var ClassRef = this;
-      // ClassRef.keys() return an array: ["map_tool_area_drawing", "map_tool_holing", "map_tool_editpolygon", "map_tool_settreatment", "map_tool_genresult"]
+      // ClassRef.keys() return an array: ["map_tool_area_drawing", "map_tool_holing", "map_tool_editpolygon", "map_tool_setproperties", "map_tool_genresult"]
       _.each(ClassRef.keys(), function iteratee(element, index, list){
         ClassRef.set(element, false);
       });
@@ -199,16 +204,23 @@ $(document).ready(function(){
 
     fillForm: function(jq_modal_form, target_polygon){
       jq_modal_form.find("input[type=radio]").prop("checked",false);
-      jq_modal_form.find("input[type=number]").val("");
+      jq_modal_form.find("input[type=number], input[type=text], textarea").val("");
       if (target_polygon.properties.landusage){
         $('input[name=landusage][value='+ target_polygon.properties.landusage+']').prop("checked", true);
       } 
       if (target_polygon.properties.treatment){
         $('input[name=treatment][value='+ target_polygon.properties.treatment+']').prop("checked", true);
-      } 
-      if (target_polygon.properties.mound_density){
-        $("input#mound-density-input").val(target_polygon.properties.mound_density);
       }
+
+      var omitted_properties = _.omit(target_polygon.properties, ["landusage","treatment"]);
+      _.each(omitted_properties, function (value, key, obj){
+        if ($('input[name='+key+']')){
+          $('input[name='+key+']').val(value);
+        }
+        if ( $('textarea[name='+key+']') ){
+          $('textarea[name='+key+']').val(value);
+        }
+      });
     },
     initialize: function (){
       var ClassRef = this;
@@ -274,11 +286,11 @@ $(document).ready(function(){
         }
       });
 
-      this.on("change:map_tool_settreatment", function (){
-        if (ClassRef.get("map_tool_settreatment")  === true){
-          $("#map-tool-settreatment").addClass("active");
+      this.on("change:map_tool_setproperties", function (){
+        if (ClassRef.get("map_tool_setproperties")  === true){
+          $("#map-tool-setproperties").addClass("active");
         } else {
-          $("#map-tool-settreatment").removeClass("active");
+          $("#map-tool-setproperties").removeClass("active");
         }    
       });
 

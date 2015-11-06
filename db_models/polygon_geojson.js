@@ -15,6 +15,7 @@ var polygon_geojson_schema = new mongoose.Schema({
     mound_density:Number,
     polygon_name:String,
     address:String,
+    notes:String, // used by user to input their notes about this polygon
     treatment:String,
     bounds :{  
       sw:{ lat: Number, lng: Number},
