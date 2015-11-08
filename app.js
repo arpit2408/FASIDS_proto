@@ -23,7 +23,7 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
+app.set("x-powered-by", false);
 //uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -89,6 +89,8 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+
 
 // module.exports = app;
 var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
