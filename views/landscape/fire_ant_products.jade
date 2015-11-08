@@ -11,12 +11,13 @@ block renderBody
       td= product.manufacturer
       td= product.usage
       if product.coverage
+        - product.usage = product.usage.toLowerCase();
         case product.usage
-          when "IMT"
+          when "imt"
             td= product.coverage + " mnds"
-          when "Broadcast"
+          when "broadcast"
             td!= product.coverage + " m<sup>2</sup>"
-          when "Line"
+          when "line"
             td= product.coverage + " m"
           default
             td="unknown unit due to unknown usage"
