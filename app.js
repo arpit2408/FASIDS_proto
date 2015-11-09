@@ -94,14 +94,7 @@ app.use(function(err, req, res, next) {
 });
 
 
-
-// module.exports = app;
-// var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
-
-// app.listen(port,ip ,null, function(){
-//   console.log( "server listening: " + ip + ":" +port );
-// });
 
 var server = http.createServer(app);
 var boot = function () {
