@@ -47,7 +47,11 @@ $(document).ready(function(){
       zoom: 14,
       zoomControl:false,    //left side
       panControl:false,     //left top corner: 
-      mapTypeControl:false  //right top corner: "map|satellite"
+      // mapTypeControl:false  //right top corner: "map|satellite"
+      mapTypeControlOptions: {
+        // style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: google.maps.ControlPosition.TOP_RIGHT
+      }
   });
 
   // preparing modal

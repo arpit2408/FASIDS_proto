@@ -51,10 +51,10 @@ app.use(function(req, res, next){
 // routing
 app.use('/', routes);
 app.post('/users/signin', passport.authenticate('local'),function (req, res, next){
-  if (typeof req.query.referral_url !== "undefined"){
+  if (typeof req.query.referral_url !== "undefined" && req.query.referral_url.search(/signin/) === -1){
     return res.redirect(req.query.referral_url);
   }
-  res.redirect("back");
+  res.redirect("/");
 });
 app.use('/users', users);
 
