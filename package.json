@@ -4,7 +4,8 @@
   "description": "KEL FASIDS quick prototyping",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test" : "mocha test"
   },
   "keywords": [
     "FASIDS",
@@ -40,7 +41,8 @@
     "passport-local": "^1.0.0",
     "promise": "^7.0.4",
     "serve-favicon": "~2.3.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "chai":">= 3.4.1"
   },
   "devDependencies": {
     "mocha": "*",
