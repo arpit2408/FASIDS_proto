@@ -64,7 +64,7 @@ exports.addPassport = function (app, db_models){
           var instance_result = instance.toObject(); // convert mongoose instance into JSON-lized object
           delete instance_result.password_hash;
           // done(null, instance_result);
-          done(null, instance);  // hoping req.User is one Mongoose Model instance
+          done(null, instance);
         }
       });
   });

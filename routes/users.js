@@ -38,7 +38,6 @@ router.get('/signin', function(req,res,next){
   res.render("users/signin.jade", {
     dev_mode: true
   });
-
 });
 
 router.post('/signup', function (req, res, next){
