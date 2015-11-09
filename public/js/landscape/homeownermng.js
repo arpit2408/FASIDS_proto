@@ -135,6 +135,10 @@ $(document).ready(function(){
       map_tool_register.fillForm($('form#purpose'), target_polygon);
       $("#purpose-modal").modal("show");
     } else if ( map_tool_register.get("map_tool_genresult") === true){
+      if(!page_status.isAuthenticated){
+        return alert("Please sign in before submit this polygon to server\n I will make this alert look nicer in future");
+      }
+
       if (page_status.model_op==="patch"){
         location.href="/landscape/treatment/" + this_polygon._id;
         return;

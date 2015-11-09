@@ -236,7 +236,7 @@ router.get('/landscape/homeownermng', function (req, res, next) {
   res.render("landscape/homeownermng.jade",{
     isAuthenticated: req.isAuthenticated(),
     user: processReqUser(req.user),
-    page_status:{model_op:"create"}
+    page_status:{model_op:"create",isAuthenticated: req.isAuthenticated()}
   });
 });
 
@@ -265,7 +265,7 @@ router.get('/landscape/homeownermng/:geojson_id', function (req, res, next){
       geojson:the_polygon,
       isAuthenticated: req.isAuthenticated(),
       user: processReqUser(req.user),
-      page_status:{model_op:"patch"},
+      page_status:{model_op:"patch", isAuthenticated: req.isAuthenticated()},
       patch_url:'/landscape/homeownermng/'+req.params.geojson_id+"/patch"
     }); 
   });  // end of findById()
