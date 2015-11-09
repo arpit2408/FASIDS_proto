@@ -54,7 +54,7 @@ app.post('/users/signin', passport.authenticate('local'),function (req, res, nex
   if (typeof req.query.referral_url !== "undefined" && req.query.referral_url.search(/signin/) === -1){
     return res.redirect(req.query.referral_url);
   }
-  res.redirect("/");
+  res.redirect("back");
 });
 app.use('/users', users);
 

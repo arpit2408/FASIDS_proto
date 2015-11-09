@@ -323,12 +323,13 @@ $(document).ready(function(){
       geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           try{
-            gmap.fitBounds(results[0].geometry.bounds);
+            gmap.fitBounds(results[0].geometry.viewport);
 
           } catch(e){  // possibly there is not bounds
             console.error(e);
             gmap.setCenter(results[0].geometry.location);
           }
+          console.log(JSON.stringify(results[0]));
         } else {
           // alert("Geocode was not successful for the following reason: " + status);
           $(".errormessage-container").removeClass("hidden");
