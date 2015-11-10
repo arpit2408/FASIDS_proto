@@ -4,12 +4,17 @@ extends ../layout
 
 block additionalCSS
   link(href='/css/users/index.css', rel='stylesheet', type='text/css', media='screen')
+  script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js", type="text/javascript")
+  script(src="/assets/ui-validate/dist/validate.js", type="text/javascript")
+  script(src="/js/users/account.js", type="text/javascript")
+  
 
 block renderBody
   -var active_section = "account"
   include ../snippets/sub-nav.jade
+  include ../snippets/infobox
+
   .divide30
-  
   .container
     .row
       .col-xs-3
@@ -18,37 +23,37 @@ block renderBody
             a(href="/users/account/basic_info") Basic info
           li(class='#{active_subsection==="security"?"active":""}')
             a(href="/users/account/security") Security
-      .col-xs-9
+      .col-xs-9(ng-app="account_ng", ng-controller="account_ctrl")
         case active_subsection
           when "basic_info"
             .panel.panel-default
               .panel-heading
                 | Basic Info
               .panel-body
-                form
+                form( action="/users/account/basic_info", method="post")
                   .row
                     .col-xs-3.text-right
                       label(for='email') Email address
                     .col-xs-5
-                      input#email.form-control(type='email', placeholder='Email', name="email")
+                      input#email.form-control(type='email', placeholder='Email', name="email", ng-model="user.email" ,required)
                   .divide20
                   .row
                     .col-xs-3.text-right
                       label(for='first_name') First name
                     .col-xs-5
-                      input#first_name.form-control(type='text', placeholder='first name', name="first_name")
+                      input#first_name.form-control(type='text', placeholder='first name', name="first_name", ng-model="user.first_name", required)
                   .divide20
                   .row
                     .col-xs-3.text-right
                       label(for='last_name') Last name 
                     .col-xs-5
-                      input#last_name.form-control(type='text', placeholder='last name', name="last_name")
+                      input#last_name.form-control(type='text', placeholder='last name', name="last_name", ng-model="user.last_name", required)
                   .divide20
                   .row
                     .col-xs-3.text-right
-                      label(for="user_cat") User category
+                      label(for="usercat") User category
                     .col-xs-5
-                      select.form-control(name="user_cat")
+                      select#usercat.form-control(name="usercat", ng-model="user.usercat", convert-to-number, required)
                         option(value="0") cat0 
                         option(value="1") cat1 
                         option(value="2") cat2 
@@ -56,13 +61,46 @@ block renderBody
                         option(value="4") cat4 
                   hr
                   .row
-                    .col-xs-2.col-xs-offset-10
-                      button.btn.btn-default(type='submit') Update Info
+                    .col-xs-2.col-xs-offset-9
+                      button.btn.btn-primary(type='submit') Update Info
           when "security"
-            p implementing
+            .panel.panel-default
+              .panel-heading
+                | Security
+              .panel-body
 
+                form(action="/users/account/security" ,name ="password_form", method="post")
+                  .row
+                    .col-xs-3.text-right
+                      label(for='old_password') Old password
+                      span.red *
+                    .col-xs-5
+                      input#old_password.form-control(type='password', name="old_password", ng-required="true", ng-model="old_password")
+                  .divide20
+                  .row
+                    .col-xs-3.text-right
+                      label(for='password') New password
+                      span.red *
+                    .col-xs-5
+                      input#password.form-control(type='password', name="password_hash", required, ng-model="password_hash")
+                  .divide20
+                  .row
+                    .col-xs-3.text-right
+                      label(for='confirm_password') New password again
+                      span.red * 
+                    .col-xs-5
+                      input#confirm_password.form-control(type='password', name="confirm_password_hash", ng-model="confirm_password_hash", required ,
+                      ui-validate=" '$value===password_hash' ", ui-validate-watch=" 'password_hash' ")
+
+                      span.red(ng-show="password_form.confirm_password_hash.$error.validator") passwords do not match!
+                  .divide20
+                  .row
+                    .col-xs-2.col-xs-offset-9
+                      button.btn.btn-primary(type='submit' ng-disabled="!password_form.$valid") Update Password
+  div.hidden
+    meta(name="user", content="#{JSON.stringify(user)}")
   .divide30
 
 block additionalJS
-  script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js", type="text/javascript")
+  
 

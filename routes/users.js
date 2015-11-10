@@ -1,4 +1,5 @@
 var express = require('express');
+var _ = require('underscore');
 var router = express.Router();
 
 function processReqUser ( req_user){  
@@ -25,6 +26,8 @@ router.all('*', function(req, res, next) {
   }
   return next(); // following routes conninue handling requests
 });
+
+
 
 router.get('/signup', function (req, res, next){
   res.render("signup",{
@@ -55,12 +58,12 @@ router.post('/signup', function (req, res, next){
     if (error) return next(error);
     console.log("[user.js:34 ]");
     // res.json(new_user.email);   // TODO send email here
-  });
-  res.render("signup",{
-    breadcrumTitle:"sign up",
-    pathToHere:"users / signup",
-    msg_type:"success",
-    msg_content:"Hello, "+new_user.displayName()+", you've signed up successfully. Click \"SIGN IN\" at left upper corner to sign in"
+    return res.render("signup",{
+      breadcrumTitle:"sign up",
+      pathToHere:"users / signup",
+      msg_type:"success",
+      msg_content:"Hello, "+new_user.displayName()+", you've signed up successfully. Click \"SIGN IN\" at left upper corner to sign in"
+    });
   });
 });
 
@@ -85,7 +88,9 @@ router.get("/dashboard",ensureAuthenticated, function (req, res, next) {
 
 router.get("/account/:active_subsection", ensureAuthenticated, function (req, res, next){
   res.render("users/account.jade",{
-    active_subsection:req.params.active_subsection
+    active_subsection:req.params.active_subsection,
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user)
   });
 })
 // for  /users/signin
@@ -93,5 +98,44 @@ router.get("/account/:active_subsection", ensureAuthenticated, function (req, re
 //   console.log("[user.js 47]");
 //   res.redirect('back'); 
 // });
+
+
+router.post('/account/:active_subsection', ensureAuthenticated, function (req, res, next){
+  if (req.params.active_subsection === "security"){
+    if (req.user.password_hash !== req.body.old_password) {
+      return res.render("users/account.jade",{
+        active_subsection:"security",
+        isAuthenticated: req.isAuthenticated(),
+        user: processReqUser(req.user),
+        flash:{ type:"danger", message:"old password does not match the data in data base." }
+      });
+    }
+    req.user.password_hash = req.body.password_hash;
+    req.user.save(function (err){
+      if (err) return next(err);
+      return res.render("users/account.jade",{
+        active_subsection:"security",
+        isAuthenticated: req.isAuthenticated(),
+        user: processReqUser(req.user),
+        flash:{ type:"success", message:"password changed successfully." }
+      });
+    });
+  } else if (req.params.active_subsection === "basic_info"){
+    _.each(_.keys(req.body), function (keyname, index, keys){
+      if( typeof req.user[keyname] !== "undefined"){
+        req.user[keyname] = req.body[keyname];
+      }
+    });
+    req.user.save(function ( error){
+      if (error) return next(error);
+      return res.render("users/account.jade",{
+        active_subsection:"basic_info",
+        isAuthenticated: req.isAuthenticated(),
+        user: processReqUser(req.user),
+        flash:{ type:"success", message:"Basic info changed." }
+      });
+    });
+  }
+});
 
 module.exports = router;
