@@ -477,9 +477,6 @@ $(document).ready(function(){
   if (page_status.model_op === "patch")
     map_tool_helper.deGeoJsonize( $('meta[name="target-polygon"]').attr("content") );
 
-
-
-
   /*geosearch processing*/
   $("#map-input-geosearch").keyup(function(e){
     var code = e.which; // recommended to use e.which, it's normalized across browsers
@@ -496,8 +493,5 @@ $(document).ready(function(){
       return;
     }
     map_tool_helper.codeAddress(input);
-
   });
-
-
 });

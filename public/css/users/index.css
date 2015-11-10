@@ -34,3 +34,19 @@
 .panel .polygon-row-dashboard .polygon-preview {
   text-align: center;
 }
+.sidenav-list {
+  font-size: 18px;
+  list-style: none;
+}
+.sidenav-list li {
+  margin-bottom: 5px;
+}
+.sidenav-list li a {
+  color: #808080;
+}
+.sidenav-list li a:hover {
+  color: #cccccc;
+}
+.sidenav-list li.active a {
+  color: #333;
+}

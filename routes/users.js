@@ -82,6 +82,12 @@ router.get("/dashboard",ensureAuthenticated, function (req, res, next) {
   });
 });
 
+
+router.get("/account/:active_subsection", ensureAuthenticated, function (req, res, next){
+  res.render("users/account.jade",{
+    active_subsection:req.params.active_subsection
+  });
+})
 // for  /users/signin
 // router.post('/signin', passport.authenticate('local'),function (req, res, next){
 //   console.log("[user.js 47]");
