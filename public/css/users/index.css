@@ -50,3 +50,6 @@
 .sidenav-list li.active a {
   color: #333;
 }
+span.red {
+  color: red;
+}
