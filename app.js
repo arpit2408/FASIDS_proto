@@ -92,10 +92,7 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
-
 var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
-
 var server = http.createServer(app);
 var boot = function () {
   server.listen(app.get('port'),ip, function(){

@@ -1,6 +1,8 @@
+// this is the main less file for all user sections
 @import "../base";
 
 @subnav-color: #565A5C;
+// for sub nav used in all users sections
 .subnav-container{
   background-color: @subnav-color;
   .subnav{
@@ -24,8 +26,7 @@
     }
   }  
 }
-
-
+// for panels in dashboard
 .panel{
   .panel-heading{
     font-size: 18px;
@@ -40,6 +41,29 @@
     }
     .polygon-preview {
       text-align: center;
+    }
+  }
+}
+
+
+
+// for account 
+.sidenav-list{
+  font-size: 18px;
+  list-style: none;
+  li{
+    margin-bottom:5px; 
+    a{
+      color:lighten(#333, 30%);
+      &:hover{
+        color: lighten(#333, 60%);
+      }
+    }
+    
+    &.active{
+      a{
+        color:#333;
+      }
     }
   }
 
