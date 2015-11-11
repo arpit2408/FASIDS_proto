@@ -71,3 +71,20 @@
 span.red{
   color:@alert-color;
 }
+
+//for panel in Account
+.panel-body{
+  .col-xs-3.text-right{
+    line-height: 34px;
+  }
+  .col-xs-4.email-sent-result{
+    line-height: 34px;
+    &.success{
+      color:green;
+    }
+    &.error{
+      color: @alert-color;
+    }
+  }
+
+}

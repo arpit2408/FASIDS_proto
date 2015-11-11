@@ -22,5 +22,30 @@ account_ng.controller('account_ctrl', function ($scope){
   $scope.password_hash = "";
   $scope.confirm_password_hash="";
   $scope.old_password="";
-  console.log($scope.user);
+  $scope.email_result_returned=false;
+  // console.log($scope.user);
+});
+
+
+$(document).ready(function onReady(){
+  console.log("check");
+  $('form[name=reset_password_form]').submit(function (event){
+    var target_scope = angular.element( $('#angular_forms') ).scope();
+    event.preventDefault();
+
+    $.post($(this).attr("action"),
+      {email: target_scope.user.email}, 
+      function onSuccess(data, text_status, jqXHR){
+        if (data === "email sent"){
+
+          target_scope.$apply( function updateScope(){
+            target_scope.email_result_returned = true;
+          }); 
+          
+          $(".email-sent-result").addClass("success");
+          $(".email-sent-result").html("Email successfully sent");
+        }
+      }
+    );
+  });
 });

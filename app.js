@@ -2,6 +2,8 @@ var express = require('express');
 
 var http = require('http');
 var path = require('path');
+
+
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 
@@ -42,7 +44,7 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 
 var passport = require('./components/processedPassport.js').addPassport(app, db_models);
-
+require('./components/extendMailer.js').extend(app);  // now response object has mailer property
 // every req has db_model: User
 app.use(function(req, res, next){
   req.DB_USER = db_models.User;

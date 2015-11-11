@@ -53,3 +53,15 @@
 span.red {
   color: red;
 }
+.panel-body .col-xs-3.text-right {
+  line-height: 34px;
+}
+.panel-body .col-xs-4.email-sent-result {
+  line-height: 34px;
+}
+.panel-body .col-xs-4.email-sent-result.success {
+  color: green;
+}
+.panel-body .col-xs-4.email-sent-result.error {
+  color: red;
+}
