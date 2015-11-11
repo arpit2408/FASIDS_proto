@@ -18,8 +18,16 @@ user_schema.method({
   },
   resetPassword: function(){
     console.log("user.js 20: code placehoder");
+  },
+
+  // cb is the callback of save
+  resetPassword : function(cb) {
+    this.password_hash =  Math.random().toString(36).slice(-8);
+    this.save(cb);
   }
 });
+
+
 
 // helper function of schema
 var saveCB = function( err, instance){
