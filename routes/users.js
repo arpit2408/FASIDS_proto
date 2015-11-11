@@ -2,6 +2,7 @@ var express = require('express');
 var _ = require('underscore');
 var router = express.Router();
 
+
 function processReqUser ( req_user){  
   if (req_user) var temp_user = req_user.toObject();
   else return null;
@@ -99,26 +100,28 @@ router.get("/account/:active_subsection", ensureAuthenticated, function (req, re
 //   res.redirect('back'); 
 // });
 
+function accountRenderHelper(req, res, next, active_subsection, flash){
+  res.render("users/account.jade", {
+    active_subsection:active_subsection,
+    isAuthenticated: req.isAuthenticated(),
+    user:processReqUser(req.user),
+    flash:flash
+  });
+  return;
+}
+
 
 router.post('/account/:active_subsection', ensureAuthenticated, function (req, res, next){
   if (req.params.active_subsection === "security"){
     if (req.user.password_hash !== req.body.old_password) {
-      return res.render("users/account.jade",{
-        active_subsection:"security",
-        isAuthenticated: req.isAuthenticated(),
-        user: processReqUser(req.user),
-        flash:{ type:"danger", message:"old password does not match the data in data base." }
-      });
+      accountRenderHelper(req, res, next, "security",{ type:"danger", message:"old password does not match the data in data base." } )
+      return;
     }
     req.user.password_hash = req.body.password_hash;
     req.user.save(function (err){
       if (err) return next(err);
-      return res.render("users/account.jade",{
-        active_subsection:"security",
-        isAuthenticated: req.isAuthenticated(),
-        user: processReqUser(req.user),
-        flash:{ type:"success", message:"password changed successfully." }
-      });
+      accountRenderHelper(req,res,next,"security",{ type:"success", message:"password changed successfully." } );
+      return;
     });
   } else if (req.params.active_subsection === "basic_info"){
     _.each(_.keys(req.body), function (keyname, index, keys){
@@ -128,12 +131,17 @@ router.post('/account/:active_subsection', ensureAuthenticated, function (req, r
     });
     req.user.save(function ( error){
       if (error) return next(error);
-      return res.render("users/account.jade",{
-        active_subsection:"basic_info",
-        isAuthenticated: req.isAuthenticated(),
-        user: processReqUser(req.user),
-        flash:{ type:"success", message:"Basic info changed." }
-      });
+      accountRenderHelper(req,res,next,"basic_info",{ type:"success", message:"Basic info changed." });
+      return;
+    });
+  } else if (req.params.active_subsection === "reset_password") {
+    res.mailer.send('emails/email.jade', {to:"boweiliu2014@gmail.com", subject:"Test Email"}, function (err){
+      if (err){
+        console.log(err);
+        res.status(500).send("Internal error cause email cannot be sent");
+        return;
+      }
+      res.send("email sent");
     });
   }
 });

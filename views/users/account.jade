@@ -6,7 +6,7 @@ block additionalCSS
   link(href='/css/users/index.css', rel='stylesheet', type='text/css', media='screen')
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js", type="text/javascript")
   script(src="/assets/ui-validate/dist/validate.js", type="text/javascript")
-  script(src="/js/users/account.js", type="text/javascript")
+  
   
 
 block renderBody
@@ -23,7 +23,7 @@ block renderBody
             a(href="/users/account/basic_info") Basic info
           li(class='#{active_subsection==="security"?"active":""}')
             a(href="/users/account/security") Security
-      .col-xs-9(ng-app="account_ng", ng-controller="account_ctrl")
+      .col-xs-9#angular_forms(ng-app="account_ng", ng-controller="account_ctrl")
         case active_subsection
           when "basic_info"
             .panel.panel-default
@@ -66,7 +66,7 @@ block renderBody
           when "security"
             .panel.panel-default
               .panel-heading
-                | Security
+                | Change Your Passsord
               .panel-body
 
                 form(action="/users/account/security" ,name ="password_form", method="post")
@@ -97,10 +97,28 @@ block renderBody
                   .row
                     .col-xs-2.col-xs-offset-9
                       button.btn.btn-primary(type='submit' ng-disabled="!password_form.$valid") Update Password
+            .divide30
+            .panel.panel-default
+              .panel-heading
+                | Reset Your Password
+              .panel-body
+                form(action="/users/account/reset_password", name="reset_password_form", method="post")
+                  .row
+                    .col-xs-3.text-right Security email
+                    .col-xs-5
+                      input.form-control(type="text" ,name="email", ng-model="user.email", disabled)
+                    .col-xs-4.email-sent-result(ng-show="email_result_returned")
+                      | result
+
+                  .divide20
+                  .row
+                    .col-xs-2.col-xs-offset-9
+                      button.btn.btn-primary(type='submit') Send Email
+
   div.hidden
     meta(name="user", content="#{JSON.stringify(user)}")
   .divide30
 
 block additionalJS
-  
+  script(src="/js/users/account.js", type="text/javascript")
 
