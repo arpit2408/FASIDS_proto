@@ -17,6 +17,10 @@ function ensureAuthenticated(req, res, next) {
     res.redirect("/users/signin?referral_url=" + req.originalUrl );
   }
 }
+make_passwd = function(n, a) {
+  var index = (Math.random() * (a.length - 1)).toFixed(0);
+  return n > 0 ? a[index] + make_passwd(n - 1, a) : '';
+};
 
 /* all the routes under "/users"*/
 /* */
@@ -135,13 +139,17 @@ router.post('/account/:active_subsection', ensureAuthenticated, function (req, r
       return;
     });
   } else if (req.params.active_subsection === "reset_password") {
-    res.mailer.send('emails/email.jade', {to:"boweiliu2014@gmail.com", subject:"Test Email"}, function (err){
-      if (err){
-        console.log(err);
-        res.status(500).send("Internal error cause email cannot be sent");
-        return;
-      }
-      res.send("email sent");
+    req.user.password_hash = make_passwd(13, 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890');
+    req.user.save(function(err){
+      if (err) return next(err);
+      res.mailer.send('emails/email.jade', {to:req.user.email, subject:"[FASIDS] Your password has been reset", user:req.user}, function (err){
+        if (err){
+          console.log(err);
+          res.status(500).send("Internal error cause email cannot be sent");
+          return;
+        }
+        res.send("email sent");
+      });
     });
   }
 });

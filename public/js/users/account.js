@@ -37,11 +37,15 @@ $(document).ready(function onReady(){
       {email: target_scope.user.email}, 
       function onSuccess(data, text_status, jqXHR){
         if (data === "email sent"){
-
           target_scope.$apply( function updateScope(){
             target_scope.email_result_returned = true;
+
           }); 
-          
+          window.setTimeout(function delayed(){
+            target_scope.$apply(function (){
+              target_scope.email_result_returned  = false;
+            })
+          },4000);
           $(".email-sent-result").addClass("success");
           $(".email-sent-result").html("Email successfully sent");
         }
