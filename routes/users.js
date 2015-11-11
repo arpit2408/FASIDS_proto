@@ -17,10 +17,6 @@ function ensureAuthenticated(req, res, next) {
     res.redirect("/users/signin?referral_url=" + req.originalUrl );
   }
 }
-make_passwd = function(n, a) {
-  var index = (Math.random() * (a.length - 1)).toFixed(0);
-  return n > 0 ? a[index] + make_passwd(n - 1, a) : '';
-};
 
 /* all the routes under "/users"*/
 /* */
@@ -39,6 +35,54 @@ router.get('/signup', function (req, res, next){
     breadcrumTitle:"sign up",
     pathToHere:"users / signup"
   });
+});
+
+router.get('/forgot_password', function (req, res, next){
+  // res.send("reset your passowrd, page view is under implementing");
+  res.render("users/forgot_password", {
+    breadcrumTitle:"forgot password",
+    pathToHere:"users / forgot_password"
+  });
+});
+
+router.post("/forgot_password", function (req, res, next){
+  req.DB_USER.findOne({email:req.body.email}, null, function exec(err, target_user){
+    if (err) return next(err);
+    if (!target_user) {
+      res.render("users/forgot_password", {
+        breadcrumTitle:"forgot password",
+        pathToHere:"users / forgot_password",
+        msg_type:"danger",
+        msg_content:"Could not find " + req.body.email + " in data base, hence cannot reset your password."
+      });
+      return;
+    }
+    var old_password = target_user.password_hash;
+    target_user.resetPassword(function (err, instance){
+      if (err) return next(err);
+      res.mailer.send('emails/email.jade', {to:target_user.email, subject:"[FASIDS] Your password has been reset", user:target_user}, function (err){
+        if (err){
+          console.log(err);
+          res.render("users/forgot_password", {
+            breadcrumTitle:"forgot password",
+            pathToHere:"users / forgot_password",
+            msg_type:"danger",
+            msg_content:"Could not sent email to " + req.body.email + " password did not reset."
+          });
+          target_user.password_hash = old_password;
+          target_user.save();
+          return;
+        }
+        res.render("users/forgot_password", {
+          breadcrumTitle:"forgot password",
+          pathToHere:"users / forgot_password",
+          msg_type:"success",
+          msg_content:"Password of  " + req.body.email + " has been reset, please check your email."
+        });
+        return;
+      });
+    });
+  }); 
 });
 
 router.get('/signin', function(req,res,next){
@@ -74,7 +118,7 @@ router.post('/signup', function (req, res, next){
 
 router.get('/logout', function (req, res, next){
   req.logout();
-  res.redirect("back");
+  res.redirect("/");
 })
 
 router.get("/dashboard",ensureAuthenticated, function (req, res, next) {
@@ -113,8 +157,10 @@ function accountRenderHelper(req, res, next, active_subsection, flash){
   });
   return;
 }
-
-
+//active_subsection can be 
+//  "security"
+//  "basic_info"
+//  "reset_password"
 router.post('/account/:active_subsection', ensureAuthenticated, function (req, res, next){
   if (req.params.active_subsection === "security"){
     if (req.user.password_hash !== req.body.old_password) {
@@ -139,8 +185,7 @@ router.post('/account/:active_subsection', ensureAuthenticated, function (req, r
       return;
     });
   } else if (req.params.active_subsection === "reset_password") {
-    req.user.password_hash = make_passwd(13, 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890');
-    req.user.save(function(err){
+    req.user.resetPassword(  function (err, instance){
       if (err) return next(err);
       res.mailer.send('emails/email.jade', {to:req.user.email, subject:"[FASIDS] Your password has been reset", user:req.user}, function (err){
         if (err){
