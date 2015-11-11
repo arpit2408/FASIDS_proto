@@ -5,16 +5,14 @@ html
     meta(http-equiv = 'Content-Type', content = 'text/html; charset=UTF-8')
     title= subject
     body
-      h1.h1 Lorem ipsum
+      h1.h1 Password reset notification
       p
-        strong Lorem ipsum dolor: 
-        | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        | Dear 
+        strong #{user.displayName()} 
         br
-        |Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      h2.h2 Lorem ipsum
-      p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      p Lorem ipsum:
-      ol
-        li Lorem ipsum dolor
-        li Lorem ipsum dolor
-        li Lorem ipsum dolor
+        | Your request of reseting your password has been processed. Your password is reset as follows
+      h3.h3= user.password_hash
+      p Thank you for using FASIDS
+      p
+        i Regards,
+      p Adiminstration of FASIDS
