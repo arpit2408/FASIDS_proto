@@ -1,8 +1,23 @@
 extends ../layout
 
 block additionalCSS
+  link(href="/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
+  //I wrote the less into homeownermng.less just because I do not want create more styling file for this
+  link(href='/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
 
 block renderBody
+  .mapcover#mapcover
+    .mapcover-map#mapcover-map
+    .mc-static2mapcontainer.panel.panel-default#ant-selection-panel
+      .panel-body
+        | hehe
+
 
 
 block additionalJS
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
+  script(src="/underscorejs/underscore-min.js")
+  script(src="/js/backbone-min.js")
+  // mapcover depends on backbone.js and underscore.js
+  script(src="/assets/mapcover/js/mapcover.js")
+  script(src="/js/landscape/antdistribution.js" )

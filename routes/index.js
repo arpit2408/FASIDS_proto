@@ -372,7 +372,7 @@ router.get('/landscape/fire_ant_products', function(req, res, next){
   req.db_models.FireAntProduct.find({},null,{}, function exec(error, products ){
     if (error) return next(error);
     
-    res.render(("landscape/fire_ant_products.jade"),{
+    res.render("landscape/fire_ant_products.jade",{
       breadcrumTitle:"FIRE ANT PRODUCTS",
       pathToHere:"landscape / fire_ant_products",
       activePage:'Landscape',
@@ -380,6 +380,15 @@ router.get('/landscape/fire_ant_products', function(req, res, next){
       isAuthenticated: req.isAuthenticated(),
       user: processReqUser(req.user)
     });
+  });
+});
+
+// 11/12/2015 Add ant distribution map, this one should be one client side project
+
+router.get('/landscape/antdistribution', function (req, res, next){
+  res.render( "landscape/antdistribution.jade", {
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user)
   });
 });
 
