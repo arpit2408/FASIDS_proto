@@ -10,7 +10,7 @@ var logger = require('morgan');
 var session = require('express-session');   //package.json has info
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var flash = require('connect-flash');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -41,6 +41,7 @@ app.use(session({
     saveUninitialized: false,
     cookie:{maxAge:2678400}
 }));
+app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var passport = require('./components/processedPassport.js').addPassport(app, db_models);
@@ -55,11 +56,12 @@ app.use(function(req, res, next){
 
 // routing
 app.use('/', routes);
-app.post('/users/signin', passport.authenticate('local'),function (req, res, next){
+app.post('/users/signin', passport.authenticate('local',{failureRedirect:'/users/signin',failureFlash:true, sucessFlash: true}),function (req, res, next){
   if (typeof req.query.referral_url !== "undefined" && req.query.referral_url.search(/signin/) === -1){
     return res.redirect(req.query.referral_url);
-  }
-  res.redirect("back");
+  } 
+
+  res.redirect("/");
 });
 app.use('/users', users);
 

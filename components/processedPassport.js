@@ -9,33 +9,20 @@ function verifyCredentials(email, password, done) {
     localUtilities['db_models'].User.findOne({"email":email},null,{},function(err, instance){
       if (err) { 
         console.log(err.message);
-        return next(err);
+        return done(err);
       }
       else if(!instance) {
-        done(null, null);
+        done(null, null, {message:"Incorrect email & password combination"});
       } else{
-        var instance_result = instance.toObject(); // convert mongoose instance into JSON-lized object
-        if (instance_result.password_hash === password){
-          delete instance_result.password_hash;
-          done(null, instance_result);  // pass the whole user profile
+        if (instance.password_hash === password){
+          done(null, instance, {message:"You have successfully logged in"});  // pass the whole user profile
         } else{
           // Not authenticated
-          done(null, null);
+          done(null, false, {message:"Incorrect mail & password combination"});
         }
       }
     });// end of findOne
 }
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    // var my_error = new Error("Unauthorized behaviro");
-    // my_error.status = 401;
-    // next(my_error);
-    res.status(401).send("Unauthorized action, loggin required");
-  }
-}
-
 
 exports.addPassport = function (app, db_models){
   localUtilities['db_models'] = db_models;
@@ -56,14 +43,11 @@ exports.addPassport = function (app, db_models){
         //instance is an instance of User Model
         if (err) { 
           console.log(err.message);
-          return next(err);
+          return done(err);
         }
         else if(!instance) {
-          done(null, null);
+          return done(null, null);
         } else{
-          var instance_result = instance.toObject(); // convert mongoose instance into JSON-lized object
-          delete instance_result.password_hash;
-          // done(null, instance_result);
           done(null, instance);
         }
       });

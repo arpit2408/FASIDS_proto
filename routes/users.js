@@ -87,8 +87,15 @@ router.post("/forgot_password", function (req, res, next){
 
 router.get('/signin', function(req,res,next){
   var referal_url = req.query.referral_url;
+  var flash = _.clone(req.flash());  // because req.flash() is deleted once I have accessed it one time
+  flash = (flash.error ) ? {type:"danger", message:(flash.error) [0] } : null;
   res.render("users/signin.jade", {
-    dev_mode: true
+    breadcrumTitle:"sign in",
+    pathToHere:"users / signin",
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user),
+    dev_mode: true,
+    flash:flash
   });
 });
 
