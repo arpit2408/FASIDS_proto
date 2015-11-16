@@ -23,17 +23,21 @@ $(document).ready(function onReady(){
   // counties_name_hash will be like <county_name:string, data.feature>
   // data.feature: https://developers.google.com/maps/documentation/javascript/reference#Data.Feature
   var counties_name_hash = {};
+  var geojsons = [];
   gmap.data.loadGeoJson("/help-file/data/counties/tx_counties.geojson", null, function processFeature( feature_array){
     feature_array.forEach(function iteratee (element, index){
       counties_name_hash[element.getProperty("COUNTY")] = element;
-      console.log(counties_name_hash[element.getProperty("COUNTY")].getGeometry().getType());
+      // console.log(counties_name_hash[element.getProperty("COUNTY")].getGeometry().getType());
+      counties_name_hash[element.getProperty("COUNTY")].toGeoJson( function (geojson){
+        geojsons.push(geojson.properties);
+      }); 
     });
 
   });
   gmap.data.setStyle({
     fillColor:"rgba(0,0,0,0)",
-    strokeColor:"green",
-    strokeWeight:1
+    strokeColor:"rgba(0, 153, 0,0.3)",
+    strokeWeight:2
   })
 
   
