@@ -153,4 +153,4 @@ db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:
 
 
 
-mongo --quiet fasids --eval 'printjson(  db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:"$species"}}},{$sort:{_id:1}}]).toArray())' > output.json
+mongo --quiet fasids --eval 'printjson(  db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:"$species"}}},{$sort:{_id:1}}]).toArray() )' > output.json

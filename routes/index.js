@@ -1,7 +1,16 @@
 var express = require('express');
 var moment = require('moment');
+var Promise = require('promise');
 var router = express.Router();
 var _ = require('underscore');
+var readFile = Promise.denodeify(require('fs').readFile); // see https://www.promisejs.org/
+
+function readJSON(filename, callback){  //// see https://www.promisejs.org/
+  // If a callback is provided, call it with error as the first argument
+  // and result as the second argument, then return `undefined`.
+  // If no callback is provided, just return the promise.
+  return readFile(filename, 'utf8').then(JSON.parse).nodeify(callback);
+}
 
 
 function ensureAuthenticated(req, res, next) {
@@ -386,9 +395,14 @@ router.get('/landscape/fire_ant_products', function(req, res, next){
 // 11/12/2015 Add ant distribution map, this one should be one client side project
 
 router.get('/landscape/antdistribution', function (req, res, next){
-  res.render( "landscape/antdistribution.jade", {
-    isAuthenticated: req.isAuthenticated(),
-    user: processReqUser(req.user),
+  // TODO: promise readFile 
+  readJSON( './data/genus_species.json' , function (err, genus_species){
+    if (err) return next(err);
+    res.render( "landscape/antdistribution.jade", {
+      genus_species    : genus_species,
+      isAuthenticated  : req.isAuthenticated(),
+      user             : processReqUser(req.user),
+    });
   });
 });
 

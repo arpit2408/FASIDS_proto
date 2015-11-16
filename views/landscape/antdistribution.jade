@@ -8,11 +8,36 @@ block additionalCSS
 block renderBody
   .mapcover#mapcover
     .mapcover-map#mapcover-map
-    .mc-static2mapcontainer.panel.panel-default#ant-selection-panel
-      .panel-body
-        | hehe
+    .mc-static2mapcontainer.panel.panel-default#genus-species-panel
+      .panel-body.genus-species-index
+        .row
+          .col-xs-2
+
+            ul
+              li Index
+              - var init_char_list = []
+              each obj in genus_species
+                if (init_char_list.indexOf(obj.genus[0])=== -1 )
+                  - init_char_list.push(obj.genus[0])
+              - var charcode = 0
+              while charcode < init_char_list.length
+                li.initial-character= init_char_list[charcode]
+                - charcode = charcode + 1
+          .col-xs-5.genus-list
+            ul.genus-ul
+              li Genus
+              each obj in genus_species
+                li(class="hidden genus-inichar-#{obj.genus.charAt(0)}")=obj.genus
+          .col-xs-5.species-list
+            | Species
+            each obj in genus_species
+              ul(class="hidden species-list-#{obj.genus}")
+                each specie in obj.species_array
+                  li=specie
+
+
   .hidden
-    meta(name="fipss", content="#{JSON.stringify(fipss)}")
+    meta(name="genus-species-index", content="#{JSON.stringify( genus_species)}")
 
 
 block additionalJS
