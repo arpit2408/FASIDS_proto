@@ -388,8 +388,19 @@ router.get('/landscape/fire_ant_products', function(req, res, next){
 router.get('/landscape/antdistribution', function (req, res, next){
   res.render( "landscape/antdistribution.jade", {
     isAuthenticated: req.isAuthenticated(),
-    user: processReqUser(req.user)
+    user: processReqUser(req.user),
   });
+});
+
+router.get('/landscape/antdistribution_lookup', function (req, res, next){
+  req.db_models.AntDistribution.findFIPSFromSpecie(req.query.genus, req.query.species, function exec(err, ant_distributions){
+    var tbr = {};
+    _.each(ant_distributions, function(el, ind, arr){
+      tbr[el._id] = el.count;
+    });
+    res.json(tbr);
+  });
+
 });
 
 module.exports = router;

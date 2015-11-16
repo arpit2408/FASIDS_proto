@@ -135,3 +135,22 @@ db.fire_ant_product.update({usage:"Line"}, {$set:{usage:"line"}}, {multi:true})
 
 
 db.user.update({first_name:"Bowei"}, {$set:{password_hash:"test",email:"boweiliu2014@gmail.com"}})
+
+
+db.ant_distribution.aggregate(
+  [
+    {$match: { }},
+    { $group: { _id: "$fips", count: { $sum: 1 } } }
+
+  ]
+  Genus
+["Acanthomyops", "Acanthostichus", "Acromyrmex", "Amblyopone", "Aphaenogaster", "Atta", "Brachymyrmex", "Camponotus", "Cardiocondyla", "Cephalotes", "Cerapachys", "Crematogaster", "Cryptopone", "Cyphomyrmex", "Dorymyrmex", "Eciton", "Ectatomma", "Forelius", "Formica", "Gnamptogenys", "Hypoponera", "Labidus", "Lasius", "Leptogenys", "Leptothorax", "Linepithema", "Liometopum", "Monomorium", "Mycetosoritis", "Myrmecina", "Myrmecocystus", "Myrmica", "Neivamyrmex", "Nomamyrmex", "Odontomachus", "Oligomyrmex", "Pachycondyla", "Paratrechina", "Pheidole", "Platythyrea", "Pogonomyrmex", "Ponera", "Prenolepsis", "Proceratium", "Pseudomyrmex", "Rogeria", "Smithistruma", "Solenopsis", "Stenamma", "Strumigenys", "Tapinoma", "Tetramorium", "Trachymyrmex", "Trichoscapa"].forEach(function(genus, index, arr ){
+  db.ant_distribution.find({genus:genus});
+});
+
+
+db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:"$species"}}},{$sort:{_id:1}}]).toArray()
+
+
+
+mongo --quiet fasids --eval 'printjson(  db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:"$species"}}},{$sort:{_id:1}}]).toArray())' > output.json
