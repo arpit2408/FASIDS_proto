@@ -1,27 +1,32 @@
 [
   {
-    "Acanthomyops": [
+    "genus": "Acanthomyops",
+    "species_array": [
       "interjectus",
       "latipes"
     ]
   },
   {
-    "Acanthostichus": [
+    "genus": "Acanthostichus",
+    "species_array": [
       "texanus"
     ]
   },
   {
-    "Acromyrmex": [
+    "genus": "Acromyrmex",
+    "species_array": [
       "versicolor chisosensis"
     ]
   },
   {
-    "Amblyopone": [
+    "genus": "Amblyopone",
+    "species_array": [
       "pallipes"
     ]
   },
   {
-    "Aphaenogaster": [
+    "genus": "Aphaenogaster",
+    "species_array": [
       "albisetosa",
       "boulderensis smithi",
       "cockerelli",
@@ -37,18 +42,21 @@
     ]
   },
   {
-    "Atta": [
+    "genus": "Atta",
+    "species_array": [
       "texana"
     ]
   },
   {
-    "Brachymyrmex": [
+    "genus": "Brachymyrmex",
+    "species_array": [
       "depilis",
       "obscurior"
     ]
   },
   {
-    "Camponotus": [
+    "genus": "Camponotus",
+    "species_array": [
       "acutirostris",
       "americanus",
       "atriceps",
@@ -81,26 +89,30 @@
     ]
   },
   {
-    "Cardiocondyla": [
+    "genus": "Cardiocondyla",
+    "species_array": [
       "ectopia",
       "emeryi",
       "nuda"
     ]
   },
   {
-    "Cephalotes": [
+    "genus": "Cephalotes",
+    "species_array": [
       "angustus",
       "texanus"
     ]
   },
   {
-    "Cerapachys": [
+    "genus": "Cerapachys",
+    "species_array": [
       "augustae",
       "davisi"
     ]
   },
   {
-    "Crematogaster": [
+    "genus": "Crematogaster",
+    "species_array": [
       "arizonensis",
       "ashmeadi",
       "browni",
@@ -122,12 +134,14 @@
     ]
   },
   {
-    "Cryptopone": [
+    "genus": "Cryptopone",
+    "species_array": [
       "gilva"
     ]
   },
   {
-    "Cyphomyrmex": [
+    "genus": "Cyphomyrmex",
+    "species_array": [
       "flavidus",
       "minutus",
       "rimosus",
@@ -135,7 +149,8 @@
     ]
   },
   {
-    "Dorymyrmex": [
+    "genus": "Dorymyrmex",
+    "species_array": [
       "bicolor",
       "flavus",
       "insanus",
@@ -145,23 +160,27 @@
     ]
   },
   {
-    "Eciton": [
+    "genus": "Eciton",
+    "species_array": [
       "mexicanum"
     ]
   },
   {
-    "Ectatomma": [
+    "genus": "Ectatomma",
+    "species_array": [
       "tuberculatum"
     ]
   },
   {
-    "Forelius": [
+    "genus": "Forelius",
+    "species_array": [
       "mccooki",
       "pruinosus"
     ]
   },
   {
-    "Formica": [
+    "genus": "Formica",
+    "species_array": [
       "bradleyi",
       "gnava",
       "gynocrates",
@@ -179,12 +198,14 @@
     ]
   },
   {
-    "Gnamptogenys": [
+    "genus": "Gnamptogenys",
+    "species_array": [
       "hartmanni"
     ]
   },
   {
-    "Hypoponera": [
+    "genus": "Hypoponera",
+    "species_array": [
       "ergatandria",
       "gleadowi",
       "inexorata",
@@ -194,23 +215,27 @@
     ]
   },
   {
-    "Labidus": [
+    "genus": "Labidus",
+    "species_array": [
       "coecus"
     ]
   },
   {
-    "Lasius": [
+    "genus": "Lasius",
+    "species_array": [
       "neoniger",
       "sitiens"
     ]
   },
   {
-    "Leptogenys": [
+    "genus": "Leptogenys",
+    "species_array": [
       "elongata"
     ]
   },
   {
-    "Leptothorax": [
+    "genus": "Leptothorax",
+    "species_array": [
       "carinatus",
       "curvispinosus",
       "hispidus",
@@ -236,18 +261,21 @@
     ]
   },
   {
-    "Linepithema": [
+    "genus": "Linepithema",
+    "species_array": [
       "humile"
     ]
   },
   {
-    "Liometopum": [
+    "genus": "Liometopum",
+    "species_array": [
       "apiculatum",
       "luctuosum"
     ]
   },
   {
-    "Monomorium": [
+    "genus": "Monomorium",
+    "species_array": [
       "carbonarium",
       "cyaneum",
       "minimum",
@@ -256,17 +284,20 @@
     ]
   },
   {
-    "Mycetosoritis": [
+    "genus": "Mycetosoritis",
+    "species_array": [
       "hartmanni"
     ]
   },
   {
-    "Myrmecina": [
+    "genus": "Myrmecina",
+    "species_array": [
       "americana"
     ]
   },
   {
-    "Myrmecocystus": [
+    "genus": "Myrmecocystus",
+    "species_array": [
       "depilis",
       "melliger",
       "mendax",
@@ -278,7 +309,8 @@
     ]
   },
   {
-    "Myrmica": [
+    "genus": "Myrmica",
+    "species_array": [
       "brevinodus",
       "colax",
       "latifrons",
@@ -287,7 +319,8 @@
     ]
   },
   {
-    "Neivamyrmex": [
+    "genus": "Neivamyrmex",
+    "species_array": [
       "baylori",
       "fallax",
       "fuscipennis",
@@ -309,28 +342,33 @@
     ]
   },
   {
-    "Nomamyrmex": [
+    "genus": "Nomamyrmex",
+    "species_array": [
       "esenbecki wilsoni"
     ]
   },
   {
-    "Odontomachus": [
+    "genus": "Odontomachus",
+    "species_array": [
       "clarus"
     ]
   },
   {
-    "Oligomyrmex": [
+    "genus": "Oligomyrmex",
+    "species_array": [
       "longii"
     ]
   },
   {
-    "Pachycondyla": [
+    "genus": "Pachycondyla",
+    "species_array": [
       "harpax",
       "villosa"
     ]
   },
   {
-    "Paratrechina": [
+    "genus": "Paratrechina",
+    "species_array": [
       "arenivaga",
       "austroccidua",
       "bourbonica",
@@ -344,7 +382,8 @@
     ]
   },
   {
-    "Pheidole": [
+    "genus": "Pheidole",
+    "species_array": [
       "anastasii",
       "bicarinata vinelandica",
       "casta",
@@ -394,12 +433,14 @@
     ]
   },
   {
-    "Platythyrea": [
+    "genus": "Platythyrea",
+    "species_array": [
       "punctata"
     ]
   },
   {
-    "Pogonomyrmex": [
+    "genus": "Pogonomyrmex",
+    "species_array": [
       "apache",
       "barbatus",
       "bigbendensis",
@@ -414,24 +455,28 @@
     ]
   },
   {
-    "Ponera": [
+    "genus": "Ponera",
+    "species_array": [
       "exotica",
       "pennsylvanica"
     ]
   },
   {
-    "Prenolepsis": [
+    "genus": "Prenolepsis",
+    "species_array": [
       "imparis"
     ]
   },
   {
-    "Proceratium": [
+    "genus": "Proceratium",
+    "species_array": [
       "compitale",
       "pergandei"
     ]
   },
   {
-    "Pseudomyrmex": [
+    "genus": "Pseudomyrmex",
+    "species_array": [
       "apache",
       "brunneus",
       "ejectus",
@@ -442,12 +487,14 @@
     ]
   },
   {
-    "Rogeria": [
+    "genus": "Rogeria",
+    "species_array": [
       "creightoni"
     ]
   },
   {
-    "Smithistruma": [
+    "genus": "Smithistruma",
+    "species_array": [
       "clypeata",
       "laevinasis",
       "margaritae",
@@ -458,7 +505,8 @@
     ]
   },
   {
-    "Solenopsis": [
+    "genus": "Solenopsis",
+    "species_array": [
       "amblychila",
       "aurea",
       "geminata",
@@ -476,24 +524,28 @@
     ]
   },
   {
-    "Stenamma": [
+    "genus": "Stenamma",
+    "species_array": [
       "hauchucanum"
     ]
   },
   {
-    "Strumigenys": [
+    "genus": "Strumigenys",
+    "species_array": [
       "louisianae",
       "silvestrii"
     ]
   },
   {
-    "Tapinoma": [
+    "genus": "Tapinoma",
+    "species_array": [
       "melanocephalum",
       "sessile"
     ]
   },
   {
-    "Tetramorium": [
+    "genus": "Tetramorium",
+    "species_array": [
       "bicarinatum",
       "hispidum",
       "spinosum",
@@ -501,7 +553,8 @@
     ]
   },
   {
-    "Trachymyrmex": [
+    "genus": "Trachymyrmex",
+    "species_array": [
       "arizonensis",
       "desertorum",
       "septentrionalis",
@@ -511,7 +564,8 @@
     ]
   },
   {
-    "Trichoscapa": [
+    "genus": "Trichoscapa",
+    "species_array": [
       "membranifera"
     ]
   }

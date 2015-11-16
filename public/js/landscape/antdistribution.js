@@ -6,6 +6,8 @@ $(document).ready(function onReady(){
   })();  
   // logic begins
   //31.560112, -98.551199
+  var genus_species = JSON.parse($("meta[name=genus-species-index]").attr("content"));
+
   var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,    { 
       draggingCursor:"move",
       draggableCursor:"auto",
@@ -38,7 +40,73 @@ $(document).ready(function onReady(){
     fillColor:"rgba(0,0,0,0)",
     strokeColor:"rgba(0, 153, 0,0.3)",
     strokeWeight:2
-  })
+  });
 
-  
+
+  var GenusSpeciesPanel = Backbone.View.extend({
+    el: document.getElementById("genus-species-panel"),
+    expandTill:function (section){
+      console.log("expandTill");
+      var ClassRef = this;
+      switch(section){
+        case "genus":
+          ClassRef.$el.find(".genus-ul li").addClass("hidden");
+          ClassRef.$el.find(".genus-ul li:first-child").removeClass("hidden");
+          ClassRef.$el.find(".col-xs-5.genus-list").show();
+          ClassRef.$el.find(".col-xs-5.species-list").hide();
+        break;
+        case "species":
+          ClassRef.$el.find(".species-list ul").addClass("hidden");
+
+          ClassRef.$el.find(".col-xs-5.species-list").show();
+        break;
+        default:
+      }
+    },
+    test: function (){
+      var ClassRef = this;
+      this.$el.hide();
+      console.log("asdf");
+    },
+    render: function (){
+      // console.log("render: " + this.model.get("genus") + " ," + this.model.get("specie"));
+
+      var mapped = _.omit( {genus: genus_species_core.get("genus"), species: genus_species_core.get("specie")}, function (val, key){
+        return !val;
+      });
+      console.log("/landscape/antdistribution_lookup?"+ $.param(mapped));
+      $.get("/landscape/antdistribution_lookup" , mapped, function (data){
+        console.log(data);
+      }  );
+    },
+    initialize:function(){
+      var ClassRef = this;
+      ClassRef.$el.find(".col-xs-5.genus-list,.col-xs-5.species-list").hide();
+      ClassRef.listenTo(ClassRef.model, 'change', ClassRef.render )
+    }
+  });
+  var genus_species_core = new Backbone.Model({
+    genus:null,
+    specie:null
+  })
+  var genus_species_panel = new GenusSpeciesPanel({model:genus_species_core});
+  $("li.initial-character").click( function onClick(){
+    var $this = $(this);
+    genus_species_panel.expandTill("genus");
+    $(".genus-inichar-"+ $this.text()).removeClass("hidden");
+  });
+
+  $(".col-xs-5.genus-list li").click(function onClick(){
+    var $this = $(this);
+    genus_species_panel.expandTill("species");
+    $("ul.species-list-"+$this.text()).removeClass("hidden");
+    genus_species_core.set("genus", $this.text());
+    genus_species_core.set("specie", null);
+  });
+
+  $(".col-xs-5.species-list ul li").click( function onClick(){
+    var $this = $(this);
+    genus_species_core.set("specie", $this.text());
+  });
+
 });
