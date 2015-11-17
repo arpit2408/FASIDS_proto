@@ -407,7 +407,7 @@ router.get('/landscape/antdistribution', function (req, res, next){
 });
 
 router.get('/landscape/antdistribution_lookup', function (req, res, next){
-  req.db_models.AntDistribution.findFIPSFromSpecie(req.query.genus, req.query.species, function exec(err, ant_distributions){
+  req.db_models.AntDistribution.findFIPSFromSpecie(req.query.genus, req.query.specie, function exec(err, ant_distributions){
     var tbr = {};
     _.each(ant_distributions, function(el, ind, arr){
       tbr[el._id] = el.count;

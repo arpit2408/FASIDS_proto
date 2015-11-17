@@ -25,15 +25,15 @@ $(document).ready(function onReady(){
   // counties_hash will be like <county_name:string, data.feature>
   // data.feature: https://developers.google.com/maps/documentation/javascript/reference#Data.Feature
   var counties_hash = {};
-  var geojsons = [];
+  // var geojsons = [];
   gmap.data.loadGeoJson("/help-file/data/counties/tx_counties.geojson", null, function processFeature( feature_array){
     feature_array.forEach(function iteratee (element, index){
       counties_hash[element.getProperty("COUNTY")] = element;
       counties_hash[element.getProperty("FIPS")]   = element;
       // console.log(counties_hash[element.getProperty("COUNTY")].getGeometry().getType());
-      counties_hash[element.getProperty("COUNTY")].toGeoJson( function (geojson){
-        geojsons.push(geojson.properties);
-      }); 
+      // counties_hash[element.getProperty("COUNTY")].toGeoJson( function (geojson){
+      //   geojsons.push(geojson.properties);
+      // }); 
     });
 
   });
@@ -53,13 +53,13 @@ $(document).ready(function onReady(){
       switch(section){
         case "genus":
           ClassRef.$el.find(".genus-ul li").addClass("hidden");
-          ClassRef.$el.find(".col-xs-5.genus-list").show(100);
-          ClassRef.$el.find(".col-xs-5.species-list").hide(100);
+          ClassRef.$el.find(".col-xs-5.genus-list").show();
+          ClassRef.$el.find(".col-xs-5.species-list").hide();
         break;
         case "species":
           ClassRef.$el.find(".species-list ul").addClass("hidden");
 
-          ClassRef.$el.find(".col-xs-5.species-list").show(100);
+          ClassRef.$el.find(".col-xs-5.species-list").show();
         break;
         default:
       }
@@ -67,14 +67,16 @@ $(document).ready(function onReady(){
     test: function (){
       var ClassRef = this;
       this.$el.hide();
-      console.log("asdf");
+      // console.log("asdf");
     },
     render: function (){
       // console.log("render: " + this.model.get("genus") + " ," + this.model.get("specie"));
+
       var ClassRef = this;
-      var mapped = _.omit( {genus: genus_species_core.get("genus"), species: genus_species_core.get("specie")}, function (val, key){
+      var mapped = _.omit( {genus: genus_species_core.get("genus"), specie: genus_species_core.get("specie")}, function (val, key){
         return !val;
       });
+      ClassRef.$el.find("li").removeClass("active");
       // console.log("/landscape/antdistribution_lookup?"+ $.param(mapped));
       $.get("/landscape/antdistribution_lookup" , mapped, function (data){
         _.each(ClassRef.model.get("revert_style_cache"), function (fips, array_index, ar){
@@ -91,6 +93,14 @@ $(document).ready(function onReady(){
           });
         });
       });
+      // show active Init Character, Genus, and Species
+      //.character-A,  genus specie
+      if (!mapped.specie){
+        mapped.specie = "undefined";
+      }
+      // console.log(".character-" + mapped.genus[0] + ", ." + mapped.genus+ ", ." + mapped.specie.replace(" ", "SpacE") );
+      $(".character-" + mapped.genus[0] + ", ." + mapped.genus+ ", ." + mapped.specie.replace(" ", "SpacE") ).addClass("active");
+
     },
     initialize:function(){
       var ClassRef = this;
@@ -112,19 +122,14 @@ $(document).ready(function onReady(){
 
   $(".col-xs-5.genus-list li").click(function onClick(){
     var $this = $(this);
-
-    $this.parent().parent().parent().find("li").removeClass("active");
-    $this.addClass("active");
     genus_species_panel.expandTill("species");
-    $("ul.species-list-"+$this.text()).removeClass("hidden");
-    genus_species_core.set("genus", $this.text());
+    $("ul.species-list-"+$this.data("genus")).removeClass("hidden");
+    genus_species_core.set("genus", $this.data("genus"));
     genus_species_core.set("specie", null);
   });
 
   $(".col-xs-5.species-list ul li").click( function onClick(){
     var $this = $(this);
-    $this.parent().find("li").removeClass("active");
-    $this.addClass("active");
     genus_species_core.set("specie", $this.text());
   });
 

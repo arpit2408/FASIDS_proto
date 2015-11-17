@@ -1,6 +1,7 @@
 extends ../layout
 
 block additionalCSS
+  link(href='/css/pace_loadingbar.css', rel='stylesheet', type='text/css', media='screen')  
   link(href="/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
   //I wrote the less into homeownermng.less just because I do not want create more styling file for this
   link(href='/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
@@ -20,19 +21,19 @@ block renderBody
                   - init_char_list.push(obj.genus[0])
               - var index = 0
               while index < init_char_list.length
-                li.initial-character= init_char_list[index]
+                li.initial-character(class="character-#{init_char_list[index]}")=init_char_list[index]
                 - index = index + 1
           .col-xs-5.genus-list
             | Genus
             ul.genus-ul
               each obj in genus_species
-                li(class="hidden genus-inichar-#{obj.genus.charAt(0)}")=obj.genus
+                li(class="hidden genus-inichar-#{obj.genus.charAt(0)} #{obj.genus}" data-genus=obj.genus )=obj.genus+" (" +obj.species_array.length + ")"
           .col-xs-5.species-list
             | Species
             each obj in genus_species
               ul(class="hidden species-list-#{obj.genus}")
                 each specie in obj.species_array
-                  li=specie
+                  li(class=specie.replace(" ", "SpacE"))=specie
 
 
   .hidden
@@ -43,6 +44,7 @@ block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
   script(src="/underscorejs/underscore-min.js")
   script(src="/js/backbone-min.js")
+  script(src="/assets/pace_pageloading/pace.min.js")
   // mapcover depends on backbone.js and underscore.js
   script(src="/assets/mapcover/js/mapcover.js")
   script(src="/js/landscape/antdistribution.js" )
