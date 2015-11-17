@@ -22,15 +22,17 @@ $(document).ready(function onReady(){
       }
   });
   var gmap = mapcover.model.get("map");
-  // counties_name_hash will be like <county_name:string, data.feature>
+  // counties_hash will be like <county_name:string, data.feature>
   // data.feature: https://developers.google.com/maps/documentation/javascript/reference#Data.Feature
-  var counties_name_hash = {};
+  var counties_hash = {};
   var geojsons = [];
   gmap.data.loadGeoJson("/help-file/data/counties/tx_counties.geojson", null, function processFeature( feature_array){
     feature_array.forEach(function iteratee (element, index){
-      counties_name_hash[element.getProperty("COUNTY")] = element;
-      // console.log(counties_name_hash[element.getProperty("COUNTY")].getGeometry().getType());
-      counties_name_hash[element.getProperty("COUNTY")].toGeoJson( function (geojson){
+      counties_hash[element.getProperty("COUNTY")] = element;
+      counties_hash[element.getProperty("FIPS")]   = element;
+      // console.log(counties_hash[element.getProperty("COUNTY")].getGeometry().getType());
+      counties_hash[element.getProperty("COUNTY")].toGeoJson( function (geojson){
+        console.log(geojson.properties);
         geojsons.push(geojson.properties);
       }); 
     });
@@ -38,7 +40,7 @@ $(document).ready(function onReady(){
   });
   gmap.data.setStyle({
     fillColor:"rgba(0,0,0,0)",
-    strokeColor:"rgba(0, 153, 0,0.3)",
+    strokeColor:"rgba(0, 153, 0,0.5)",
     strokeWeight:2
   });
 
@@ -76,8 +78,29 @@ $(document).ready(function onReady(){
       });
       console.log("/landscape/antdistribution_lookup?"+ $.param(mapped));
       $.get("/landscape/antdistribution_lookup" , mapped, function (data){
+        //Example: Object {48109: 5, 48125: 5, 48483: 5}
         console.log(data);
-      }  );
+
+        gmap.data.setStyle(function (feature){
+
+          if (_.has(data,feature.getProperty("FIPS")) ){
+            return ({
+              fillColor:"rgb(0, 102, 255)",
+              strokeColor:"rgba(0, 153, 0, 0.5)",
+              strokeWeight:2
+            });
+          }
+          return ({
+            fillColor:"rgba(0,0,0,0)",
+            strokeColor:"rgba(0, 153, 0,0.5)",
+            strokeWeight:2
+          });
+        });
+        _.each(data, function (observation_number, key, data){
+          console.log(key);
+
+        });
+      } );
     },
     initialize:function(){
       var ClassRef = this;
