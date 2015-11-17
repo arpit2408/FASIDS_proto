@@ -25,6 +25,7 @@
   -moz-box-shadow: 0px 1px 1px #aaaaaa;
   -ms-box-shadow: 0px 1px 1px #aaaaaa;
   box-shadow: 0px 1px 1px #aaaaaa;
+  background-clip: padding-box;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
@@ -41,6 +42,7 @@
   -moz-box-shadow: 0px 1px 1px #aaaaaa;
   -ms-box-shadow: 0px 1px 1px #aaaaaa;
   box-shadow: 0px 1px 1px #aaaaaa;
+  background-clip: padding-box;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
@@ -85,12 +87,20 @@
   -moz-box-shadow: 0px 1px 1px #aaaaaa;
   -ms-box-shadow: 0px 1px 1px #aaaaaa;
   box-shadow: 0px 1px 1px #aaaaaa;
+  background-clip: padding-box;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
   border-radius: 3px;
   overflow: auto;
   height: 500px;
+}
+.genus-species-index {
+  -webkit-transition: width 200ms;
+  -moz-transition: width 200ms;
+  -o-transition: width 200ms;
+  -ms-transition: width 200ms;
+  transition: width 200ms;
 }
 .genus-species-index .col-xs-2 {
   width: 72px;

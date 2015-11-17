@@ -16,8 +16,8 @@ $(document).ready(function onReady(){
       zoomControl:false,    //left side
       panControl:false,     //left top corner: 
       // mapTypeControl:false  //right top corner: "map|satellite"
+      mapTypeId: google.maps.MapTypeId.TERRAIN,
       mapTypeControlOptions: {
-        // style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
         position: google.maps.ControlPosition.TOP_RIGHT
       }
   });
@@ -39,6 +39,7 @@ $(document).ready(function onReady(){
   });
   gmap.data.setStyle({
     fillColor:"rgba(0,0,0,0)",
+    fillOpacity:1,
     strokeColor:"rgba(0, 153, 0,0.5)",
     strokeWeight:2
   });
@@ -52,13 +53,13 @@ $(document).ready(function onReady(){
       switch(section){
         case "genus":
           ClassRef.$el.find(".genus-ul li").addClass("hidden");
-          ClassRef.$el.find(".col-xs-5.genus-list").show();
-          ClassRef.$el.find(".col-xs-5.species-list").hide();
+          ClassRef.$el.find(".col-xs-5.genus-list").show(100);
+          ClassRef.$el.find(".col-xs-5.species-list").hide(100);
         break;
         case "species":
           ClassRef.$el.find(".species-list ul").addClass("hidden");
 
-          ClassRef.$el.find(".col-xs-5.species-list").show();
+          ClassRef.$el.find(".col-xs-5.species-list").show(100);
         break;
         default:
       }
@@ -70,26 +71,23 @@ $(document).ready(function onReady(){
     },
     render: function (){
       // console.log("render: " + this.model.get("genus") + " ," + this.model.get("specie"));
-
+      var ClassRef = this;
       var mapped = _.omit( {genus: genus_species_core.get("genus"), species: genus_species_core.get("specie")}, function (val, key){
         return !val;
       });
-      console.log("/landscape/antdistribution_lookup?"+ $.param(mapped));
+      // console.log("/landscape/antdistribution_lookup?"+ $.param(mapped));
       $.get("/landscape/antdistribution_lookup" , mapped, function (data){
-        //Example: Object {48109: 5, 48125: 5, 48483: 5}
-        gmap.data.setStyle(function (feature){
-          if (_.has(data,feature.getProperty("FIPS")) ){
-            // console.log(feature.getProperty("FIPS"));
-            return ({
-              fillColor:"rgb(0, 102, 255)",
-              strokeColor:"rgba(0, 153, 0, 0.5)",
-              strokeWeight:2
-            });
-          }
-          return ({
-            fillColor:"rgba(0,0,0,0)",
-            strokeColor:"rgba(0, 153, 0,0.5)",
-            strokeWeight:2
+        _.each(ClassRef.model.get("revert_style_cache"), function (fips, array_index, ar){
+          gmap.data.overrideStyle(counties_hash[fips], {
+            fillColor:"rgba(0, 0, 0,0)"
+          });
+        });
+        //http://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
+        ClassRef.model.get("revert_style_cache").length = 0;
+        _.each(data, function (number_observation, fips, data){
+          ClassRef.model.get("revert_style_cache").push(fips);
+          gmap.data.overrideStyle(counties_hash[fips], {
+            fillColor:"rgba(255, 153, 51,0.7)"
           });
         });
       });
@@ -102,7 +100,8 @@ $(document).ready(function onReady(){
   });
   var genus_species_core = new Backbone.Model({
     genus:null,
-    specie:null
+    specie:null,
+    revert_style_cache:[]
   })
   var genus_species_panel = new GenusSpeciesPanel({model:genus_species_core});
   $("li.initial-character").click( function onClick(){
