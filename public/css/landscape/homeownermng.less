@@ -97,7 +97,6 @@
 
 /*following code is for antdistribution.jade*/
 #genus-species-panel{
-  width: 400px;
   left:20px;
   top: 10px;
   .box-shadow(0px 1px 1px #aaa);
@@ -106,13 +105,23 @@
   height: 500px;
 }
 .genus-species-index{
+
+  .col-xs-2{
+    width: 72px;
+  }
+  .col-xs-5{
+    width: 180px;
+  }
   ul {
     padding: 0px;
     li{
       cursor: pointer;
       &:hover{
-        font-weight:bold;
+        // font-weight:bold;
         text-decoration: underline;
+      }
+      &.active{
+        color:#3366ff;
       }
       list-style: none;
       line-height: 1.42857143;
