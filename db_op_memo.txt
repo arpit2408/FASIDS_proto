@@ -73,36 +73,6 @@ provider: http://openweathermap.org/api
    ]
 }
 
-    mockPolygon:{
-     "type":"FeatureCollection",
-     "features":[
-        {
-           "type":"Feature",
-           "geometry":{
-              "type":"Polygon",
-              "coordinates":[
-                 [
-                    [100.0,0.0],
-                    [101.0,0.0],
-                    [101.0,1.0],
-                    [100.0,1.0],
-                    [100.0,0.0]
-                 ],
-                 [
-                    [100.2,0.2],
-                    [100.5,0.0],
-                    [100.5,1.0],
-                    [100.2,0.2]
-                 ]
-              ]
-           },
-           "properties":{
-              "prop0":"value0",
-              "prop1":"value1"
-           }
-        }
-     ]
-    },
 
 
 // for /landscape/treatment
@@ -131,9 +101,6 @@ db.fire_ant_product.update({usage:"Line"}, {$set:{usage:"line"}}, {multi:true})
 }
 
 
-
-
-
 db.user.update({first_name:"Bowei"}, {$set:{password_hash:"test",email:"boweiliu2014@gmail.com"}})
 
 
@@ -151,6 +118,6 @@ db.ant_distribution.aggregate(
 
 db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:"$species"}}},{$sort:{_id:1}}]).toArray()
 
-
-
+将mongo数据导出为文件
 mongo --quiet fasids --eval 'printjson(  db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:"$species"}}},{$sort:{_id:1}}]).toArray() )' > output.json
+
