@@ -32,7 +32,6 @@ $(document).ready(function onReady(){
       counties_hash[element.getProperty("FIPS")]   = element;
       // console.log(counties_hash[element.getProperty("COUNTY")].getGeometry().getType());
       counties_hash[element.getProperty("COUNTY")].toGeoJson( function (geojson){
-        console.log(geojson.properties);
         geojsons.push(geojson.properties);
       }); 
     });
@@ -53,7 +52,6 @@ $(document).ready(function onReady(){
       switch(section){
         case "genus":
           ClassRef.$el.find(".genus-ul li").addClass("hidden");
-          ClassRef.$el.find(".genus-ul li:first-child").removeClass("hidden");
           ClassRef.$el.find(".col-xs-5.genus-list").show();
           ClassRef.$el.find(".col-xs-5.species-list").hide();
         break;
@@ -79,11 +77,9 @@ $(document).ready(function onReady(){
       console.log("/landscape/antdistribution_lookup?"+ $.param(mapped));
       $.get("/landscape/antdistribution_lookup" , mapped, function (data){
         //Example: Object {48109: 5, 48125: 5, 48483: 5}
-        console.log(data);
-
         gmap.data.setStyle(function (feature){
-
           if (_.has(data,feature.getProperty("FIPS")) ){
+            // console.log(feature.getProperty("FIPS"));
             return ({
               fillColor:"rgb(0, 102, 255)",
               strokeColor:"rgba(0, 153, 0, 0.5)",
@@ -96,11 +92,7 @@ $(document).ready(function onReady(){
             strokeWeight:2
           });
         });
-        _.each(data, function (observation_number, key, data){
-          console.log(key);
-
-        });
-      } );
+      });
     },
     initialize:function(){
       var ClassRef = this;
@@ -121,6 +113,9 @@ $(document).ready(function onReady(){
 
   $(".col-xs-5.genus-list li").click(function onClick(){
     var $this = $(this);
+
+    $this.parent().parent().parent().find("li").removeClass("active");
+    $this.addClass("active");
     genus_species_panel.expandTill("species");
     $("ul.species-list-"+$this.text()).removeClass("hidden");
     genus_species_core.set("genus", $this.text());
@@ -129,6 +124,8 @@ $(document).ready(function onReady(){
 
   $(".col-xs-5.species-list ul li").click( function onClick(){
     var $this = $(this);
+    $this.parent().find("li").removeClass("active");
+    $this.addClass("active");
     genus_species_core.set("specie", $this.text());
   });
 
