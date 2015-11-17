@@ -13,7 +13,7 @@ block renderBody
       .panel-body.genus-species-index
         .row
           .col-xs-2
-            | Index
+            b Index
             ul
               - var init_char_list = []
               each obj in genus_species
@@ -24,12 +24,12 @@ block renderBody
                 li.initial-character(class="character-#{init_char_list[index]}")=init_char_list[index]
                 - index = index + 1
           .col-xs-5.genus-list
-            | Genus
+            b Genus
             ul.genus-ul
               each obj in genus_species
                 li(class="hidden genus-inichar-#{obj.genus.charAt(0)} #{obj.genus}" data-genus=obj.genus )=obj.genus+" (" +obj.species_array.length + ")"
           .col-xs-5.species-list
-            | Species
+            b Species
             each obj in genus_species
               ul(class="hidden species-list-#{obj.genus}")
                 each specie in obj.species_array
