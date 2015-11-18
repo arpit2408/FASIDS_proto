@@ -8,6 +8,9 @@ block renderBody
 
   mixin tabledatarow(product)
     tr
+      td
+        a(href=product.product_url, target="_blank")
+          img.img-thumbnail( src=product.homedepot_img_small_url alt="product_img")
       td= product.product_id
       td= product.product_name
       td= product.application_type
@@ -54,7 +57,8 @@ block renderBody
       table.table.table-striped
         thead
           tr
-            th #
+            th Thumbnail Img
+            th Product Id
             th Product Name
             th Application Type
             th Coverage per unit

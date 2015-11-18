@@ -1,66 +1,80 @@
 [
   {
+    "product_url":"http://www.homedepot.com/p/Ortho-Orthene-12-oz-Fire-Ant-Killer-0282210/100056182",
     "product_id":100056182,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/11/11be8011-7087-4c3b-80e6-9ea8bb6c83f1_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/Spectracide-3-5-lb-Fire-Ant-Killer-HG-53225-7/202056478",
     "product_id":202056478,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/54/54434130-1ebb-4ae3-807a-e3a6f646469f_1000.jpg"
+
   },
   {
+    "product_url":"http://www.homedepot.com/p/Over-n-Out-Advanced-11-5-lb-Fire-Ant-Killer-100515674/204599626",
     "product_id":204599626,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/a5/a574aa0f-15d7-4fb1-9ab3-e431c393da2a_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/Spectracide-20-lb-Triazicide-Insect-Killer-for-Lawns-Granules-HG-83961/202056480",
     "product_id":202056480,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/0a/0ac5c744-44e3-4f26-9696-125fc93232c6_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/AMDRO-24-oz-Ant-Block-Home-Perimeter-Ant-Bait-100099216/100598633",
     "product_id":100598633,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/8d/8d478c24-07a6-4236-a78a-e7ee7a4aae3e_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/Ortho-4-lb-Ready-to-Use-Fire-Ant-Killer-Mound-Treatment-0258310/100464289",
     "product_id":100464289,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/bb/bb4bf35c-acf4-4498-a4ba-3b524266719a_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/Ortho-Max-11-5-lb-Fire-Ant-Killer-0257549/100017237",
     "product_id":100017237,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/e0/e082e4c4-273a-4341-bfff-bb84110a6cdd_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/AMDRO-2-lb-Fire-Ant-Bait-100099072/100662156",
     "product_id":100662156,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/e5/e5144328-1609-4932-9141-c8328e2fed31_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/AMDRO-1-lb-Fire-Ant-Bait-100099070/100327315",
     "product_id":100327315,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/ef/efc12d33-30ee-4712-aa2a-4c4b1eb5321a_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/AMDRO-5-lb-Kills-Fire-Ants-Yard-Treatment-Bait-100511025/204020090",
     "product_id":204020090,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/dc/dc4ac5c5-a5a2-4be8-884e-31173efe91ac_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/Compare-N-Save-4-lb-Fire-Ant-Killer-Granules-75332/203112362",
     "product_id":203112362,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/b3/b331c9e9-140d-4891-b326-86d126ab775d_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/AMDRO-32-oz-Ready-to-Use-Quick-Kill-Lawn-and-Landscape-Insect-Killer-Spray-100518836/203031281",
     "product_id":203031281,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/75/758fadc4-14fd-46e5-aabd-18c198ede367_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/Scotts-Snap-Pac-9-2-lb-Fire-Ant-Killer-24580A/202611668",
     "product_id":202611668,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/5c/5c4ac4fa-318d-4ba8-9c71-773762340d30_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/Bengal-UltraDust-2X-12-oz-Fire-Ant-Killer-93650/202523208",
     "product_id":202523208,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/69/691bbf59-809a-4767-8476-83b2a6a014ee_1000.jpg"
   },
   {
+    "product_url":"http://www.homedepot.com/p/Pro-Care-1-lb-Acephate-Fire-Ant-Killer-100521490/205673144",
     "product_id":205673144,
     "picurl_1000":"http://www.homedepot.com/catalog/productImages/1000/c8/c861e23a-084d-44dd-a331-d4216900732b_1000.jpg"
   }
 ].forEach(function(el, index, ar){
-  db.fire_ant_product.update({product_id:el.product_id}, {$set:{homedepot_img_small_url:el.picurl_1000.replace(/1000/g,"145"),
-    homedepot_img_url:el.picurl_1000
-  }});
+  db.fire_ant_product.update({product_id:el.product_id}, {$set:{"product_url":el.product_url }})
 });
