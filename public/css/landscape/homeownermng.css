@@ -2,6 +2,10 @@
   margin: 0px;
   padding: 0px;
 }
+.at-bottom-right {
+  bottom: 0;
+  right: 0;
+}
 .search-row .input-group {
   padding: 3px 0px;
 }
@@ -103,6 +107,13 @@
   padding-left: 0px;
   max-height: 490px;
   overflow: auto;
+}
+.genus-species-index .col-xs-5 .collapse-button {
+  padding-right: 30px;
+  cursor: pointer;
+}
+.genus-species-index .col-xs-5 .collapse-button span {
+  padding-left: 10px;
 }
 .genus-species-index ul {
   padding: 0px;
