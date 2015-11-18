@@ -4,7 +4,7 @@
 var mongoose = require('mongoose');
 var _ = require('underscore');
 var fire_ant_product_schema = new mongoose.Schema({
-  product_id:Number,           // get from homedeport Internet #
+  product_id:Number,           // get from homedepot Internet #
   product_name: String,
   manufacturer: String,
   application_type: String,    //  granular, dust
@@ -19,6 +19,10 @@ var fire_ant_product_schema = new mongoose.Schema({
   is_water_needed: Boolean,   
   homedepot_score: Number, 
   product_overview: String,
+  product_url:String,
+  homedepot_img_small_url:String,
+  homedepot_img_url: String,
+  backup_url:String
 },{ collection:'fire_ant_product'});
 
 // define instance methods
