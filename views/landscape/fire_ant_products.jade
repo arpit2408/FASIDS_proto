@@ -6,6 +6,8 @@ block renderBody
   //- put mixins here
   mixin tabledatarow(product)
     tr
+      td
+        img.img-thumbnail( src=product.homedepot_img_small_url alt="product_img")
       td= product.product_id
       td= product.product_name
       td= product.manufacturer
@@ -32,6 +34,7 @@ block renderBody
         table.table.table-striped.table-bordered
           thead
             tr
+              th Preview Img
               th Product ID
               th Product Name
               th Brand

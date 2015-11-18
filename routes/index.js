@@ -233,6 +233,8 @@ router.get('/qa/posting', ensureAuthenticated,function (req, res, next){
 /* anti activity */
 router.get('/antactivity', function (req, res, next){
   res.render("antactivity",{
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user),
     breadcrumTitle:"FIREANT ACTIVITY FORECAST",
     pathToHere:"antactivity",
     activePage:'Ants',

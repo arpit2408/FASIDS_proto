@@ -75,13 +75,13 @@ $(document).ready(function onReady(){
       switch(section){
         case "genus":
           ClassRef.$el.find(".genus-ul li").addClass("hidden");
-          ClassRef.$el.find(".col-xs-5.genus-list").show();
-          ClassRef.$el.find(".col-xs-5.species-list").hide();
+          ClassRef.$el.find(".col-xs-5.genus-list").show(100);
+          ClassRef.$el.find(".col-xs-5.species-list").hide(100);
         break;
         case "species":
           ClassRef.$el.find(".species-list ul").addClass("hidden");
 
-          ClassRef.$el.find(".col-xs-5.species-list").show();
+          ClassRef.$el.find(".col-xs-5.species-list").show(100);
         break;
         default:
       }
@@ -131,7 +131,7 @@ $(document).ready(function onReady(){
       ClassRef.$el.find(".col-xs-5.genus-list,.col-xs-5.species-list").hide();
       ClassRef.listenTo(ClassRef.model, 'change', ClassRef.render );
       $('.collapse-button').click(function (event){
-        $(this).parent().hide()
+        $(this).parent().hide(100)
       })
     }
   });
