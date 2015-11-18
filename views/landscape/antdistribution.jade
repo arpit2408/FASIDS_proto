@@ -47,6 +47,17 @@ block renderBody
 
 
 block additionalJS
+  script#info-window-template(type="text/template").
+    <div class="infowindow-content">
+      <% var county = county? county : "unspecified"; var genus = genus? genus : "unspecified";var specie = specie? specie : "unspecified"; var observations = observations? "Yes" : "No or no data";%>
+      County: <%=county%>
+      <br/>
+      Genus: <%=genus%>
+      <br/>
+      Specie: <%=specie%>
+      <br/>
+      Is Observed: <%=observations%>
+    </div>
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
   script(src="/underscorejs/underscore-min.js")
   script(src="/js/backbone-min.js")

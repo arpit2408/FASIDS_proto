@@ -22,10 +22,27 @@ $(document).ready(function onReady(){
       }
   });
   var gmap = mapcover.model.get("map");
+  var infowindow = new google.maps.InfoWindow({
+    // map:gmap
+  });
+
   // counties_hash will be like <county_name:string, data.feature>
   // data.feature: https://developers.google.com/maps/documentation/javascript/reference#Data.Feature
   var counties_hash = {};
   // var geojsons = [];
+  function featureOnClick(event){
+    infowindow.setOptions({
+      position: event.latLng,
+      content: genus_species_core.get("compiled_infowindow_content")({
+        county: event.feature.getProperty("COUNTY"),
+        genus: genus_species_core.get("genus"),
+        specie: genus_species_core.get("specie"),
+        observations: genus_species_core.get("observation_map")[event.feature.getProperty("FIPS")]
+      })
+    });
+    infowindow.open(gmap);
+  }
+
   gmap.data.loadGeoJson("/help-file/data/counties/tx_counties.geojson", null, function processFeature( feature_array){
     feature_array.forEach(function iteratee (element, index){
       counties_hash[element.getProperty("COUNTY")] = element;
@@ -44,11 +61,16 @@ $(document).ready(function onReady(){
     strokeWeight:2
   });
 
+  gmap.data.addListener('click', featureOnClick);
+
 
   var GenusSpeciesPanel = Backbone.View.extend({
+    
     el: document.getElementById("genus-species-panel"),
+
+
     expandTill:function (section){
-      console.log("expandTill");
+      // console.log("expandTill");
       var ClassRef = this;
       switch(section){
         case "genus":
@@ -79,6 +101,8 @@ $(document).ready(function onReady(){
       ClassRef.$el.find("li").removeClass("active");
       // console.log("/landscape/antdistribution_lookup?"+ $.param(mapped));
       $.get("/landscape/antdistribution_lookup" , mapped, function (data){
+        ClassRef.model.set("observation_map", data);
+        console.log(data);
         _.each(ClassRef.model.get("revert_style_cache"), function (fips, array_index, ar){
           gmap.data.overrideStyle(counties_hash[fips], {
             fillColor:"rgba(0, 0, 0,0)"
@@ -112,6 +136,8 @@ $(document).ready(function onReady(){
     }
   });
   var genus_species_core = new Backbone.Model({
+    compiled_infowindow_content: _.template($('#info-window-template').html()),
+    observation_map:{},
     genus:null,
     specie:null,
     revert_style_cache:[]
