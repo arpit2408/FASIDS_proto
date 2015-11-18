@@ -28,12 +28,18 @@ block renderBody
             ul.genus-ul
               each obj in genus_species
                 li(class="hidden genus-inichar-#{obj.genus.charAt(0)} #{obj.genus}" data-genus=obj.genus )=obj.genus+" (" +obj.species_array.length + ")"
+            div.at-bottom-right.collapse-button
+              i.fa.fa-caret-left.fa-lg
+              span collapse
           .col-xs-5.species-list
             b Species
             each obj in genus_species
               ul(class="hidden species-list-#{obj.genus}")
                 each specie in obj.species_array
                   li(class=specie.replace(" ", "SpacE"))=specie
+            div.at-bottom-right.collapse-button
+              i.fa.fa-caret-left.fa-lg
+              span collapse
 
 
   .hidden

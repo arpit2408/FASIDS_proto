@@ -121,3 +121,5 @@ db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:
 将mongo数据导出为文件
 mongo --quiet fasids --eval 'printjson(  db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:"$species"}}},{$sort:{_id:1}}]).toArray() )' > output.json
 
+为remote mongo导入数据
+mongoimport -u <username> -p <password here> -h <ip here> --db fasids --collection ant_distribution --file ant_distri.json --jsonArray

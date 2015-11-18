@@ -105,7 +105,10 @@ $(document).ready(function onReady(){
     initialize:function(){
       var ClassRef = this;
       ClassRef.$el.find(".col-xs-5.genus-list,.col-xs-5.species-list").hide();
-      ClassRef.listenTo(ClassRef.model, 'change', ClassRef.render )
+      ClassRef.listenTo(ClassRef.model, 'change', ClassRef.render );
+      $('.collapse-button').click(function (event){
+        $(this).parent().hide()
+      })
     }
   });
   var genus_species_core = new Backbone.Model({
