@@ -137,7 +137,7 @@ $(document).ready(function(){
           if (!element.temp_avg){
             return;
           }
-          // var date_event = {
+          // var date_event = {   // this is one event that is used to add background color
           //   start: moment().add(index, "days").format(),
           //   end: moment().add(index+1, "days").format(),
           //   allDay: true,

@@ -1,3 +1,11 @@
+.real-100-width {
+  margin: 0px;
+  padding: 0px;
+}
+.at-bottom-right {
+  bottom: 0;
+  right: 0;
+}
 .fasids-editor-toolbar .btn.wysihtml5-command-active {
   background-color: #d0d0d0;
 }
@@ -42,12 +50,26 @@ body {
   /*modifying one post, one can see this in specific question*/
   /*modifying the reply input editor*/
 }
-body .qa-slider {
-  height: 300px;
-  background-color: #f7f9fa;
+body .main-qa .tabs .nav-tabs li {
+  float: right;
 }
 body .qa-post-titles .qa-post-title-row {
   padding: 15px 0px;
+}
+body .qa-post-titles .qa-post-title-row .col-sm-1 {
+  font-size: 12px;
+  line-height: 16px;
+}
+body .qa-post-titles .qa-post-title-row .col-sm-1 .votes-number,
+body .qa-post-titles .qa-post-title-row .col-sm-1 .answers-number {
+  font-size: 20px;
+  line-height: 28px;
+}
+body .qa-post-titles .qa-post-title-row .col-sm-1 .views-combination {
+  padding: 6px 0 6px 0;
+}
+body .qa-post-titles .qa-post-title-row .col-sm-1 .views-combination span.views-number {
+  padding-right: 5px;
 }
 body .qa-post-titles .even-numbered-post-row {
   background-color: #eef2f4;

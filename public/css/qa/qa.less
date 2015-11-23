@@ -1,13 +1,37 @@
 ﻿@import "../base";
 @import "../fasids-editor";
 body {
-  .qa-slider{
-      height:300px;
-      background-color: @very-light-grey;
+  .main-qa{
+    .tabs{
+      .nav-tabs{
+        li{
+          float: right;
+        }
+
+      }
+    }
+
   }
+
   .qa-post-titles{
     .qa-post-title-row{
       padding: 15px 0px;
+      .col-sm-1{
+        font-size: 12px;
+        line-height: 16px;
+        .votes-number,.answers-number{
+          font-size: 20px;
+          line-height: 28px;
+        }
+        .views-combination{
+          padding: 6px 0 6px 0;
+          span.views-number{
+            padding-right: 5px;
+          }
+
+        }
+
+      }
     }
 
     .even-numbered-post-row{
