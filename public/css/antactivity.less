@@ -1,0 +1,39 @@
+@import "prefixer.less";
+@import "base.less";
+.fc-event-container{
+  height: 90px;
+  .activity-text-low{
+    background-image: url("/img/RIFA_Icons/lowforaging.png");
+  }
+  .activity-text-middle{
+    background-image: url("/img/RIFA_Icons/middleforaging.png");
+  }
+  .activity-text-high{
+    background-image: url("/img/RIFA_Icons/highforaging.png");
+  }
+  .activity-text-high,.activity-text-middle,.activity-text-low{
+    height: 100%;
+    background-repeat: no-repeat;
+    border-style: none;
+    background-color: transparent;
+    background-size: 90px 90px;
+    background-position: center;
+    cursor: pointer;
+    .fc-content{
+      color: rgba(0, 0, 0, 0.0);
+    }
+  } 
+}
+
+
+.modal-content{
+  .weather-table{
+    &,td,th{
+      border: 1px solid black;
+    }
+    td,th{
+      padding: 5px;
+    }
+  }
+  padding:20px;
+}

@@ -2,6 +2,7 @@ extends layout
 
 block additionalCSS
   link(href='/assets/fullcalendar-2.4.0/fullcalendar.css', rel='stylesheet', type='text/css', media='screen')
+  link(href='/css/antactivity.css', rel='stylesheet', type='text/css', media='screen')
 
 block renderBody
   include snippets/breadcrum
@@ -18,16 +19,63 @@ block renderBody
     .row
       .col-md-10.col-md-offset-1#calendar
   .divide30
+  .modal.fade#antactivity-low-explain(tabindex='-1', role='dialog', aria-labelledby='myLargeModalLabel')
+    .modal-dialog.modal-lg
+      .modal-content
+        h4 Weather For This day
+        .weather-container
+        .divide30
+        h4 Low Foraging Activity
+        h5 Biology:
+        |  Fire Ants will forage when soil temperatures are above 60°F. When ambient temperatures are less than 70° ants may forage during the warmest part of the day. Activity may also be affected by the situation of the mound - ants often build mounds under or near structures that aid the regulation of temperatures in the mound (e.g. under pavements, alongside metal structures). Activity levels may also be reduced by high ambient temperatures - i.e. above 90&degF; In this case, foraging activity may be restricted to the morning, evening or at night, and the colony may move further underground.
+        h5 Management:
+        |  Bait applications are most effective when ants are active enough to carry the bait to the colony and when te colony is actively developing. To assess the likely efficacy of an application, assess the speciifc conditions of the application area such as soil temperatures, and consider the likelihood of foraging up to 2 days after the application.
+
+  .modal.fade#antactivity-mddle-explain(tabindex='-1', role='dialog', aria-labelledby='myLargeModalLabel')
+    .modal-dialog.modal-lg
+      .modal-content
+        | ...
+
+  .modal.fade#antactivity-high-explain(tabindex='-1', role='dialog', aria-labelledby='myLargeModalLabel')
+    .modal-dialog.modal-lg
+      .modal-content
+        h4 Weather For This day
+        .weather-container
+        .divide30
+        h4 High Foraging Activity
+        h5 Biology:
+        |  Fire Ants will actively forage when soil temperatures are above 60°F. Foraging activity is highest between abmient temperatures of 70°F and 90°F. Despite high activity, ants may not be particularily noticable. Food items are transported from foraging sites to the nest through a network of tunnels just below the vegetation or soil surface.
+        h5 Management:
+        |  Bait applications are most effective when foraging activity is high.
+
+
+
+  //- .modal.fade#antactivity-low-explain(tabindex='-1', role='dialog', aria-labelledby='myLargeModalLabel')
+    .modal-dialog.modal-lg
+      .modal-content
+        | ...
+
+
+
+
 
 
 
 block additionalJS
-
+  script#weather-table-template(type="text/template").
+    <table class="weather-table">
+      <tr>
+        <th>Avg. Temp.</th>
+        <th>Humidity</th>
+      </tr>
+      <tr>
+        <td> <%= temp_avg %></td>
+        <td> <%= humidity_avg %></td>
+      </tr>
+    </table>
   //- 35.4kb
   script(src='/assets/moment/moment.min.js')
   script(src='/assets/fullcalendar-2.4.0/fullcalendar.min.js')
   script(src='/underscorejs/underscore-min.js')
   //- script(src='/simpleWeather/jquery.simpleWeather.min.js')
-
-
   script(src='/js/antactivity.js')
