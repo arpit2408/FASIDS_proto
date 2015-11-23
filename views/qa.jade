@@ -13,29 +13,26 @@ block renderBody
 
   include snippets/breadcrum
 
-  .container-fluid.qa-summary
-    .row
-      .col-md-6.qa-slider
-        | slider here
-      .col-md-6.qa-most-voted
-        .row
-          .col-sm-1 icon
-          .col-sm-1 67
-          .col-sm-8 Title here title here title here
-          .col-sm-2 2015-5-3
   .divide30
-
-  .container
+  .container.main-qa
     .row
-      .col-xs-10.col-xs-offset-1
-        h3.heading Current Posts
-    .row
-      .col-xs-10.col-xs-offset-1
+      .col-xs-3.col-xs-offset-1
         a.btn.btn.btn-theme-dark(href="/qa/posting") 
           i.fa.fa-plus
           | NEW QUESTION
+      .col-xs-8.tabs
+        ul.nav.nav-tabs
+          li.active(role='presentation')
+            a(href='#') newest
+          li(role='presentation')
+            a(href='#') votes
+          li(role='presentation')
+            a(href='#') active
+          li(role='presentation')
+            a(href='#') unanswered
+
     .divide25
-    .row.qa-post-title-header
+    //- .row.qa-post-title-header
       .col-sm-1
       .col-sm-6
         strong TOPICS
@@ -51,17 +48,22 @@ block renderBody
       each post, index in posts
         if index % 2 === 1
           .row.qa-post-title-row.even-numbered-post-row
-            .col-sm-1 ICON
-            .col-sm-6
+            .col-sm-1.col-sm-offset-1.text-center
+              .votes-number 0
+              .votes-text votes
+              .answers-number=post.replied_post
+              .answers-text answers
+              .views-combination
+                span.views-number=post.post_viewed
+                span.views-text views
+
+            .col-sm-7
               .row
                 .col-xs-12
                   a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
               .row
                 .col-xs-12.text-muted Posted by #{post.poster.displayName()} at #{getDataString(post.post_time)}
-            .col-sm-1 
-              i.fa.fa-comment-o
-              | &nbsp;&nbsp;#{post.replied_post}
-            .col-sm-1 #{post.post_viewed} views
+
             .col-sm-3
               .row
                 .col-xs-3 [ICON]
@@ -74,17 +76,22 @@ block renderBody
                       | #{getDataString( (post['last_reply'].post_time)? post['last_reply'].post_time: "error time")}
         else
           .row.qa-post-title-row
-            .col-sm-1 ICON
-            .col-sm-6
+            .col-sm-1.col-sm-offset-1.text-center
+              .votes-number 0
+              .votes-text votes
+              .answers-number=post.replied_post
+              .answers-text answers
+              .views-combination
+                span.views-number=post.post_viewed
+                span.views-text views
+            .col-sm-7
               .row
                 .col-xs-12 
                   a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
               .row
                 .col-xs-12.text-muted Posted by #{post.poster.displayName()} at #{getDataString(post.post_time)}
-            .col-sm-1 
-              i.fa.fa-comment-o
-              | &nbsp;&nbsp;#{post.replied_post}
-            .col-sm-1 #{post.post_viewed} views
+
+
             .col-sm-3
               .row
                 .col-xs-3 [ICON]
