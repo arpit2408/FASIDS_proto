@@ -84,13 +84,14 @@ router.get('/', function (req, res, next) {
 
 /*visit the qa forum*/
 router.get('/qa', function (req, res, next){
-  req.DB_POST.getAllMainPosts(function (err, posts){
+
+  req.DB_POST.getAllMainPosts(req.query.sort,function (err, posts){
     if (err) {return next(err);}
     if (!posts) {return next(new Error("did not find posts"));}
     toBeRenderedPosts = [];
     if (posts.length === 0){
       res.render('qa', {title:'Question and Answers | FASIDS',
-        breadcrumTitle:"Interactive Questions and Answers",
+        breadcrumTitle:"Questions and Answers",
         pathToHere:"qa",
         activePage:'Questions',
         isAuthenticated: req.isAuthenticated(),
@@ -99,19 +100,21 @@ router.get('/qa', function (req, res, next){
       });
       return;
     }
+    console.log(JSON.stringify(posts));
     req.DB_POST.staticLinkPostWithUser(posts).then(  req.DB_POST.staticLinkLastReply.bind(req.DB_POST)  ).then(function (processed_posts){
       var sanityCheckSig =   sanityCheckPosts(processed_posts)
       if ( sanityCheckSig !== 1){
           return next(new Error("posts sanity check failed with code: " + sanityCheckSig));
       }
       res.render('qa', {title:'Question and Answers | FASIDS',
-        breadcrumTitle:"Interactive Questions and Answers",
+        breadcrumTitle:"Questions and Answers",
         pathToHere:"qa",
         activePage:'Questions',
         isAuthenticated: req.isAuthenticated(),
         user: processReqUser(req.user),
         posts:processed_posts,
-        momentlib:moment
+        momentlib:moment,
+        sort:req.query.sort
       }).catch(function(err){
         return next(err);
       });

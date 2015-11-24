@@ -65,11 +65,19 @@ body .qa-post-titles .qa-post-title-row .col-sm-1 .answers-number {
   font-size: 20px;
   line-height: 28px;
 }
+body .qa-post-titles .qa-post-title-row .col-sm-1 .answers-number,
+body .qa-post-titles .qa-post-title-row .col-sm-1 .answers-text {
+  background-color: #5a5a5a;
+  color: #fff;
+}
 body .qa-post-titles .qa-post-title-row .col-sm-1 .views-combination {
   padding: 6px 0 6px 0;
 }
 body .qa-post-titles .qa-post-title-row .col-sm-1 .views-combination span.views-number {
   padding-right: 5px;
+}
+body .qa-post-titles .qa-post-title-row .post-title {
+  font-size: 18px;
 }
 body .qa-post-titles .even-numbered-post-row {
   background-color: #eef2f4;
