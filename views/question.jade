@@ -17,7 +17,7 @@ block renderBody
         | unknown user category
 
   mixin dateString(date)
-    | [ICON] #{momentlib(date).fromNow()}
+    | #{momentlib(date).fromNow()}
   //- breadcrumTitle:target_post.post_title,
   //- pathToHere:"qa / question?qid="+post_id.toString(),
   //- title: 'QA QUESTION | FASIDS',
@@ -29,62 +29,69 @@ block renderBody
   include snippets/breadcrum
   .container.posts-regarding-question
     .divide20
-
-    .row
-      .col-xs-12
-        a.btn.btn-theme-bg.margin-right-10(href='#') Post reply
-        a.btn.btn-theme-dark(href='#') print
-    
-
-    //- for main_post
     .row.post-row
-      .col-md-3.one-post-author-info-col
-        .row
-          .col-xs-12.one-post-displayname
-            | #{main_post.poster_fullname}
-        .row
-          .col-xs-12.text-muted.one-post-usercat
-            +userCatString(main_post.poster.usercat)
-
-        .row
-          .col-xs-12.one-post-userprofile
-            | [user profile pic here]
-
-      .col-md-9
-        .row.one-post-time-number
-          .col-xs-10
+      .col-xs-1.text-center.votes-container
+        div
+          i.fa.fa-caret-up.fa-2(data-target-post-id="#{main_post.post_id}")
+        div
+          span.votes-number-container=main_post.votes
+        div
+          i.fa.fa-caret-down.fa-2(data-target-post-id="#{main_post.post_id}")
+        .star-div
+          i.fa.fa-star.fa-2
+      .col-xs-9
+        .content!=main_post.content
+        .post-signature
+          .ask-time
+            |asked 
             +dateString(main_post.post_time)
-          .col-xs-1
-            | #1
-        hr
+          .user-name #{main_post.poster_fullname}
+      .col-xs-2.post-status
         .row
-          .col-xs-12.one-post-content-col!=main_post.content
+          .col-xs-4.text-muted asked
+          .col-xs-8
+            +dateString(main_post.post_time)
+        .row
+          .col-xs-4.text-muted viewed
+          .col-xs-8
+            | #{main_post.post_viewed} times
+        .row
+          .col-xs-4.text-muted active
+          .col-xs-8 today
+
     
     //- reply is one Post object, 
     each reply, index in replies
       .row.post-row
-        .col-md-3.one-post-author-info-col
-          .row
-            .col-xs-12.one-post-displayname
-              | #{reply.poster.displayName()}
-          .row
-            .col-xs-12.text-muted.one-post-usercat
-              //- | #{reply.poster.usercat}
-              +userCatString(reply.poster.usercat)
-
-          .row
-            .col-xs-12.one-post-userprofile
-              | [user profile pic here]
-
-        .col-md-9
-          .row.one-post-time-number
-            .col-xs-10
+        .col-xs-1.text-center.votes-container
+          div
+            i.fa.fa-caret-up.fa-2(data-target-post-id="#{reply.post_id}")
+          div
+            span.votes-number-container=reply.votes
+          div
+            i.fa.fa-caret-down.fa-2(data-target-post-id="#{reply.post_id}")
+          .star-div
+            i.fa.fa-star.fa-2
+        .col-xs-9
+          .content!=reply.content
+          .post-signature.answer-signature
+            .ask-time
+              |asked 
               +dateString(reply.post_time)
-            .col-xs-1
-              | ##{index+2}
-          hr
+            .user-name #{reply.poster_fullname}
+        .col-xs-2.post-status
           .row
-            .col-xs-12.one-post-content-col!=reply.content
+            .col-xs-4.text-muted asked
+            .col-xs-8
+              +dateString(reply.post_time)
+          .row
+            .col-xs-4.text-muted viewed
+            .col-xs-8
+              | #{reply.post_viewed} times
+          .row
+            .col-xs-4.text-muted active
+            .col-xs-8 today
+
 
   .divide30
   if(isAuthenticated)
@@ -113,15 +120,32 @@ block renderBody
 block additionalJS
   script(src="/wysihtml/dist/wysihtml5x-toolbar.min.js")
   script(src="/wysihtml/parser_rules/advanced_and_extended.js")
+  if (isAuthenticated)
+    script.
+      var editor = new wysihtml5.Editor('editor', {
+        toolbar: 'toolbar',
+        parserRules:  wysihtml5ParserRules
+      });
   script.
-    var editor = new wysihtml5.Editor('editor', {
-      toolbar: 'toolbar',
-      parserRules:  wysihtml5ParserRules
-    });
-
     $(document).ready(function(){
       $('#wysihtml-submit').click(function(){
         $('#content').val( $('#editor').html() );
         $('#wysihtml-form').submit();
       });
+      $(".fa.fa-caret-up.fa-2,.fa.fa-caret-down.fa-2").click(function onClickUpVote(e){
+        $this = $(this);
+        $.ajax("/qa/vote", {
+          data:{post_id:$this.data("target-post-id"), vote_score: $this.hasClass("fa-caret-up")?1:-1 },
+          method: "GET",
+          success: function (data, textStatus, jqXHR){
+            $this.parent().parent().find(".votes-number-container").html( data.success);
+          },
+          error: function ( jqXHR, textStatus, errorThrown){
+            console.error("error of vote ajax");
+          }
+
+        });
+      })
+
+
     });
