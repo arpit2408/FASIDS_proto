@@ -2,8 +2,6 @@ extends layout
 
 block additionalCSS
   link(href='/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
-
-
 block renderBody
   -function getDataString(date){
     -return momentlib(date).fromNow();
@@ -21,17 +19,19 @@ block renderBody
           i.fa.fa-plus
           | NEW QUESTION
       .col-xs-8.tabs
+        if !sort
+          - sort = "newest"
         ul.nav.nav-tabs
-          li.active(role='presentation')
-            a(href='#') newest
-          li(role='presentation')
-            a(href='#') votes
-          li(role='presentation')
-            a(href='#') active
-          li(role='presentation')
-            a(href='#') unanswered
-
-    .divide25
+          li(role='presentation' class='#{(sort==="newest")?"active":""}')
+            a(href='/qa?sort=newest') newest
+          li(role='presentation' class='#{(sort==="frequent")?"active":""}')
+            a(href='/qa?sort=frequent') frequent
+          li(role='presentation' class='#{(sort==="votes")?"active":""}')
+            a(href='/qa?sort=votes') votes
+          li(role='presentation' class='#{(sort==="active")?"active":""}')
+            a(href='/qa?sort=active') active
+          li(role='presentation' class='#{(sort==="unanswered")?"active":""}')
+            a(href='/qa?sort=unanswered') unanswered
     //- .row.qa-post-title-header
       .col-sm-1
       .col-sm-6
@@ -49,10 +49,12 @@ block renderBody
         if index % 2 === 1
           .row.qa-post-title-row.even-numbered-post-row
             .col-sm-1.col-sm-offset-1.text-center
-              .votes-number 0
+              .votes-number=post.votes
               .votes-text votes
+              .divide10
               .answers-number=post.replied_post
               .answers-text answers
+              .divide10
               .views-combination
                 span.views-number=post.post_viewed
                 span.views-text views
@@ -60,9 +62,9 @@ block renderBody
             .col-sm-7
               .row
                 .col-xs-12
-                  a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
+                  a.post-title(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
               .row
-                .col-xs-12.text-muted Posted by #{post.poster.displayName()} at #{getDataString(post.post_time)}
+                .col-xs-12.text-muted Preview Text should appear here, I need to add one instance method getPreviwText() for Post model ...
 
             .col-sm-3
               .row
@@ -70,26 +72,28 @@ block renderBody
                 .col-xs-9
                   .row
                     .col-xs-12
-                      | #{(post['last_reply'].poster_fullname)? post['last_reply'].poster_fullname: "error"}
+                      | #{post.poster.displayName()}
                   .row
                     .col-xs-12
-                      | #{getDataString( (post['last_reply'].post_time)? post['last_reply'].post_time: "error time")}
+                      | posted #{getDataString(post.post_time)}
         else
           .row.qa-post-title-row
             .col-sm-1.col-sm-offset-1.text-center
-              .votes-number 0
+              .votes-number=post.votes
               .votes-text votes
+              .divide10
               .answers-number=post.replied_post
               .answers-text answers
               .views-combination
+              .divide10
                 span.views-number=post.post_viewed
                 span.views-text views
             .col-sm-7
               .row
                 .col-xs-12 
-                  a(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
+                  a.post-title(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
               .row
-                .col-xs-12.text-muted Posted by #{post.poster.displayName()} at #{getDataString(post.post_time)}
+                .col-xs-12.text-muted Preview Text should appear here, I need to add one instance method getPreviwText() for Post model ...
 
 
             .col-sm-3
@@ -98,10 +102,10 @@ block renderBody
                 .col-xs-9
                   .row
                     .col-xs-12
-                      | #{(post['last_reply'].poster_fullname)? post['last_reply'].poster_fullname: "error"}
+                      | #{post.poster.displayName()}
                   .row
                     .col-xs-12
-                      | #{getDataString( (post['last_reply'].post_time)? post['last_reply'].post_time: "error time")}
+                      | posted #{getDataString(post.post_time)}
 
 
     .divide10
@@ -126,7 +130,8 @@ block renderBody
             li
               a(href='#') »
     //- put filter row here
-    .row.qa-post-title-filter
+
+    //- .row.qa-post-title-filter
       .col-sm-8.col-sm-offset-1
         form(method='post')
           | Display topics from previous:

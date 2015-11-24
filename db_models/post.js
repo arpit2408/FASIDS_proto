@@ -18,6 +18,7 @@ var post_schema = new mongoose.Schema({
 
   "reply_to_post":String,// post created to reply specific post
   "reply_to_mainpost":String,
+  "votes":Number,
   "content":String
 },{ collection:'post'});
 var User = require('./user.js');
@@ -177,9 +178,38 @@ post_schema.static({
     });
   },
 
-  getAllMainPosts: function ( callback) {   // I can put sort parameter here
+  getAllMainPosts: function ( sort ,callback) {   // I can put sort parameter here
     var Model = this;
-    Model.find({"role":1}).sort({"post_time":-1}).exec(callback);
+    if (typeof sort === "undefined"){
+      console.log("[INFO] getAllMainPosts of post.js received undefined sort argument");
+    }
+    var to_be_sorted_field = "post_time";
+    var increasing = 1;
+    var decreasing = -1;
+    var order = -1
+    var sort_param = {};
+    switch(sort){
+      case "newest":
+        break;
+      case "votes":
+        to_be_sorted_field = "votes";
+        break;
+      case "frequent":
+        to_be_sorted_field = "post_viewed";
+        break;
+      case "active":
+        // TODO
+        break;
+      case "unanswered":
+        sort_param[to_be_sorted_field] = order;
+        Model.find({"replied_post":0, "role":1}).sort(sort_param).exec(callback);
+        return;
+        break;
+      default:
+        // the default value has already being assigned
+    }
+    sort_param[to_be_sorted_field] = order;
+    Model.find({"role":1}).sort(sort_param).exec(callback);
   }
 });
 
