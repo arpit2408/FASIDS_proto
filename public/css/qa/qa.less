@@ -68,6 +68,38 @@ body {
     .one-post-content-col{
       padding-bottom: 20px;
     }
+
+
+    /*after 11.24 date*/
+    .votes-container{
+      padding-top:10px; 
+      .votes-number-container{
+        font-size: 18px;
+      }
+      .fa-caret-up,.fa-caret-down{
+        cursor: pointer;
+      }
+      .star-div{
+        color:@light-grey;
+      }
+    }
+    .content{
+      padding: 10px;
+    }
+    .post-signature{
+      float: right;
+      background-color: #E0EAF1;
+      padding: 10px;
+      margin-bottom: 15px;
+      &.answer-signature{
+        background-color: transparent;
+        border-left: 4px solid #E0EAF1;
+        // border-top: 3px solid #E0EAF1;
+      }
+    }
+    .post-status{
+      padding-top: 10px;
+    }
   } 
 
   /*modifying the reply input editor*/
@@ -80,4 +112,9 @@ body {
       }
     }
   }
+
+  .fa-2{
+    font-size: 2em;
+  }
+  // fixup about 
 }

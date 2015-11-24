@@ -123,6 +123,24 @@ router.get('/qa', function (req, res, next){
   });
 });
 
+// AJAX API
+router.get('/qa/vote', function (req, res, next){
+
+  req.DB_POST.findOne({post_id: req.query.post_id}, null,{}, function (err, target_post){
+    if (!req.query.post_id || !req.query.vote_score) return res.status(404).send("Parameter not correct");
+    if (err) return res.status(500).send(JSON.stringify(err));
+    if (!target_post) return res.status(404).send("cannot do voting operation on post_id: " + req.query.post_id + ", since cannot find this post");
+    
+    target_post.votes = Number( Number(target_post.votes) + Number(req.query.vote_score));
+    target_post.save( function(err){
+      if (err) return res.status(500).send("Error in saveing target post at /qa/vote");
+      return res.send( {"success":target_post.votes});
+
+    });
+
+  });
+});
+
 router.post('/qa/question', function (req, res, next) {
   var reply = {
     role:2,
@@ -161,8 +179,6 @@ router.get('/qa/question',function (req, res, next){
   req.DB_POST.findOne({post_id:post_id},null,{}, function (err, target_post){
     if (err) next(err);
     //Converts this document into a plain javascript object, ready for storage in MongoDB.
-
-
     target_post.addOneView();
     req.DB_POST.staticLinkPostWithUser([target_post]).then(function (result){
       var result = result[0];

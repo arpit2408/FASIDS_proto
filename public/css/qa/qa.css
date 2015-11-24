@@ -91,6 +91,7 @@ body .row.final-buttons a.btn {
 body .post-row {
   margin-top: 15px;
   border: 1px solid #d8e1e6;
+  /*after 11.24 date*/
 }
 body .post-row .one-post-author-info-col {
   border-right: 1px solid #d8e1e6;
@@ -98,6 +99,38 @@ body .post-row .one-post-author-info-col {
 body .post-row .one-post-content-col {
   padding-bottom: 20px;
 }
+body .post-row .votes-container {
+  padding-top: 10px;
+}
+body .post-row .votes-container .votes-number-container {
+  font-size: 18px;
+}
+body .post-row .votes-container .fa-caret-up,
+body .post-row .votes-container .fa-caret-down {
+  cursor: pointer;
+}
+body .post-row .votes-container .star-div {
+  color: lightgrey;
+}
+body .post-row .content {
+  padding: 10px;
+}
+body .post-row .post-signature {
+  float: right;
+  background-color: #E0EAF1;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+body .post-row .post-signature.answer-signature {
+  background-color: transparent;
+  border-left: 4px solid #E0EAF1;
+}
+body .post-row .post-status {
+  padding-top: 10px;
+}
 body .reply-editor-row .reply-buttons-row .btn + .btn {
   margin-left: 10px;
+}
+body .fa-2 {
+  font-size: 2em;
 }
