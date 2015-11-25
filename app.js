@@ -11,8 +11,9 @@ var session = require('express-session');   //package.json has info
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var flash = require('connect-flash');
-var routes = require('./routes/index');
+var index_route = require('./routes/index');
 var users = require('./routes/users');
+var api_route = require('./routes/api')
 
 /*if this app is running on openshift, env var should have OPENSHIFT_MONGODB_DB_URL*/
 var db_literal = "fasids";
@@ -55,7 +56,7 @@ app.use(function(req, res, next){
 });
 
 // routing
-app.use('/', routes);
+app.use('/', index_route);
 app.post('/users/signin', passport.authenticate('local',{failureRedirect:'/users/signin',failureFlash:true, sucessFlash: true}),function (req, res, next){
   if (typeof req.query.referral_url !== "undefined" && req.query.referral_url.search(/signin/) === -1){
     return res.redirect(req.query.referral_url);

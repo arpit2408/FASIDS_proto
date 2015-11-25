@@ -18,6 +18,8 @@ block renderBody
 
   mixin dateString(date)
     | #{momentlib(date).fromNow()}
+  mixin dateStringISO(date)
+    | #{momentlib(date).format("MMM Do YYYY")}
   //- breadcrumTitle:target_post.post_title,
   //- pathToHere:"qa / question?qid="+post_id.toString(),
   //- title: 'QA QUESTION | FASIDS',
@@ -44,7 +46,7 @@ block renderBody
         .post-signature
           .ask-time
             |asked 
-            +dateString(main_post.post_time)
+            +dateStringISO(main_post.post_time)
           .user-name #{main_post.poster_fullname}
       .col-xs-2.post-status
         .row
@@ -76,10 +78,10 @@ block renderBody
           .content!=reply.content
           .post-signature.answer-signature
             .ask-time
-              |asked 
-              +dateString(reply.post_time)
+              |answered 
+              +dateStringISO(reply.post_time)
             .user-name #{reply.poster_fullname}
-        .col-xs-2.post-status
+        //- .col-xs-2.post-status
           .row
             .col-xs-4.text-muted asked
             .col-xs-8
