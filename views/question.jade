@@ -34,11 +34,11 @@ block renderBody
     .row.post-row
       .col-xs-1.text-center.votes-container
         div
-          i.fa.fa-caret-up.fa-2(data-target-post-id="#{main_post.post_id}")
+          i.fa.fa-caret-up.fa-2(data-target-post-id="#{main_post.post_id}",data-user-id="#{user?user._id:null}")
         div
           span.votes-number-container=main_post.votes
         div
-          i.fa.fa-caret-down.fa-2(data-target-post-id="#{main_post.post_id}")
+          i.fa.fa-caret-down.fa-2(data-target-post-id="#{main_post.post_id}",data-user-id="#{user?user._id:null}")
         .star-div
           i.fa.fa-star.fa-2
       .col-xs-9
@@ -67,11 +67,11 @@ block renderBody
       .row.post-row
         .col-xs-1.text-center.votes-container
           div
-            i.fa.fa-caret-up.fa-2(data-target-post-id="#{reply.post_id}")
+            i.fa.fa-caret-up.fa-2(data-target-post-id="#{reply.post_id}", data-user-id="#{user?user._id:null}")
           div
             span.votes-number-container=reply.votes
           div
-            i.fa.fa-caret-down.fa-2(data-target-post-id="#{reply.post_id}")
+            i.fa.fa-caret-down.fa-2(data-target-post-id="#{reply.post_id}", data-user-id="#{user?user._id:null}" )
           .star-div
             i.fa.fa-star.fa-2
         .col-xs-9
@@ -113,12 +113,6 @@ block renderBody
                 .btn.btn-theme-bg#wysihtml-submit SUBMIT
     .divide15
 
-
-
-
-
-
-
 block additionalJS
   script(src="/wysihtml/dist/wysihtml5x-toolbar.min.js")
   script(src="/wysihtml/parser_rules/advanced_and_extended.js")
@@ -128,26 +122,38 @@ block additionalJS
         toolbar: 'toolbar',
         parserRules:  wysihtml5ParserRules
       });
-  script.
-    $(document).ready(function(){
-      $('#wysihtml-submit').click(function(){
-        $('#content').val( $('#editor').html() );
-        $('#wysihtml-form').submit();
-      });
-      $(".fa.fa-caret-up.fa-2,.fa.fa-caret-down.fa-2").click(function onClickUpVote(e){
-        $this = $(this);
-        $.ajax("/qa/vote", {
-          data:{post_id:$this.data("target-post-id"), vote_score: $this.hasClass("fa-caret-up")?1:-1 },
-          method: "GET",
-          success: function (data, textStatus, jqXHR){
-            $this.parent().parent().find(".votes-number-container").html( data.success);
-          },
-          error: function ( jqXHR, textStatus, errorThrown){
-            console.error("error of vote ajax");
-          }
-
+      $(document).ready(function(){
+        $('#wysihtml-submit').click(function(){
+          $('#content').val( $('#editor').html() );
+          $('#wysihtml-form').submit();
         });
-      })
+        // click on up caret or down caret
+        $(".fa.fa-caret-up.fa-2,.fa.fa-caret-down.fa-2").click(function onClickUpVote(e){
+          $this = $(this);
+          $.ajax("/api/addrelation", {
+            data:{
+              operation_receiver_id:$this.data("target-post-id"), 
+              operater_id: $this.data("user-id"),
+              operation_name:"vote",
+              operation_value:1
+            },
+            method: "POST",
+            success: function (data, textStatus, jqXHR){
+              if (data.api_result !== "success"){
+                return;
+              }
+              $this.addClass("active-relation");
+
+            },
+            error: function ( jqXHR, textStatus, errorThrown){
+              console.error("error of vote ajax");
+            }
+
+          });
+        })
+
+        /* try find all relations */
+        
+      });
 
 
-    });

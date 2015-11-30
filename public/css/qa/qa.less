@@ -13,6 +13,7 @@ body {
 
   }
 
+  /* qa index*/
   .qa-post-titles{
     .qa-post-title-row{
       padding: 15px 0px;
@@ -44,6 +45,7 @@ body {
       background-color: darken(@very-light-grey, 3%);;
     }
   }
+
   #filter-go-btn{
     margin-left: 10px;
   }
@@ -56,7 +58,7 @@ body {
     }
   }
 
-  /*modifying one post, one can see this in specific question*/
+  /*modifying one post, specific question*/
   .post-row{
     // padding: 10px;
     .one-post-author-info-col{
@@ -78,6 +80,9 @@ body {
       }
       .fa-caret-up,.fa-caret-down{
         cursor: pointer;
+        &.active-relation{
+          color:orange;
+        }
       }
       .star-div{
         color:@light-grey;
