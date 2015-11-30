@@ -132,7 +132,9 @@ router.post('/qa/question', function (req, res, next) {
     post_time: new Date(),
     reply_to_post: (req.query.replyto)?req.query.replyto:"none",
     reply_to_mainpost:req.query.qid,
-    content: req.body.content
+    content: req.body.content,
+    votes:0,
+    stars:0
   };
   reply = new req.DB_POST(reply);
   reply.save( function (error){
@@ -209,6 +211,7 @@ router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
     post_viewed:0,
     replied_post:0,
     votes:0,
+    stars:0,
     last_reply_id:post_id,  // last reply is itself, when this is just posted
     content: req.body.content,
     poster_fullname: req.user.displayName()
