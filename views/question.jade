@@ -128,14 +128,75 @@ block additionalJS
           $('#wysihtml-form').submit();
         });
         // click on up caret or down caret
+        var query_operation_receivers = [];
+        $.each($(".fa.fa-caret-up.fa-2"), function (index, value){
+          query_operation_receivers.push( $(value).data("target-post-id") ); 
+        });
+
+        $.ajax("/api/batchlookuprelation",{
+          data:{
+            query_operater_id: $(".fa.fa-caret-up.fa-2").data("user-id"),
+            query_operation_receivers: JSON.stringify(query_operation_receivers)
+          },
+          method:"POST",
+          success: function (relations, textStatus, jqXHR){
+            /* I expect data to be like this 
+              
+              [relationObject,...]
+              
+            */
+            console.log(relations);
+            relations.forEach( function ( relation, index, arr){
+              if (relation.operation.operation_name !== "vote"){
+                return;
+              }
+              switch (relation.operation.operation_value){
+                case 1 :
+                  $(".fa.fa-caret-up.fa-2[data-target-post-id="+ relation.operation_receiver_id+ "]").addClass("active-relation");
+                  break;
+                case -1 :
+                  $(".fa.fa-caret-down.fa-2[data-target-post-id="+ relation.operation_receiver_id+ "]").addClass("active-relation");
+                  break;
+                default:
+
+              }
+            });
+          },
+          error: function (jqXHR, textStatus, errorThrown){
+            console.log("Error in batch lookup")
+          }
+        });
+
+
         $(".fa.fa-caret-up.fa-2,.fa.fa-caret-down.fa-2").click(function onClickUpVote(e){
           $this = $(this);
+          if ($this.hasClass("active-relation")){
+            $.ajax("/api/delrelation", {
+              data:{
+                operation_receiver_id:$this.data("target-post-id"), 
+                operater_id: $this.data("user-id")
+              },
+              method: "GET",
+              success: function (data, textStatus, jqXHR){
+                if (data.api_result !== "success"){
+                  return;
+                }
+                $this.removeClass("active-relation");
+                $this.parent().parent().find(".votes-number-container").html(data.api_new_votes);
+              },
+              error: function ( jqXHR, textStatus, errorThrown){
+                console.error("error of vote ajax");
+              }
+
+            });
+            return;
+          }
           $.ajax("/api/addrelation", {
             data:{
               operation_receiver_id:$this.data("target-post-id"), 
               operater_id: $this.data("user-id"),
               operation_name:"vote",
-              operation_value:1
+              operation_value:$this.hasClass('fa-caret-up')?1:-1
             },
             method: "POST",
             success: function (data, textStatus, jqXHR){
@@ -143,7 +204,7 @@ block additionalJS
                 return;
               }
               $this.addClass("active-relation");
-
+              $this.parent().parent().find(".votes-number-container").html(data.api_new_votes);
             },
             error: function ( jqXHR, textStatus, errorThrown){
               console.error("error of vote ajax");
@@ -151,9 +212,8 @@ block additionalJS
 
           });
         })
-
         /* try find all relations */
-        
       });
+
 
 
