@@ -210,6 +210,23 @@ post_schema.static({
     }
     sort_param[to_be_sorted_field] = order;
     Model.find({"role":1}).sort(sort_param).exec(callback);
+  },
+  offsetRelation : function (relation_to_be_removed, exec){
+    // exec (err, new_notes)
+    if (!relation_to_be_removed) {
+      return exec( new Error("relation_to_be_removed is falsy argument"), null);
+    }
+    var Model = this;
+    Model.findOne( {post_id: relation_to_be_removed.operation_receiver_id}, function  (err, post){
+      if (err) return exec(err, null);
+      if (!post) return exec(new Error("cannot find this post"), null);
+      post.votes -= relation_to_be_removed.operation.operation_value;
+      post.save(function onSave(err){
+        if (err) return exec(err, null);
+        return exec(null, post.votes);
+      });
+    });
+
   }
 });
 

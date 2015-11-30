@@ -46,8 +46,9 @@
   min-height: 200px;
 }
 body {
+  /* qa index*/
   /*modifying post page*/
-  /*modifying one post, one can see this in specific question*/
+  /*modifying one post, specific question*/
   /*modifying the reply input editor*/
 }
 body .main-qa .tabs .nav-tabs li {
@@ -108,6 +109,10 @@ body .post-row .votes-container .votes-number-container {
 body .post-row .votes-container .fa-caret-up,
 body .post-row .votes-container .fa-caret-down {
   cursor: pointer;
+}
+body .post-row .votes-container .fa-caret-up.active-relation,
+body .post-row .votes-container .fa-caret-down.active-relation {
+  color: orange;
 }
 body .post-row .votes-container .star-div {
   color: lightgrey;
