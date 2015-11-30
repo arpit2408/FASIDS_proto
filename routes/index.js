@@ -208,6 +208,7 @@ router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
     post_time:currentDate,
     post_viewed:0,
     replied_post:0,
+    votes:0,
     last_reply_id:post_id,  // last reply is itself, when this is just posted
     content: req.body.content,
     poster_fullname: req.user.displayName()
