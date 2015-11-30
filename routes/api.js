@@ -21,15 +21,47 @@ function APIEnsureAuthenticated (req, res, next) {
 
 // all routes after (/api)
 apirouter.post("/addrelation", APIEnsureAuthenticated, function (req, res, next){
-  var tentative_relation = req.body.tentative_relation;
-  req.db_models.Relationship.addRelation(tentative_relation, function (added_relation){
-    if (addrelation)
-      res.json({api_result:"success", api_route:"/api/addrelation"});
-    else
-      res.status(500).json({api_result:"error", api_route:"/api/addrelation"});
-  })
-});
+  
+  var tentative_relation = {
+    operation_receiver_id:req.body.operation_receiver_id,
+    operater_id:req.body.operater_id,
+    operation:{
+      operation_name:req.body.operation_name,
+      operation_value:req.body.operation_value
+    }
+  };
+  console.log(tentative_relation);
+  req.db_models.Relationship.addRelation(tentative_relation, function (err ,added_relation){
+    if (added_relation) {
+      switch (added_relation.operation.operation_name ) {
+        case "vote":
+          req.DB_POST.findOne({post_id: added_relation.operation_receiver_id}, function (err, post){
+            post.votes = post.votes + added_relation.operation.operation_value;
+            post.save( function (err){
+              if (err) return res.status(500).json({api_result:"error : " + JSON.stringify(err), api_route:"/api/addrelation"});
+              console.log(post.post_id + " : votes," + post.votes);
+            });
+          });
+          break;
+        default:
+      }     
 
+      res.json({api_result:"success", api_route:"/api/addrelation"});
+    }
+
+    else {
+      res.status(500).json({api_result:"error : " + err.message, api_route:"/api/addrelation"});
+    }
+  });
+});
+/*
+{
+  ...
+  operater_id: xxxxxx,
+  operation_receiver_id:xxxx
+  ...
+}
+*/
 apirouter.get("/getrelation", APIEnsureAuthenticated, function (req, res, next ){
   var Relationship = req.db_models.Relationship;
   Relationship.getRelation(req.query.operater_id, req.query.operation_receiver_id, function (err, relation){
@@ -39,3 +71,4 @@ apirouter.get("/getrelation", APIEnsureAuthenticated, function (req, res, next )
   });
 });
 
+module.exports = apirouter;

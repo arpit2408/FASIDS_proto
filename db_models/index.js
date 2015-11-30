@@ -4,3 +4,4 @@ exports.PolygonGeojson = require('./polygon_geojson.js');
 exports.FireAntProduct = require('./fire_ant_product.js');
 exports.AntDistribution = require('./ant_distribution.js');
 exports.County = require('./county.js');
+exports.Relationship = require('./relationship.js');

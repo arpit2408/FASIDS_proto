@@ -65,7 +65,7 @@ app.post('/users/signin', passport.authenticate('local',{failureRedirect:'/users
   res.redirect("/");
 });
 app.use('/users', users);
-
+app.use('/api', api_route);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

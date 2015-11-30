@@ -19,17 +19,24 @@ relationship_schema.static({
   },
   addRelation: function (relation, exec){
     var Model = this;
-    Model.findOne({operater_id: relation.operater_id, operation_receiver_id: relation.operation_receiver_id}, function (err, relation){
+    Model.findOne({operater_id: relation.operater_id, operation_receiver_id: relation.operation_receiver_id}, function (err, db_relation){
       if (err){
         console.log("[ERROR] : " + JSON.stringify(err))
-        exec();
+        exec(err, null);
       }
-      else if (!relation){
+      else if (!db_relation){
+        console.log("relationship.js: " + "going to new");
         var new_relation = new Model(relation);
-        exec(new_relation);
+        new_relation.save( function (err) {
+          if (err) {
+            return exec(err, null);
+          }
+          exec(null,new_relation);
+        });
       } 
-      else {
-        exec();
+      else {  // already has one relation, so we cannot process this adding
+
+        exec(new Error("relationship already exited"));
       }
     });
   }
