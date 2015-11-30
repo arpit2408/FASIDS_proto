@@ -19,6 +19,7 @@ var post_schema = new mongoose.Schema({
   "reply_to_post":String,// post created to reply specific post
   "reply_to_mainpost":String,
   "votes":Number,
+  "stars":Number,
   "content":String
 },{ collection:'post'});
 var User = require('./user.js');
