@@ -182,7 +182,7 @@ block additionalJS
                   return;
                 }
                 $this.removeClass("active-relation");
-                $this.parent().parent().find(".votes-number-container").html(data.api_new_votes);
+                $this.parent().parent().find(".votes-number-container").html(data.updated_value);
               },
               error: function ( jqXHR, textStatus, errorThrown){
                 console.error("error of vote ajax");
@@ -204,7 +204,7 @@ block additionalJS
                 return;
               }
               $this.addClass("active-relation");
-              $this.parent().parent().find(".votes-number-container").html(data.api_new_votes);
+              $this.parent().parent().find(".votes-number-container").html(data.updated_value);
             },
             error: function ( jqXHR, textStatus, errorThrown){
               console.error("error of vote ajax");

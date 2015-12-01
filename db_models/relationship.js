@@ -8,8 +8,6 @@ var relationship_schema = new mongoose.Schema({
 
 // define instance methods
 relationship_schema.method({
-
-
 });
 
 relationship_schema.static({
@@ -35,8 +33,7 @@ relationship_schema.static({
         });
       } 
       else {  // already has one relation, so we cannot process this adding
-
-        exec(new Error("relationship already exited"));
+        exec(new Error("relation already exited or have conflicts with exited relations "));
       }
     });
   }
@@ -50,3 +47,31 @@ var saveCB = function( err, instance){
 };
 
 module.exports = mongoose.model('Relationship',relationship_schema);
+
+
+
+
+/*
+Possible relationship in databse
+
+{
+  operater_id:ObjectId(5611f401ce5001a4267c83d3),
+  operation_receiver_id:"1510416050108",
+  operation:{
+    operation_name:"vote",
+    operation_value:+1, or -1
+  }
+}
+
+
+{
+  operater_id:ObjectId(5611f401ce5001a4267c83d3),
+  operation_receiver_id:"1510416050108",
+  operation:{
+    operation_name:"star",
+    operation_value:1
+  }
+}
+
+*/
+
