@@ -107,11 +107,13 @@ body .post-row .votes-container .votes-number-container {
   font-size: 18px;
 }
 body .post-row .votes-container .fa-caret-up,
-body .post-row .votes-container .fa-caret-down {
+body .post-row .votes-container .fa-caret-down,
+body .post-row .votes-container .fa-star {
   cursor: pointer;
 }
 body .post-row .votes-container .fa-caret-up.active-relation,
-body .post-row .votes-container .fa-caret-down.active-relation {
+body .post-row .votes-container .fa-caret-down.active-relation,
+body .post-row .votes-container .fa-star.active-relation {
   color: orange;
 }
 body .post-row .votes-container .star-div {

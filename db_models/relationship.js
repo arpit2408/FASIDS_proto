@@ -17,7 +17,8 @@ relationship_schema.static({
   },
   addRelation: function (relation, exec){
     var Model = this;
-    Model.findOne({operater_id: relation.operater_id, operation_receiver_id: relation.operation_receiver_id}, function (err, db_relation){
+    Model.findOne({operater_id: relation.operater_id, operation_receiver_id: relation.operation_receiver_id, "operation.operation_name": relation.operation.operation_name},
+    function (err, db_relation){
       if (err){
         console.log("[ERROR] : " + JSON.stringify(err))
         exec(err, null);
