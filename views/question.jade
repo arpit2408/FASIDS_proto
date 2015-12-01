@@ -40,7 +40,7 @@ block renderBody
         div
           i.fa.fa-caret-down.fa-2(data-target-post-id="#{main_post.post_id}",data-user-id="#{user?user._id:null}")
         .star-div
-          i.fa.fa-star.fa-2
+          i.fa.fa-star.fa-2(data-target-post-id="#{main_post.post_id}",data-user-id="#{user?user._id:null}")
       .col-xs-9
         .content!=main_post.content
         .post-signature
@@ -73,7 +73,7 @@ block renderBody
           div
             i.fa.fa-caret-down.fa-2(data-target-post-id="#{reply.post_id}", data-user-id="#{user?user._id:null}" )
           .star-div
-            i.fa.fa-star.fa-2
+            i.fa.fa-star.fa-2(data-target-post-id="#{reply.post_id}",data-user-id="#{user?user._id:null}")
         .col-xs-9
           .content!=reply.content
           .post-signature.answer-signature
@@ -147,18 +147,18 @@ block additionalJS
             */
             console.log(relations);
             relations.forEach( function ( relation, index, arr){
-              if (relation.operation.operation_name !== "vote"){
-                return;
-              }
-              switch (relation.operation.operation_value){
-                case 1 :
-                  $(".fa.fa-caret-up.fa-2[data-target-post-id="+ relation.operation_receiver_id+ "]").addClass("active-relation");
-                  break;
-                case -1 :
-                  $(".fa.fa-caret-down.fa-2[data-target-post-id="+ relation.operation_receiver_id+ "]").addClass("active-relation");
-                  break;
-                default:
-
+              if (relation.operation.operation_name === "star"){
+                $(".fa-star[data-target-post-id="+ relation.operation_receiver_id+ "]").addClass("active-relation");
+              } else {
+                switch (relation.operation.operation_value){
+                  case 1 :
+                    $(".fa.fa-caret-up.fa-2[data-target-post-id="+ relation.operation_receiver_id+ "]").addClass("active-relation");
+                    break;
+                  case -1 :
+                    $(".fa.fa-caret-down.fa-2[data-target-post-id="+ relation.operation_receiver_id+ "]").addClass("active-relation");
+                    break;
+                  default:
+                }
               }
             });
           },
@@ -168,13 +168,14 @@ block additionalJS
         });
 
 
-        $(".fa.fa-caret-up.fa-2,.fa.fa-caret-down.fa-2").click(function onClickUpVote(e){
+        $(".fa.fa-caret-up.fa-2,.fa.fa-caret-down.fa-2,.fa-star").click(function onClickUpVote(e){
           $this = $(this);
           if ($this.hasClass("active-relation")){
             $.ajax("/api/delrelation", {
               data:{
                 operation_receiver_id:$this.data("target-post-id"), 
-                operater_id: $this.data("user-id")
+                operater_id: $this.data("user-id"),
+                operation_name:$this.hasClass('fa-star')?"star":"vote"
               },
               method: "GET",
               success: function (data, textStatus, jqXHR){
@@ -182,7 +183,8 @@ block additionalJS
                   return;
                 }
                 $this.removeClass("active-relation");
-                $this.parent().parent().find(".votes-number-container").html(data.updated_value);
+                if (!$this.hasClass("fa-star"))
+                  $this.parent().parent().find(".votes-number-container").html(data.updated_value);
               },
               error: function ( jqXHR, textStatus, errorThrown){
                 console.error("error of vote ajax");
@@ -191,12 +193,18 @@ block additionalJS
             });
             return;
           }
+
+          if ($this.hasClass("fa-star")){
+            var operation_value = 1;
+          } else {
+            var operation_value = $this.hasClass('fa-caret-up')?1:-1;
+          }
           $.ajax("/api/addrelation", {
             data:{
               operation_receiver_id:$this.data("target-post-id"), 
               operater_id: $this.data("user-id"),
-              operation_name:"vote",
-              operation_value:$this.hasClass('fa-caret-up')?1:-1
+              operation_name:$this.hasClass('fa-star')?"star":"vote",
+              operation_value:operation_value
             },
             method: "POST",
             success: function (data, textStatus, jqXHR){
@@ -204,7 +212,10 @@ block additionalJS
                 return;
               }
               $this.addClass("active-relation");
-              $this.parent().parent().find(".votes-number-container").html(data.updated_value);
+              if ($this.hasClass("fa-star")){
+              } else {
+                $this.parent().parent().find(".votes-number-container").html(data.updated_value);
+              }
             },
             error: function ( jqXHR, textStatus, errorThrown){
               console.error("error of vote ajax");

@@ -35,7 +35,9 @@ var User = require('./user.js');
 //   "post_viewed":Number,
 //   "reply_to_post":String,// post created to reply specific post
 //   "reply_to_mainpost":String,
-//   "content":String
+//   "content":String,
+//   "stars" : Number,
+//   "votes" : Number
 // }
 
 /*regardomh followups*/
@@ -47,7 +49,9 @@ var User = require('./user.js');
 //   "post_time": Date,
 //   "reply_to_post":String,// post created to reply specific post
 //   "reply_to_mainpost":String,
-//   "content":String
+//   "content":String,
+//   "stars" : Number,
+//   "votes" : Number
 // }
 // define instance methods
 //http://stackoverflow.com/questions/13851088/how-to-bind-function-arguments-without-binding-this
