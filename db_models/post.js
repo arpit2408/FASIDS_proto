@@ -212,22 +212,60 @@ post_schema.static({
     sort_param[to_be_sorted_field] = order;
     Model.find({"role":1}).sort(sort_param).exec(callback);
   },
+  handleNewRelation: function (relation_to_be_added, exec){
+    if (!relation_to_be_added) {
+      return exec( new Error("relation_to_be_added is falsy argument"), null);
+    } 
+    this.findOne({post_id: relation_to_be_added.operation_receiver_id}, function (err ,post){
+      if (err) return exec(err, null);
+      if (!post) return exec(new Error("cannot find this post: " + relation_to_be_added.operation_receiver_id));
+      var to_be_returned_property = "";
+      switch (relation_to_be_added.operation.operation_name){
+        case "vote":
+          post.votes += relation_to_be_added.operation.operation_value;
+          to_be_returned_property = "votes";
+          break;
+        case "star":
+          post.stars += 1;
+          to_be_returned_property = "stars";
+          break;
+        default:
+          console.log("[ERROR]  handleNewRelation() of post.js (DB Schema), unrecognized relation name");
+          return exec (null, new Error("recognized relation name"));
+      }
+      post.save (function onSave(err){
+        if (err) return exec (err, null);
+        return exec (null, post[to_be_returned_property]);
+      });
+    });
+  },
   offsetRelation : function (relation_to_be_removed, exec){
-    // exec (err, new_notes)
     if (!relation_to_be_removed) {
       return exec( new Error("relation_to_be_removed is falsy argument"), null);
     }
     var Model = this;
     Model.findOne( {post_id: relation_to_be_removed.operation_receiver_id}, function  (err, post){
       if (err) return exec(err, null);
-      if (!post) return exec(new Error("cannot find this post"), null);
-      post.votes -= relation_to_be_removed.operation.operation_value;
+      if (!post) return exec(new Error("cannot find this post: " + relation_to_be_removed.operation_receiver_id));
+      var to_be_returned_property = "";
+      switch ( relation_to_be_removed.operation.operation_name ){
+        case "vote":
+          post.votes -= relation_to_be_removed.operation.operation_value;
+          to_be_returned_property = "votes";
+          break;
+        case "star":
+          post.stars -= 1;
+          to_be_returned_property = "stars";
+          break;
+        default:
+          console.log("[ERROR]  offsetRelation() of post.js (DB Schema), unrecognized relation name");
+          return exec (null, new Error("recognized relation name"));
+      }
       post.save(function onSave(err){
         if (err) return exec(err, null);
-        return exec(null, post.votes);
+        return exec(null, post[to_be_returned_property]);
       });
     });
-
   }
 });
 
