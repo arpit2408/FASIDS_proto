@@ -11,7 +11,68 @@ block renderBody
 
   include snippets/breadcrum
   +breadcrumb(breadcrumTitle, pathToHere)
+  -function getPagedURL (paging_condition, page){
+    - if (page && page <= Math.ceil(paging_condition.count / paging_condition.limit)) {paging_condition.skip = (page -1) * paging_condition.limit; }
+    -var str = Object.keys(paging_condition).map(function(key) {
+    -    return key + '=' + paging_condition[key];
+    -}).join('&');
+    -return '/qa?'+str;
+  -}
+  mixin paging(paging_condition)
+    //- paging_nation is like following
+    //- {
+    //-   sort: newest,
+    //-   skip: 0,
+    //-   limit: 15,
+    //-   count:23
+    //- }
+    - var totalpage = Math.ceil(paging_condition.count / paging_condition.limit)
+    - var currentpage = ( paging_condition.skip  / paging_condition.limit ) + 1 
+    div
+      ul.pagination
+        if (currentpage > 1)
+          li
+            a(href=getPagedURL(paging_condition, currentpage-1)) «  
+        else
+          li.disabled 
+            a «  
+        if (currentpage >4)
+          li
+            a(href=getPagedURL(paging_condition,1)) 1
+          li.disabled
+            a ...
+        if (currentpage >2)
+          li
+            a(href=getPagedURL(paging_condition, currentpage-1))=currentpage-2  
+        if (currentpage >1)
+          li
+            a(href=getPagedURL(paging_condition, currentpage-1))=currentpage-1  
+        li.active
+          a(href=getPagedURL(paging_condition))=currentpage
+        if (totalpage - currentpage >0)
+          li
+            a(href=getPagedURL(paging_condition, currentpage+1))=currentpage+1
+        if (totalpage - currentpage >1)
+          li
+            a(href=getPagedURL(paging_condition, currentpage+2))=currentpage+2
+        if (totalpage - currentpage >3)
+          li.disabled
+            a ...
+          li
+            a(href=getPagedURL(paging_condition, totalpage))=totalpage
+        if (currentpage < totalpage)
+          li
+            a(href=getPagedURL(paging_condition, currentpage+1)) »
+        else
+          li.disabled 
+            a »
+
   .divide30
+    //- for debugging purpose
+    //- p=paging_condition.sort
+    //- p=paging_condition.skip
+    //- p=paging_condition.limit
+    //- p=paging_condition.count
   .container.main-qa
     .row
       .col-xs-3.col-xs-offset-1
@@ -19,29 +80,19 @@ block renderBody
           i.fa.fa-plus
           | NEW QUESTION
       .col-xs-8.tabs
-        if !sort
-          - sort = "newest"
+        if !(paging_condition.sort)
+          - paging_condition.sort = "newest"
         ul.nav.nav-tabs
-          li(role='presentation' class='#{(sort==="newest")?"active":""}')
+          li(role='presentation' class='#{(paging_condition.sort==="newest")?"active":""}')
             a(href='/qa?sort=newest') newest
-          li(role='presentation' class='#{(sort==="frequent")?"active":""}')
+          li(role='presentation' class='#{(paging_condition.sort==="frequent")?"active":""}')
             a(href='/qa?sort=frequent') frequent
-          li(role='presentation' class='#{(sort==="votes")?"active":""}')
+          li(role='presentation' class='#{(paging_condition.sort==="votes")?"active":""}')
             a(href='/qa?sort=votes') votes
-          li(role='presentation' class='#{(sort==="active")?"active":""}')
+          li(role='presentation' class='#{(paging_condition.sort==="active")?"active":""}')
             a(href='/qa?sort=active') active
-          li(role='presentation' class='#{(sort==="unanswered")?"active":""}')
+          li(role='presentation' class='#{(paging_condition.sort==="unanswered")?"active":""}')
             a(href='/qa?sort=unanswered') unanswered
-    //- .row.qa-post-title-header
-      .col-sm-1
-      .col-sm-6
-        strong TOPICS
-      .col-sm-1 
-        strong REPLIES
-      .col-sm-1
-        strong VIEWS
-      .col-sm-3
-        strong LAST REPLY
     hr
     .qa-post-titles
       //- posts is from controller
@@ -113,66 +164,8 @@ block renderBody
     //- put pagination down
     .row
       .col-xs-10.col-xs-offset-1
-        div
-          ul.pagination
-            li
-              a(href='#') «
-            li.active
-              a(href='#') 1
-            li
-              a(href='#') 2
-            li
-              a(href='#') 3
-            li
-              a(href='#') 4
-            li
-              a(href='#') 5
-            li
-              a(href='#') »
-    //- put filter row here
-
-    //- .row.qa-post-title-filter
-      .col-sm-8.col-sm-offset-1
-        form(method='post')
-          | Display topics from previous:
-          .btn-group
-            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-              | all
-              span.caret
-            ul.dropdown-menu
-              li
-                a(href='#') All
-              li
-                a(href='#') 1 day ago
-              li
-                a(href='#') 1 week ago
-          |&nbsp;&nbsp; Sort by
-          .btn-group
-            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-              | Post time
-              span.caret
-            ul.dropdown-menu
-              li
-                a(href='#') Post time
-              li
-                a(href='#') Views
-              li
-                a(href='#') Replies
-              li: a(href = "#") Subjects
-          |&nbsp;&nbsp;
-          .btn-group.marginRight10
-            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-              | Descending
-              span.caret
-            ul.dropdown-menu
-              li: a(href = "#") Descending
-              li: a(href = "#") Ascending
-
-
-
-
-          // div.btn-group ends
-          button.btn.btn-primary(type='button', id="filter-go-btn") Go
+        +paging(paging_condition)
+  
   .divide60
 
 

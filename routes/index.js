@@ -84,8 +84,8 @@ router.get('/', function (req, res, next) {
 
 /*visit the qa forum*/
 router.get('/qa', function (req, res, next){
-
-  req.DB_POST.getAllMainPosts(req.query.sort,function (err, posts){
+  var paging_condition = _.pick(req.query,'sort','skip','limit');
+  req.DB_POST.getAllMainPosts(paging_condition,function (err, posts){
     if (err) {return next(err);}
     if (!posts) {return next(new Error("did not find posts"));}
     toBeRenderedPosts = [];
@@ -96,11 +96,11 @@ router.get('/qa', function (req, res, next){
         activePage:'Questions',
         isAuthenticated: req.isAuthenticated(),
         user: processReqUser(req.user),
+        paging_condition: paging_condition,
         posts:toBeRenderedPosts
       });
       return;
     }
-    console.log(JSON.stringify(posts));
     req.DB_POST.staticLinkPostWithUser(posts).then(  req.DB_POST.staticLinkLastReply.bind(req.DB_POST)  ).then(function (processed_posts){
       var sanityCheckSig =   sanityCheckPosts(processed_posts)
       if ( sanityCheckSig !== 1){
@@ -114,7 +114,7 @@ router.get('/qa', function (req, res, next){
         user: processReqUser(req.user),
         posts:processed_posts,
         momentlib:moment,
-        sort:req.query.sort
+        paging_condition: paging_condition,
       }).catch(function(err){
         return next(err);
       });

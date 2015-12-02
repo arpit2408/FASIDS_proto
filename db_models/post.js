@@ -183,38 +183,45 @@ post_schema.static({
     });
   },
 
-  getAllMainPosts: function ( sort ,callback) {   // I can put sort parameter here
+  getAllMainPosts: function ( condition ,callback) {   // I can put sort parameter here
     var Model = this;
-    if (typeof sort === "undefined"){
+    if (typeof condition === "undefined"){
       console.log("[INFO] getAllMainPosts of post.js received undefined sort argument");
+      condition = {limit: 15, skip: 0, sort:"newest"};
     }
-    var to_be_sorted_field = "post_time";
-    var increasing = 1;
-    var decreasing = -1;
-    var order = -1
-    var sort_param = {};
-    switch(sort){
-      case "newest":
-        break;
-      case "votes":
-        to_be_sorted_field = "votes";
-        break;
-      case "frequent":
-        to_be_sorted_field = "post_viewed";
-        break;
-      case "active":
-        // TODO
-        break;
-      case "unanswered":
-        sort_param[to_be_sorted_field] = order;
-        Model.find({"replied_post":0, "role":1}).sort(sort_param).exec(callback);
-        return;
-        break;
-      default:
-        // the default value has already being assigned
-    }
-    sort_param[to_be_sorted_field] = order;
-    Model.find({"role":1}).sort(sort_param).exec(callback);
+    if (!condition.limit){condition.limit = 15;}
+    if (!condition.skip) { condition.skip = 0;}
+    if (!condition.sort){ condition.sort = "newest";}
+    Model.count({role:1}, function afterCount(err, count){
+      condition.count = count;
+      var to_be_sorted_field = "post_time";
+      var increasing = 1;
+      var decreasing = -1;
+      var order = -1
+      var sort_param = {};
+      switch(condition.sort){
+        case "newest":
+          break;
+        case "votes":
+          to_be_sorted_field = "votes";
+          break;
+        case "frequent":
+          to_be_sorted_field = "post_viewed";
+          break;
+        case "active":
+          // TODO
+          break;
+        case "unanswered":
+          sort_param[to_be_sorted_field] = order;
+          Model.find({"replied_post":0, "role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param).exec(callback);
+          return;
+          break;
+        default:
+          // the default value has already being assigned
+      }
+      sort_param[to_be_sorted_field] = order;
+      Model.find({"role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param).exec(callback);
+    });
   },
   handleNewRelation: function (relation_to_be_added, exec){
     if (!relation_to_be_added) {
