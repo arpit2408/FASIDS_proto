@@ -1,11 +1,25 @@
-.breadcrumb-wrap
-  .container
-    .row
-      .col-sm-6
-        h4 #{(breadcrumTitle)?breadcrumTitle:"breadcrumb title unspecified"}
-      .col-sm-6.hidden-xs.text-right
-        ol.breadcrumb
-          li
-            a(href='/') Home
-          li #{(pathToHere)?pathToHere:"path unspecified"}
-// breadcrumbs
+mixin path(path)
+  if (!path)
+    li path unspecified
+  else
+    each val in path.split("/")
+      li 
+        -var href = "#"
+        -var link_text = val.trim()
+        if (link_text.match(/^qa$/))
+          -link_text = "Q &amp; A"
+          -href = "/qa/"
+        else if (link_text === "antactivity")
+          -href = "/antactivity"
+        a(href=href)!=link_text
+mixin breadcrumb(breadcrumTitle, pathToHere)
+  .breadcrumb-wrap
+    .container
+      .row
+        .col-sm-6
+          h4 #{(breadcrumTitle)?breadcrumTitle:"breadcrumb title unspecified"}
+        .col-sm-6.hidden-xs.text-right
+          ol.breadcrumb
+            li
+              a(href='/') Home
+            +path(pathToHere)

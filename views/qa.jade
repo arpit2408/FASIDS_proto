@@ -10,7 +10,7 @@ block renderBody
     | [ICON] #{momentlib(date).fromNow()}
 
   include snippets/breadcrum
-
+  +breadcrumb(breadcrumTitle, pathToHere)
   .divide30
   .container.main-qa
     .row
