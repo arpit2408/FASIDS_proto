@@ -5,29 +5,27 @@ var htmlToText = require('html-to-text');
 var fs = require('fs');
 var post_schema = new mongoose.Schema({
   "role":Number, // 1 means main_post, 2 means reply
-  "post_id":String,
-  "poster_id":mongoose.Schema.ObjectId,
-  "poster_fullname":String,
-  //"poster"   // this is a virtual field which only be fullfilled when rendered 
+  "poster_id":{type: mongoose.Schema.ObjectId, ref: 'User'},
   "post_cat":{type:Number, min:0, max:4},   // used for the icons
   "post_title":String,
   "post_time": Date,
+  "updated_at": {type: Date, default: Date.now},
   "post_viewed":Number,
   "replied_post":Number,
-  //"last_reply"  // this is a virtual field which only be fullfilled when rendered 
-  "last_reply_id":String,  // keep track of last reply post_id
-
-  "reply_to_post":String,// post created to reply specific post
-  "reply_to_mainpost":String,
-  "votes":Number,
-  "stars":Number,
-  "content":String
+  // "last_reply_id":{type:mongoose.Schema.ObjectId, ref:'Post'},  // keep track of last reply _id
+  "reply_to_post":{type:mongoose.Schema.ObjectId, ref:'Post'},// post created to reply specific post
+  "reply_to_mainpost":{type:mongoose.Schema.ObjectId, ref:'Post'},
+  "replies":[{type:mongoose.Schema.ObjectId, ref:'Post'}],
+  "votes":{type:Number, required: true},
+  "stars":{type:Number, required: true},
+  "content":{type:String, required: true}
 },{ collection:'post'});
-var User = require('./user.js');
+var models = require('./index.js');
+var User = models.User;
 /*regarding main post*/
 // {
+//   "_id" : default  
 //   "role":1, // 1 means main_post, 2 means reply
-//   "post_id":String,
 //   "poster_id":mongoose.Schema.ObjectId,
 //   "poster_fullname":String,
 //   "post_cat":{type:Number, min:0, max:4},   // used for the icons
@@ -43,8 +41,8 @@ var User = require('./user.js');
 
 /*regardomh followups*/
 // {
+//   "_id" : default  
 //   "role":2, // 1 means main_post, 2 means reply
-//   "post_id":String,
 //   "poster_id":mongoose.Schema.ObjectId,
 //   "poster_fullname":String,
 //   "post_time": Date,
@@ -76,16 +74,10 @@ post_schema.method({
     }
     post.save(saveCB);
   },
-  updateData: function (reply_number, newest_reply){
-    this.replied_post = reply_number;
-    this.last_reply_id = newest_reply.post_id;
+  addOneReply: function (reply_id, saveCB){
+    this.replies.push(reply_id);
+    this.replied_post += 1;
     this.save(saveCB);
-  },
-  setReplyNumber: function (reply_number){
-    var post = this;
-    if (post.role !== 1) {throw ("only main post can add reply number");} 
-    post.replied_post = reply_number;
-    post.save(saveCB);
   },
   /*
     param:
@@ -98,6 +90,20 @@ post_schema.method({
     return htmlToText.fromString(this.content,{
       wordwrap:false
     }).substring(0,length);
+  },
+  destroy : function ( callback){
+    var this_post = this;
+    this_post.remove(function onRemovePostInstance (err, post){
+      if (err){ return callback(err);}
+      models.Relationship.remove({"operation_receiver_id": post._id}, function (err){
+        if (err){
+          return callback(err);
+        }
+        if (post.role === 2){
+        }
+        console.log("[INFO] post: " + post._id + " removed");
+      });
+    });
   }
 });
 
@@ -117,50 +123,14 @@ function errHandler(err){
 post_schema.static({
   getAllFollowUps: function( main_post_id, callback){
     var Model = this;
-    Model.findOne({"post_id": main_post_id}, null,{},function findMainPostCB(err, instance){
-      if (err) throw (err);
-      if (instance.role !== 1){
-        throw ("only main post can have follow ups");
-      }
-      Model.find({"reply_to_mainpost": main_post_id}).sort({"post_time":1}).exec(function findRepliesCB(err, replies){
-        if (err) throw (err);
-        Model.staticLinkPostWithUser(replies).then(function(res){
-          callback(null, res);
-        }).catch(errHandler);
-
-      });  // callback should take err, and instances
-    });
+    Model.findOne({"_id": main_post_id}).populate('replies poster_id').exec(callback);
   },
+  // This method is to populate poster_id of all the replies
   staticLinkPostWithUser:function(mongoArray){
-    // console.log(this);
-    return new Promise(function wrappedCodeBlock (fulfill, reject){
-      if (mongoArray.length ===0){
-        fulfill(mongoArray);
-      }
-      else {
-        var dueCallbackStack = [];
-        for(var i = 0; i <= mongoArray.length - 1; i++){
-          dueCallbackStack.push(i);
-          User.findOne({_id:mongoArray[i].poster_id},null,{}, bindWithoutThis(  function userFoundCB(i,err, user){
-            if (err) {
-              reject(err);
-              return;
-            }
-            if (!user){
-              reject( new Error("did not find corresponding poster for: " + mongoArray[i]._id));
-              return;
-            }
-            mongoArray[i]['poster'] = user;
-            dueCallbackStack.pop();
-            /*I do not assume async callbacks order can be kept*/
-            if (dueCallbackStack.length === 0){
-              fulfill(mongoArray);
-            }
-          },i)  );
-        }// end of for
-      }  
-    });
+    var ids = _.pluck(mongoArray, '_id')
+    return this.find({_id:{$in:ids}}).populate('poster_id');
   },
+  /*
   staticLinkLastReply:function( main_posts ){
     var POST = this;
     // console.log("arrived staticLinkLastReply#################");
@@ -173,7 +143,7 @@ post_schema.static({
         var dueCallbackStack = [];
         for(var i = 0; i < main_posts.length ;i++){
           dueCallbackStack.push(i);
-          POST.findOne({ "post_id":main_posts[i].last_reply_id},null,{}, bindWithoutThis(  function userFoundCB(i, err, reply){
+          POST.findOne({ "_id":main_posts[i].last_reply_id},null,{}, bindWithoutThis(  function userFoundCB(i, err, reply){
             if (err) {
               reject(err);
               return;
@@ -194,7 +164,7 @@ post_schema.static({
       }  
     });
   },
-
+  */
   getAllMainPosts: function ( condition ,callback) {   // I can put sort parameter here
     var Model = this;
     if (typeof condition === "undefined"){
@@ -225,21 +195,21 @@ post_schema.static({
           break;
         case "unanswered":
           sort_param[to_be_sorted_field] = order;
-          Model.find({"replied_post":0, "role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param).exec(callback);
-          return;
+          return callback(err , Model.find({"replied_post":0, "role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param));
           break;
         default:
           // the default value has already being assigned
       }
       sort_param[to_be_sorted_field] = order;
-      Model.find({"role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param).exec(callback);
+      return callback( null, Model.find({"role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param) );
+      // Model.find({"role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param).exec(callback);
     });
   },
   handleNewRelation: function (relation_to_be_added, exec){
     if (!relation_to_be_added) {
       return exec( new Error("relation_to_be_added is falsy argument"), null);
     } 
-    this.findOne({post_id: relation_to_be_added.operation_receiver_id}, function (err ,post){
+    this.findOne({_id: relation_to_be_added.operation_receiver_id}, function (err ,post){
       if (err) return exec(err, null);
       if (!post) return exec(new Error("cannot find this post: " + relation_to_be_added.operation_receiver_id));
       var to_be_returned_property = "";
@@ -267,7 +237,7 @@ post_schema.static({
       return exec( new Error("relation_to_be_removed is falsy argument"), null);
     }
     var Model = this;
-    Model.findOne( {post_id: relation_to_be_removed.operation_receiver_id}, function  (err, post){
+    Model.findOne( {_id: relation_to_be_removed.operation_receiver_id}, function  (err, post){
       if (err) return exec(err, null);
       if (!post) return exec(new Error("cannot find this post: " + relation_to_be_removed.operation_receiver_id));
       var to_be_returned_property = "";

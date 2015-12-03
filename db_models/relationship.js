@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var _ = require('underscore');
 var relationship_schema = new mongoose.Schema({
   "operater_id":mongoose.Schema.ObjectId,
-  "operation_receiver_id" :String,  // have to be consistent with post Model 
+  "operation_receiver_id" :mongoose.Schema.ObjectId,  // have to be consistent with post Model 
   "operation"  :{"operation_name":String, "operation_value": Number}
 },{ collection:'relationship'});
 

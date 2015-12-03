@@ -118,7 +118,7 @@ block renderBody
               .col-sm-7
                 .row
                   .col-xs-12
-                    a.post-title(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
+                    a.post-title(href="/qa/question?qid=#{post._id}") #{post.post_title} 
                 .row
                   .col-xs-12.text-muted=post.preivew()
 
@@ -128,7 +128,7 @@ block renderBody
                   .col-xs-9
                     .row
                       .col-xs-12
-                        | #{post.poster.displayName()}
+                        | #{post.poster_id.displayName()}
                     .row
                       .col-xs-12
                         | posted #{getDataString(post.post_time)}
@@ -147,7 +147,7 @@ block renderBody
               .col-sm-7
                 .row
                   .col-xs-12 
-                    a.post-title(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
+                    a.post-title(href="/qa/question?qid=#{post._id}") #{post.post_title} 
                 .row
                   .col-xs-12.text-muted=post.preivew()
 
@@ -157,7 +157,7 @@ block renderBody
                   .col-xs-9
                     .row
                       .col-xs-12
-                        | #{post.poster.displayName()}
+                        | #{post.poster_id.displayName()}
                     .row
                       .col-xs-12
                         | posted #{getDataString(post.post_time)}

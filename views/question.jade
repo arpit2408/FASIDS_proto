@@ -21,7 +21,7 @@ block renderBody
   mixin dateStringISO(date)
     | #{momentlib(date).format("MMM Do YYYY")}
   //- breadcrumTitle:target_post.post_title,
-  //- pathToHere:"qa / question?qid="+post_id.toString(),
+  //- pathToHere:"qa / question?qid="+_id.toString(),
   //- title: 'QA QUESTION | FASIDS',
   //- activePage:'Questions',
   //- isAuthenticated: req.isAuthenticated(),
@@ -35,13 +35,13 @@ block renderBody
     .row.post-row
       .col-xs-1.text-center.votes-container
         div
-          i.fa.fa-caret-up.fa-2(data-target-post-id="#{main_post.post_id}",data-user-id="#{user?user._id:null}")
+          i.fa.fa-caret-up.fa-2(data-target-post-id="#{main_post._id}",data-user-id="#{user?user._id:null}")
         div
           span.votes-number-container=main_post.votes
         div
-          i.fa.fa-caret-down.fa-2(data-target-post-id="#{main_post.post_id}",data-user-id="#{user?user._id:null}")
+          i.fa.fa-caret-down.fa-2(data-target-post-id="#{main_post._id}",data-user-id="#{user?user._id:null}")
         .star-div
-          i.fa.fa-star.fa-2(data-target-post-id="#{main_post.post_id}",data-user-id="#{user?user._id:null}")
+          i.fa.fa-star.fa-2(data-target-post-id="#{main_post._id}",data-user-id="#{user?user._id:null}")
       .col-xs-9
         .content!=main_post.content
         .post-signature
@@ -68,13 +68,13 @@ block renderBody
       .row.post-row
         .col-xs-1.text-center.votes-container
           div
-            i.fa.fa-caret-up.fa-2(data-target-post-id="#{reply.post_id}", data-user-id="#{user?user._id:null}")
+            i.fa.fa-caret-up.fa-2(data-target-post-id="#{reply._id}", data-user-id="#{user?user._id:null}")
           div
             span.votes-number-container=reply.votes
           div
-            i.fa.fa-caret-down.fa-2(data-target-post-id="#{reply.post_id}", data-user-id="#{user?user._id:null}" )
+            i.fa.fa-caret-down.fa-2(data-target-post-id="#{reply._id}", data-user-id="#{user?user._id:null}" )
           .star-div
-            i.fa.fa-star.fa-2(data-target-post-id="#{reply.post_id}",data-user-id="#{user?user._id:null}")
+            i.fa.fa-star.fa-2(data-target-post-id="#{reply._id}",data-user-id="#{user?user._id:null}")
         .col-xs-9
           .content!=reply.content
           .post-signature.answer-signature
