@@ -6,7 +6,6 @@ qa href: /qa/question?qid=15101153335863
 {
   "_id" : ObjectId("5612de9f8f8b79964776581c"),
   "role" : 1,
-  "post_id" : "15101153335863",
   "poster_id" : ObjectId("5611f401ce5001a4267c83d3"),
   "post_cat" : 1,
   "post_title" : "test first post",
