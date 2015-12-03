@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var _ = require('underscore');
 var Promise = require('promise');
+var htmlToText = require('html-to-text');
 var fs = require('fs');
 var post_schema = new mongoose.Schema({
   "role":Number, // 1 means main_post, 2 means reply
@@ -56,13 +57,12 @@ var User = require('./user.js');
 // define instance methods
 //http://stackoverflow.com/questions/13851088/how-to-bind-function-arguments-without-binding-this
 function bindWithoutThis(cb) {
-    var bindArgs = Array.prototype.slice.call(arguments, 1);
-
-    return function () {
-        var internalArgs = Array.prototype.slice.call(arguments, 0);
-        var args = Array.prototype.concat(bindArgs, internalArgs);
-        return cb.apply(this, args);
-    };
+  var bindArgs = Array.prototype.slice.call(arguments, 1);
+  return function () {
+      var internalArgs = Array.prototype.slice.call(arguments, 0);
+      var args = Array.prototype.concat(bindArgs, internalArgs);
+      return cb.apply(this, args);
+  };
 }
 
 post_schema.method({
@@ -86,6 +86,18 @@ post_schema.method({
     if (post.role !== 1) {throw ("only main post can add reply number");} 
     post.replied_post = reply_number;
     post.save(saveCB);
+  },
+  /*
+    param:
+      length: how long the pure text content will be returned, the preview text need use this method
+  */
+  preivew: function (){
+    return this.getPureTextContent(80) + "...";
+  },
+  getPureTextContent: function (length){
+    return htmlToText.fromString(this.content,{
+      wordwrap:false
+    }).substring(0,length);
   }
 });
 
