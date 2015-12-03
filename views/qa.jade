@@ -120,7 +120,7 @@ block renderBody
                   .col-xs-12
                     a.post-title(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
                 .row
-                  .col-xs-12.text-muted Preview Text should appear here, I need to add one instance method getPreviwText() for Post model ...
+                  .col-xs-12.text-muted=post.preivew()
 
               .col-sm-3
                 .row
@@ -149,8 +149,7 @@ block renderBody
                   .col-xs-12 
                     a.post-title(href="/qa/question?qid=#{post.post_id}") #{post.post_title} 
                 .row
-                  .col-xs-12.text-muted Preview Text should appear here, I need to add one instance method getPreviwText() for Post model ...
-
+                  .col-xs-12.text-muted=post.preivew()
 
               .col-sm-3
                 .row
