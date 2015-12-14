@@ -235,9 +235,9 @@ router.post('/qa/edit_post', ensureAuthenticated, function (req, res, next){
       var not_found_error = new Error("could not find this post"); not_found_error.status =404;
       return next(not_found_error);
     }
-    if (req.user._id === post.poster_id || req.user.usercat === 0){
+    if (req.user._id.toString() === post.poster_id.toString() || req.user.usercat === 0){
       post.content = req.body.content;
-      if (post.role == 1){post.post_title = req.body.title}
+      if (post.role == 1){post.post_title = req.body.title;}
     }
     else {
       var not_privileged = new Error("does not have access to this operation");
