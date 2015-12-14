@@ -7,11 +7,13 @@ block additionalCSS
 block renderBody
   include snippets/breadcrum
   +breadcrumb(breadcrumTitle, pathToHere)
+  -function actionPath (to_be_edited_post){ if (to_be_edited_post){ return "/qa/edit_post?post_id="+to_be_edited_post._id ;} else return "/qa/posting";}
   .container
-    form(method="post" id ='wysihtml-form')
-      //- .row
-        .col-xs-10.col-xs-offset-1
-          h3.heading topic icons
+    if to_be_edited_post
+      meta(name="to_be_edited_post", content=to_be_edited_post.content)
+      if to_be_edited_post.post_title
+        meta(name="to_be_edited_post.post_title", content=to_be_edited_post.post_title)
+    form(method="post" id ='wysihtml-form', action=actionPath(to_be_edited_post))
       .divide30
       .row
         .col-xs-11.col-xs-offset-1
@@ -56,6 +58,7 @@ block renderBody
     .divide20
 
 
+
 block additionalJS
   script(src="/wysihtml/dist/wysihtml5x-toolbar.min.js")
   script(src="/wysihtml/parser_rules/advanced_and_extended.js")
@@ -70,4 +73,16 @@ block additionalJS
         $('#content').val( $('#editor').html() );
         $('#wysihtml-form').submit();
       });
+
+      /*
+        since this view jade file will be used for edit purpose too
+        I need to check whether this page has to be edited post tag
+      */
+      var jMeta = $("meta[name=to_be_edited_post]");
+      if (jMeta.length >0){
+        $("#editor").html(jMeta.attr("content"));
+      }
+      if ($('meta[name="to_be_edited_post.post_title"]').length>0){
+        $("input[name=title]").val($('meta[name="to_be_edited_post.post_title"]').attr("content"));
+      }
     });

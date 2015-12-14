@@ -1,4 +1,5 @@
 ﻿@import "../base";
+// @import "../prefixer";
 @import "../fasids-editor";
 body {
   .main-qa{
@@ -90,6 +91,15 @@ body {
     }
     .content{
       padding: 10px;
+      transition: background-color 0.5s ease;
+      &.editable-post{
+
+        cursor: pointer;
+        &:hover{
+          background-color: #e5f2ff;
+
+        }
+      }
     }
     .post-signature{
       float: right;
