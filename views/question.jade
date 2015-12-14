@@ -32,7 +32,7 @@ block renderBody
   +breadcrumb(breadcrumTitle, pathToHere)
   mixin editablePost(post ,user)
     if user
-      if (user._id.toString() == post.poster_id.toString() || user.usercat === 0)
+      if (user._id.toString() == post.poster_id._id.toString() || user.usercat === 0)
         .content.editable-post(data-post-id=post._id.toString())!=post.content
       else 
         .content!=post.content

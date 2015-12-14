@@ -210,7 +210,7 @@ router.get('/qa/edit_post', ensureAuthenticated, function(req, res, next){
     }
     if (!post){
       var e = new Error("requested post could not be found");
-      e.status = 404
+      e.status = 404;
       return next(e);
     }
     res.render('postquestion',{
