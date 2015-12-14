@@ -34,6 +34,8 @@ block renderBody
     if user
       if (user._id == post.poster_id || user.usercat === 0)
         .content.editable-post(data-post-id=post._id.toString())!=post.content
+      else 
+        .content!=post.content
     else
       .content!=post.content
   .container.posts-regarding-question
