@@ -87,6 +87,7 @@ router.get('/qa', function (req, res, next){
   });
 });
 
+/* POST replies at path: "/qa/question" */
 router.post('/qa/question', function (req, res, next) {
   var reply = {
     role:2,
@@ -141,7 +142,7 @@ router.get('/qa/question',function (req, res, next){
   });
 });
 
-/*destroy one post and its relationship in collection relationship*/
+/* TODO destroy one post and its relationship in collection relationship*/
 router.delete('/qa/question', ensureAdmin, function (req, res, next){
   req.DB_POST.findOne({_id:req.query.qid}).exec(function (err, target_post){
     target_post.destroy( function onDestroy(err){
@@ -182,6 +183,7 @@ router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
   });
 });
 
+/*render this posting page*/
 router.get('/qa/posting', ensureAuthenticated,function (req, res, next){
   res.render('postquestion',{
     breadcrumTitle:"POST A NEW QUESTION",
@@ -193,6 +195,64 @@ router.get('/qa/posting', ensureAuthenticated,function (req, res, next){
   });
 });
 
+router.get('/qa/edit_post', ensureAuthenticated, function(req, res, next){
+  if (!req.query.post_id){
+    return next(new Error("post_id not found"));
+  }
+  req.DB_POST.findById(req.query.post_id, null, {}, function exec(error, post){
+    if (error) {
+      if (error.message.search('Cast to ObjectId failed') >=0){
+        var new_error = new Error("could not find resource");
+        new_error.status = 404;
+        return next(new_error);
+      }
+      return next(error);
+    }
+    if (!post){
+      var e = new Error("requested post could not be found");
+      e.status = 404
+      return next(e);
+    }
+    res.render('postquestion',{
+      breadcrumTitle:"EDIT POST",
+      pathToHere:"qa / edit_post?post_id=" + req.query.post_id,
+      title:"QA EDIT POST | FASIDS",
+      activePage:"Questions",
+      isAuthenticated: req.isAuthenticated(),
+      user: processReqUser(req.user),
+      to_be_edited_post:post
+    });
+  });
+});
+
+router.post('/qa/edit_post', ensureAuthenticated, function (req, res, next){
+  if (!req.query.post_id){
+    return next(new Error("post_id not found"));
+  }
+  req.DB_POST.findById(req.query.post_id, null, {}, function exec(error, post){
+    if (error) return next(error);
+    if (!post) {
+      var not_found_error = new Error("could not find this post"); not_found_error.status =404;
+      return next(not_found_error);
+    }
+    if (req.user._id === post.poster_id || req.user.usercat === 0){
+      post.content = req.body.content;
+      if (post.role == 1){post.post_title = req.body.title}
+    }
+    else {
+      var not_privileged = new Error("does not have access to this operation");
+      not_privileged.status = 401;
+      return next(not_privileged);
+    }
+    post.save(function (error){
+      if (error) return next(error);
+      if (post.role == 1)
+        return res.redirect('/qa/question?qid=' + post._id);
+      else if (post.role == 2)
+        return res.redirect('/qa/question?qid=' + post.reply_to_mainpost);
+    })
+  });
+});
 
 /* anti activity */
 router.get('/antactivity', function (req, res, next){

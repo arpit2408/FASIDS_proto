@@ -30,6 +30,12 @@ block renderBody
   //- replies:replies  //- all mongoose doc instances
   include snippets/breadcrum
   +breadcrumb(breadcrumTitle, pathToHere)
+  mixin editablePost(post ,user)
+    if user
+      if (user._id == post.poster_id || user.usercat === 0)
+        .content.editable-post(data-post-id=post._id.toString())!=post.content
+    else
+      .content!=post.content
   .container.posts-regarding-question
     .divide20
     .row.post-row
@@ -43,12 +49,12 @@ block renderBody
         .star-div
           i.fa.fa-star.fa-2(data-target-post-id="#{main_post._id}",data-user-id="#{user?user._id:null}")
       .col-xs-9
-        .content!=main_post.content
+        +editablePost(main_post, user)
         .post-signature
           .ask-time
             |asked 
             +dateStringISO(main_post.post_time)
-          .user-name #{main_post.poster_fullname}
+          .user-name #{main_post.poster_id.displayName()}
       .col-xs-2.post-status
         .row
           .col-xs-4.text-muted asked
@@ -76,25 +82,12 @@ block renderBody
           .star-div
             i.fa.fa-star.fa-2(data-target-post-id="#{reply._id}",data-user-id="#{user?user._id:null}")
         .col-xs-9
-          .content!=reply.content
+          +editablePost(reply, user)
           .post-signature.answer-signature
             .ask-time
               |answered 
               +dateStringISO(reply.post_time)
-            .user-name #{reply.poster_fullname}
-        //- .col-xs-2.post-status
-          .row
-            .col-xs-4.text-muted asked
-            .col-xs-8
-              +dateString(reply.post_time)
-          .row
-            .col-xs-4.text-muted viewed
-            .col-xs-8
-              | #{reply.post_viewed} times
-          .row
-            .col-xs-4.text-muted active
-            .col-xs-8 today
-
+            .user-name #{reply.poster_id.displayName()}
 
   .divide30
   if(isAuthenticated)
@@ -133,7 +126,7 @@ block additionalJS
         $.each($(".fa.fa-caret-up.fa-2"), function (index, value){
           query_operation_receivers.push( $(value).data("target-post-id") ); 
         });
-
+        /* try find all relations */
         $.ajax("/api/batchlookuprelation",{
           data:{
             query_operater_id: $(".fa.fa-caret-up.fa-2").data("user-id"),
@@ -168,7 +161,6 @@ block additionalJS
           }
         });
 
-
         $(".fa.fa-caret-up.fa-2,.fa.fa-caret-down.fa-2,.fa-star").click(function onClickUpVote(e){
           $this = $(this);
           if ($this.hasClass("active-relation")){
@@ -190,11 +182,9 @@ block additionalJS
               error: function ( jqXHR, textStatus, errorThrown){
                 console.error("error of vote ajax");
               }
-
             });
             return;
           }
-
           if ($this.hasClass("fa-star")){
             var operation_value = 1;
           } else {
@@ -224,7 +214,12 @@ block additionalJS
 
           });
         })
-        /* try find all relations */
+        
+        $(".editable-post").click(function (event){
+          var query = {post_id: $(this).data("post-id")};
+          window.location.href = "/qa/edit_post?" + $.param(query);
+        });
+
       });
 
 

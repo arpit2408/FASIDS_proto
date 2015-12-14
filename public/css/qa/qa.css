@@ -121,6 +121,13 @@ body .post-row .votes-container .star-div {
 }
 body .post-row .content {
   padding: 10px;
+  transition: background-color 0.5s ease;
+}
+body .post-row .content.editable-post {
+  cursor: pointer;
+}
+body .post-row .content.editable-post:hover {
+  background-color: #e5f2ff;
 }
 body .post-row .post-signature {
   float: right;
