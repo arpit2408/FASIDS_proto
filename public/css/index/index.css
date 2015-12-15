@@ -1,0 +1,19 @@
+.real-100-width {
+  margin: 0px;
+  padding: 0px;
+}
+.at-bottom-right {
+  bottom: 0;
+  right: 0;
+}
+.pic-below-title .breadcrumb-text-row {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.pic-below-title .breadcrumb-text-row p,
+.pic-below-title .breadcrumb-text-row h3 {
+  color: #eee;
+}
+.lightbluebg {
+  background-color: #f7f9fa;
+}
