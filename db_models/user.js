@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var async = require('async');
 var _ = require('underscore');
 var user_schema = new mongoose.Schema({
   "first_name":String,
@@ -24,6 +25,22 @@ user_schema.method({
   resetPassword : function(cb) {
     this.password_hash =  Math.random().toString(36).slice(-8);
     this.save(cb);
+  },
+
+  /*The purpose of this function to return relevant activities for this user instance
+    , his question, his answers, his polygon json and so on
+  */
+  allRelvant : function (  callback){
+    var user = this;
+    async.parallel(  
+    [
+      function parallel1(cb){
+        mongoose.model('Post').find({poster_id: user._id}).populate('reply_to_mainpost').exec(cb);
+      }, 
+      function parallel2(cb){
+        mongoose.model('PolygonGeojson').find({'properties.owner':user._id}, cb);
+      }
+    ], callback);
   }
 });
 

@@ -73,7 +73,7 @@ block renderBody
     
     //- reply is one Post object, 
     each reply, index in replies
-      .row.post-row
+      .row.post-row(id="reply-#{reply._id}")
         .col-xs-1.text-center.votes-container
           div
             i.fa.fa-caret-up.fa-2(data-target-post-id="#{reply._id}", data-user-id="#{user?user._id:null}")

@@ -33,7 +33,7 @@ fire_ant_product_schema.method({
     if (product.coverage){
       switch(product.usage){
         case "imt":
-          amount =  (totalarea / 100 * density / product.coverage).toFixed(1); 
+          amount =  (totalarea * density / product.coverage).toFixed(1); 
           break;
         case "broadcast":
           amount = (totalarea / product.coverage).toFixed(1);

@@ -34,7 +34,7 @@ block renderBody
           .panel-body
             .row
               .col-xs-12
-                | you currently have 0 nitification.
+                | you currently have 0 nitification. (The internal notifition section is under implement)
         .panel.panel-default
           .panel-heading
             | Message
@@ -42,13 +42,62 @@ block renderBody
           .panel-body
             .row
               .col-xs-12
-                | When you message hosts or send reservation requests, you'll see their response here.
+                | When you message hosts or send reservation requests, you'll see their response here.(The internal messenger section is under implement)
+        if questions.length >0
+          .panel.panel-default
+            .panel-heading
+              | Your Questions
+              span.badge=questions.length
+            .panel-body
+              table.table.table-striped
+                thead
+                  tr
+                    th #
+                    th Title
+                    th Viewed
+                    th Answered
+                    th Votes
+                    th Stars
+                tbody
+                  each question, index in questions
+                    tr
+                      th(scope='row')=index+1
+                      td
+                        a(href="/qa/question?qid=#{question._id.toString()}")
+                          b=question.post_title
+                      td=question.post_viewed
+                      td=question.replied_post
+                      td=question.votes
+                      td=question.stars
+        if answers.length>0
+          .panel.panel-default
+            .panel-heading
+              | Your Answers
+              span.badge=answers.length
+            .panel-body
+              table.table.table-striped
+                thead
+                  tr
+                    th #
+                    th Reply To
+                    th Votes
+                    th Stars
+                tbody
+                  each answer , index in answers
+                    tr
+                      th(scope='row')=index+1
+                      td
+                        | Reply To : 
+                        a(href="/qa/question?qid=#{answer.reply_to_mainpost._id.toString()}#reply-#{answer._id.toString()}")
+                          b=answer.reply_to_mainpost.post_title
+                      td=answer.votes
+                      td=answer.stars
+                    
         .panel.panel-default
           .panel-heading
             | Geojson Polygons
             span.badge=polygons.length
           .panel-body
-
             each db_polygon , index in polygons 
               .row.polygon-row-dashboard
                 .col-xs-3.polygon-preview Preview Pic here
