@@ -133,8 +133,12 @@ router.get("/dashboard",ensureAuthenticated, function (req, res, next) {
   req.user.allRelvant(function asyncCallback (err, results){
     if (err){
       if (Array.isArray(err)){
+        console.log("[Error] dashboard controller");
         return next(err[0]);
-      } else return next(err);
+      } else {
+        console.log("[Error] dashboard controller");
+        return next(err);
+      }
     }
     // console.log(results);
     var db_polygons = results[1];
