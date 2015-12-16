@@ -392,7 +392,6 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
   }
-
   geojson.properties.owner = req.user._id;
   var db_geojson = new req.db_models.PolygonGeojson(geojson);
   db_geojson.save( function ( error){

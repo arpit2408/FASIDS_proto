@@ -146,7 +146,7 @@ $(document).ready(function(){
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
       $('input#geojson').val(JSON.stringify(geoJsonPolygon));
       console.log( JSON.stringify(geoJsonPolygon) );
-      $('form#treatment').submit(); // for dubug
+      $('form#treatment').submit(); // commit it for for dubug
     } else if (map_tool_register.get("map_tool_save") === true){
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
       $('form#patch input').val(JSON.stringify(geoJsonPolygon) );
@@ -207,6 +207,13 @@ $(document).ready(function(){
           default:
 
         }
+      }
+      console.log(to_be_rendered_polygon.properties);
+      if (to_be_rendered_polygon.properties.environment_map){
+        var environment_map = to_be_rendered_polygon.properties.environment_map;
+        console.log("setting");
+        gmap.setTilt(environment_map.tilt);
+        gmap.setMapTypeId(environment_map.MapTypeId);
       }
     },
 
@@ -321,8 +328,6 @@ $(document).ready(function(){
   } ) ) ();  // initialize a new 
 
   var map_tool_helper = {
-
-
     codeAddress :function ( address) {
       geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
@@ -434,13 +439,10 @@ $(document).ready(function(){
           sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
           ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
         };
-
-        // ["landusage","treatment", "mound_density"].forEach( function (key, index, ar){
-        //   if (googleMapShapeObject.hasOwnProperty(key)){
-        //     tempGeoJPolygon.properties[key] = googleMapShapeObject[key];
-        //   }
-        // });
         _.extendOwn(tempGeoJPolygon.properties, googleMapShapeObject.properties);
+        tempGeoJPolygon.properties.environment_map = {};
+        tempGeoJPolygon.properties.environment_map.tilt = gmap.getTilt();
+        tempGeoJPolygon.properties.environment_map.MapTypeId = gmap.getMapTypeId();
         return tempGeoJPolygon;
       }
     },

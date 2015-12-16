@@ -17,7 +17,11 @@ var polygon_geojson_schema = new mongoose.Schema({
     address:String,
     notes:String, // used by user to input their notes about this polygon
     treatment:String,
-    bounds :{  
+    environment_map:{
+      MapTypeId:{type:String, enum:['hybrid','roadmap', 'satellite', 'terrain']},
+      tilt:{type:Number,enum:[0,45]}
+    },
+    bounds :{
       sw:{ lat: Number, lng: Number},
       ne:{ lat: Number, lng: Number}
     },
