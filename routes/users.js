@@ -130,15 +130,32 @@ router.get('/logout', function (req, res, next){
 
 router.get("/dashboard",ensureAuthenticated, function (req, res, next) {
   var temp_userid = req.user._id.toString();
-  req.db_models.PolygonGeojson.find({"properties.owner": temp_userid}, null, {}, function exec (error, db_polygons){
-    if (error)
-      return next(error);
+  req.user.allRelvant(function asyncCallback (err, results){
+    if (err){
+      if (Array.isArray(err)){
+        return next(err[0]);
+      } else return next(err);
+    }
+    // console.log(results);
+    var db_polygons = results[1];
+    var questions = [];
+    var answers = [];
+    results[0].forEach(function (result, index, ar){
+      if (result.role){
+        // console.log("ehjhe");
+        if (result.role === 1) questions.push(result);
+        else  answers.push(result);
+      }
+    });
     res.render("users/dashboard.jade", {
       polygons:db_polygons,
+      questions: questions,
+      answers: answers,
       isAuthenticated: req.isAuthenticated(),
       user: processReqUser(req.user)
     });
   });
+
 });
 
 
