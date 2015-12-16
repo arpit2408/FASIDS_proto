@@ -35,10 +35,10 @@ user_schema.method({
     async.parallel(  
     [
       function parallel1(cb){
-        mongoose.model('Post').find({poster_id: user._id}).populate('reply_to_mainpost').exec(cb);
+        mongoose.model('Post').find({poster_id: user._id.toString()}).populate('reply_to_mainpost').exec(cb);
       }, 
       function parallel2(cb){
-        mongoose.model('PolygonGeojson').find({'properties.owner':user._id}, cb);
+        mongoose.model('PolygonGeojson').find({'properties.owner':user._id.toString()}, cb);
       }
     ], callback);
   }
