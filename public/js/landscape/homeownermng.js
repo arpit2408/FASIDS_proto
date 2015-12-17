@@ -1,8 +1,8 @@
 $(document).ready(function(){
+
   (function settingMapContainerHeight(){
     // The reason might because the nav bar gives padding 70,
-    var mapcontainer_height = $(window).height() - 1.5 * $(".navbar").height();
-    $("#mapcover").height(mapcontainer_height);
+    $("#mapcover").height($(window).height() - 1.5 * $(".navbar").height());
   })();    
   google.maps.Polygon.prototype.my_getBounds=function(){
       var bounds = new google.maps.LatLngBounds();
@@ -11,16 +11,14 @@ $(document).ready(function(){
         bounds.extend(element);
       })
       if (bounds.isEmpty()){alert("FK")}
-      console.log(bounds.toString());
-      console.log(bounds.getCenter().toString());
+      // console.log(bounds.toString());
+      // console.log(bounds.getCenter().toString());
       return bounds;
   }
-
   var page_status = JSON.parse($("meta[name=\"page_status\"]").attr("content"));
 
-  // map tool functioning populating
+  // map_tool_register state updated by map tool panel buttons 
   $("#map-tools-box .btn:not(:last)").click( function mapToolOpUpdating(){
-    // this is the clicked element
     var target_property = $(this).attr("data-operation");
     if (map_tool_register.get(target_property) === true){
       map_tool_register.set(target_property,false);
@@ -39,11 +37,10 @@ $(document).ready(function(){
   });  
 
   /*beginning of normal file */
-
   var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,    { 
       draggingCursor:"move",
       draggableCursor:"auto",
-      center: { lat: 30.62060000, lng: -96.32621},
+      center: {lat: 30.62060000, lng: -96.32621},
       zoom: 14,
       zoomControl:false,    //left side
       panControl:false,     //left top corner: 
@@ -56,24 +53,21 @@ $(document).ready(function(){
 
   // preparing modal
   $("#save-prepared-treatment").click(function savePreparedTreatment(){
+    var target_polygon = window.target_polygon;
     var formdata = $("form#purpose").serializeArray();
     console.log(JSON.stringify(formdata));
     var data = {};
     _.each(formdata, function(element){
       var value = _.values(element);
-
       if ( value[1].match(/^\d+(\.\d+)*$/g ) ){ value[1] = Number(value[1]); } // whole string match number pattern can be casted into string, otherwise, keep string
       data[value[0]] = value[1];
     });
     console.log(data);
     if (target_polygon !== null ){
-      _.keys(data).forEach(function(keyname,index, arr) {
-        target_polygon.properties[keyname] = data[keyname];
-        console.log("target_polygon.properties."+keyname+" : " + target_polygon.properties[keyname]); 
-      });
-      
+      _.extendOwn(target_polygon.properties, data);
       map_tool_register.renderPolygonProperly(target_polygon);
       target_polygon = null;
+      window.target_polygon = null;
       $("#purpose-modal").modal("hide");
     } else{
       throw "target_polygon is null when savePreparedTreatment() is invoked";
@@ -88,7 +82,8 @@ $(document).ready(function(){
       scale: 3,
       strokeColor:'#FF0000'
     }
-  });  
+  });
+  // by clicking starting-marker, finish drawing of polygon or holes inside polygons
   temp_startmarker.addListener('click',function onTempStartMarkerClicked(){
     if ( map_tool_register.get("map_tool_area_drawing") === true ) {
       map_tool_register.set("map_tool_area_drawing",false);
@@ -96,8 +91,8 @@ $(document).ready(function(){
       map_tool_register.set("map_tool_holing",false);
     }
   });
-  var polygons = [];  
-  var spherical = google.maps.geometry.spherical;
+  var polygons = [];
+  var spherical = google.maps.geometry.spherical;  // computing library
   var drawingPath = new google.maps.Polyline({
     path: [],
     geodesic: false,
@@ -106,9 +101,8 @@ $(document).ready(function(){
     strokeWeight: 2,
     map:gmap
   });
-  var target_polygon = null;  // when drawing circle on certain polygon, this polygon will be filled with the polygon which is being operated
-  var deleteMenu = new DeleteMenu();
-
+  window.target_polygon = null;  // when drawing circle on certain polygon, this polygon will be the polygon which is being operated
+  var deleteMenu = new DeleteMenu();  // DeleteMenu is defined in DeleteMenu.js
   function polygonRightClicked (event){
     var this_polygon = this;
     if (event.vertex == undefined || event.path == undefined){
@@ -119,7 +113,8 @@ $(document).ready(function(){
   function polygonClicked (event) {
     // "this" scope is set to the polygon 
     var this_polygon = this;
-    target_polygon = this_polygon;
+    var target_polygon = this_polygon;
+    window.target_polygon = this_polygon;
     if (map_tool_register.get("map_tool_holing") === true ) {
       target_polygon = this_polygon;
       drawingPath.getPath().push(event.latLng);
@@ -130,7 +125,7 @@ $(document).ready(function(){
     } else if  ( map_tool_register.get("map_tool_editpolygon") === true) {
       this_polygon.setEditable(true);
     } else if ( map_tool_register.get("map_tool_setproperties") === true){
-      target_polygon = this_polygon;
+      // target_polygon = this_polygon;
       // modal show, reset options 
       map_tool_register.fillForm($('form#purpose'), target_polygon);
       $("#purpose-modal").modal("show");
@@ -271,7 +266,7 @@ $(document).ready(function(){
         } else{
           $("#map-tool-hole").removeClass("active");
           if (drawingPath.getPath().getLength() > 2){
-            var paths = target_polygon.getPaths();
+            var paths = window.target_polygon.getPaths();
             var direction0  =  spherical.computeSignedArea(paths.getAt(0));
             var direction1 = spherical.computeSignedArea( drawingPath.getPath() );
             if (direction1 * direction0 > 0) {
@@ -282,7 +277,6 @@ $(document).ready(function(){
               drawingPath.setPath(temp_latlngs2);
             }
             paths.push( drawingPath.getPath());
-            // target_polygon.setPaths(paths);
           }
           // reseting
           drawingPath.setPath([]);
@@ -347,17 +341,24 @@ $(document).ready(function(){
       });
     },
 
+    /*I want to write it in a more beautiful way*/
     convertToMVCArray : function (array, index_at_parent, parent_array){
       var ClassRef = this;
-      // prope whether element is Number
       if ( !Array.isArray(array[0]) ){
-        parent_array[index_at_parent] = ClassRef.geoLatLngToGoogleLatLng(array);
+          parent_array[index_at_parent] = ClassRef.geoLatLngToGoogleLatLng(array);
       }
       else{
+        // var len = array[0][0]
         array.forEach( function (element, index, ar){
           ClassRef.convertToMVCArray(element, index, ar);
-          if (typeof index_at_parent !== 'undefined' && index === ar.length-1){
-            parent_array[index_at_parent] = new google.maps.MVCArray(ar);
+          if (typeof ar[0].lat === 'function'){
+            if (typeof index_at_parent !== 'undefined' && index === array.length -1){
+              parent_array[index_at_parent] = new google.maps.MVCArray(ar.slice(0,index));
+            }
+          } else {
+            if (typeof index_at_parent !== 'undefined' && index === array.length -1){
+              parent_array[index_at_parent] = new google.maps.MVCArray(ar);
+            }
           }
         });
       }
@@ -368,7 +369,7 @@ $(document).ready(function(){
         array.forEach( function(el, index, ar){
           to_be_return.push(el);
         });
-        console.log(to_be_return);
+        // console.log(to_be_return);
         return to_be_return;
       }
     },
@@ -452,7 +453,7 @@ $(document).ready(function(){
       // Key step is covert JS Geojson latlng array into MVCArray instance
       var ClassRef = this; // map_tool_helper
       var temp_MVCArray = ClassRef.convertToMVCArray(temp_geojson.geometry.coordinates);
-      // console.log(temp_MVCArray.getAt(0).getAt(0).toString());
+      
 
       var temp_polygon = new google.maps.Polygon({
         paths:temp_MVCArray,
