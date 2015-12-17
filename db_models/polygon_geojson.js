@@ -25,7 +25,7 @@ var polygon_geojson_schema = new mongoose.Schema({
       sw:{ lat: Number, lng: Number},
       ne:{ lat: Number, lng: Number}
     },
-    owner:mongoose.Schema.ObjectId
+    owner:{type:mongoose.Schema.ObjectId, ref:'User'}
   }
 },{collection:'polygon_geojson'});
   

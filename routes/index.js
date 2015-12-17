@@ -306,7 +306,7 @@ router.get('/landscape/homeownermng/:geojson_id', function (req, res, next){
   });  // end of findById()
 });
 
-router.post('/landscape/homeownermng/:geojson_id/patch' , function (req, res, next){
+router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, function (req, res, next){
   var geojson = req.body.geojson;
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
@@ -316,6 +316,11 @@ router.post('/landscape/homeownermng/:geojson_id/patch' , function (req, res, ne
     if (!the_polygon){
       var e = new Error("requested geojson could not be found");
       e.status = 404
+      return next(e);
+    }
+    if (the_polygon.properties.owner.toString()!== req.user._id){
+      var e = new Error("is not authorized for requested resource");
+      e.status = 401;
       return next(e);
     }
     _.each(_.keys(geojson), function (key_name, index, key_list){
