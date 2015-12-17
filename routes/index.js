@@ -40,18 +40,34 @@ function thisError(err){
 }
 
 /*routes
-get    "/"
+get    "/" index page
 //********* Q & A **********
-get    "/qa"
-post   "/qa/question?qid=xxxx"
-get    "/qa/question?qid=xxxxx"
-post   "/qa/posting"
-get    "/qa/[pstomh"
+get    "/qa"                         Q & A index
+post   "/qa/question?qid=xxxxx"      post replies to certain question
+get    "/qa/question?qid=xxxxx"      render certain questions and answers
+delete "/qa/question?qid=xxxxx"      destroy this post and clean all associations    Not Done Yet
+post   "/qa/posting"                 New questions posted via this route                 
+get    "/qa/posting"                 Render the input page for use to post a question
+get    "/qa/edit_post?post_id=xx"    Render the editor with to be edited content in  
+                                     eit
+post   "/qa/edit_post?post_id=xx"    update content of post instance
 
-//********* Ant Activity **********
+//********* ant activity *****
+get    "/antactivity"                show ant acitvity page
 
-
+//******map application ******
+get    "/landscape/homeownermng"     show main page of landscape management
+get    "/landscape/homeownermng/:geojson_id"   show patch page of certain geojson
+delete "/landscape/homeownermng/:geojson_id"   delete geojson
+post   "/landscape/homeownermng/:geojson_id/patch"   update geojson instance
+get    "/landscape/treatment/:geojson_id"      show treatment (list of products and map of 
+                                               polygon)
+post   "/landscape/treatment"        create new geojson and show treatment
+get    "/landscape/fire_ant_products"  show list of all fire_ant_products
+get    "/landscape/antdistribution"    show counties map
+get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  api for antdistribution
 */
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -142,7 +158,7 @@ router.get('/qa/question',function (req, res, next){
   });
 });
 
-/* TODO destroy one post and its relationship in collection relationship*/
+/* TODO: destroy one post and its relationship in collection relationship*/
 router.delete('/qa/question', ensureAdmin, function (req, res, next){
   req.DB_POST.findOne({_id:req.query.qid}).exec(function (err, target_post){
     target_post.destroy( function onDestroy(err){
@@ -151,15 +167,8 @@ router.delete('/qa/question', ensureAdmin, function (req, res, next){
   });
 });
 
-/*
-  "role":Number, // 1 means main_post, 2 means reply
-  "poster_id":mongoose.Schema.ObjectId,
-  "post_cat":{type:Number, min:0, max:4},   // used for the icons
-  "post_title":String,
-  "post_time": Date,
-  "reply_to_post":String,// post created to reply specific post
-  "reply_to_mainpost":String,
-  "content":String
+/**
+* New question posted via this route
 */
 router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
   var currentDate = new Date();
@@ -254,7 +263,7 @@ router.post('/qa/edit_post', ensureAuthenticated, function (req, res, next){
   });
 });
 
-/* anti activity */
+/* ant activity */
 router.get('/antactivity', function (req, res, next){
   res.render("antactivity",{
     isAuthenticated: req.isAuthenticated(),
@@ -276,7 +285,6 @@ router.get('/landscape/homeownermng', function (req, res, next) {
 });
 
 router.get('/landscape/homeownermng/:geojson_id', function (req, res, next){
-  
   req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
     if (error) {
       if (error.message.search('Cast to ObjectId failed') >=0){
@@ -291,11 +299,6 @@ router.get('/landscape/homeownermng/:geojson_id', function (req, res, next){
       e.status = 404
       return next(e);
     }
-
-    // if(the_polygon.properties.owner.toString() !== req.user._id.toString()){
-    //   return res.status(401).send("you are not authorized to view other's polygon");
-    // }
-
     res.render('landscape/homeownermng.jade',{
       geojson:the_polygon,
       isAuthenticated: req.isAuthenticated(),
@@ -304,6 +307,24 @@ router.get('/landscape/homeownermng/:geojson_id', function (req, res, next){
       patch_url:'/landscape/homeownermng/'+req.params.geojson_id+"/patch"
     }); 
   });  // end of findById()
+});
+
+// this is for ajax
+router.delete('/landscape/homeownermng/:geojson_id' , ensureAuthenticated,function (req, res, next){
+  req.db_models.PolygonGeojson.findOne(  {_id: req.params.geojson_id}, null,{}, function execRemoval(error, the_polygon ){
+    if (error) return next(error);
+    if (!the_polygon) {
+      return res.status(404).send("Did not find");
+    }
+    if (the_polygon.properties.owner.toString() === req.user._id.toString()){
+      the_polygon.remove(function onRemoval(error){
+        if (error){
+          return next (error);
+        }
+        res.send("removal successful"); 
+      } );
+    }
+  });
 });
 
 router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, function (req, res, next){
@@ -334,24 +355,7 @@ router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, fu
   });
 });
 
-// this is for ajax
-router.delete('/landscape/homeownermng/:geojson_id' , ensureAuthenticated,function (req, res, next){
-  req.db_models.PolygonGeojson.findOne(  {_id: req.params.geojson_id}, null,{}, function execRemoval(error, the_polygon ){
-    if (error) return next(error);
-    if (!the_polygon) {
-      return res.status(404).send("Did not find");
-    }
-    console.log(the_polygon);
-    if (the_polygon.properties.owner.toString() === req.user._id.toString()){
-      the_polygon.remove(function onRemoval(error){
-        if (error){
-          return next (error);
-        }
-        res.send("removal successful"); 
-      } );
-    }
-  });
-});
+
 
 router.get('/landscape/treatment/:geojson_id', ensureAuthenticated, function (req, res, next){
   req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
@@ -436,6 +440,9 @@ router.get('/landscape/antdistribution', function (req, res, next){
   });
 });
 
+/**
+* This is one api for antdistribution
+*/
 router.get('/landscape/antdistribution_lookup', function (req, res, next){
   req.db_models.AntDistribution.findFIPSFromSpecie(req.query.genus, req.query.specie, function exec(err, ant_distributions){
     var tbr = {};
