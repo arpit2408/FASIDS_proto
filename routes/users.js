@@ -52,8 +52,7 @@ router.post("/forgot_password", function (req, res, next){
       res.render("users/forgot_password", {
         breadcrumTitle:"forgot password",
         pathToHere:"users / forgot_password",
-        msg_type:"danger",
-        msg_content:"Could not find " + req.body.email + " in data base, hence cannot reset your password."
+        flash:{type:"danger", message:"Could not find " + req.body.email + " in data base, hence cannot reset your password."}
       });
       return;
     }
@@ -66,8 +65,7 @@ router.post("/forgot_password", function (req, res, next){
           res.render("users/forgot_password", {
             breadcrumTitle:"forgot password",
             pathToHere:"users / forgot_password",
-            msg_type:"danger",
-            msg_content:"Could not sent email to " + req.body.email + " password did not reset."
+            flash:{type:"danger", message:"Could not sent email to " + req.body.email + " password did not reset."}
           });
           target_user.password_hash = old_password;
           target_user.save();
@@ -76,8 +74,7 @@ router.post("/forgot_password", function (req, res, next){
         res.render("users/forgot_password", {
           breadcrumTitle:"forgot password",
           pathToHere:"users / forgot_password",
-          msg_type:"success",
-          msg_content:"Password of  " + req.body.email + " has been reset, please check your email."
+          flash:{type:"success", message:"Password of  " + req.body.email + " has been reset, please check your email."}
         });
         return;
       });
@@ -112,13 +109,10 @@ router.post('/signup', function (req, res, next){
   new_user = new req.DB_USER(new_user);
   new_user.save(function (error){
     if (error) return next(error);
-    console.log("[user.js:34 ]");
-    // res.json(new_user.email);   // TODO send email here
     return res.render("signup",{
       breadcrumTitle:"sign up",
       pathToHere:"users / signup",
-      msg_type:"success",
-      msg_content:"Hello, "+new_user.displayName()+", you've signed up successfully. Click \"SIGN IN\" at left upper corner to sign in"
+      flash:{type:"success", message:"Hello, "+new_user.displayName()+", you've signed up successfully. Click \"SIGN IN\" at left upper corner to sign in"}
     });
   });
 });
