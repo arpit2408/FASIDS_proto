@@ -1,4 +1,5 @@
 // This is test file is experimental attempt to write first bdd for this prototype project
+// refer to chapter 3,  project part
 // Bowei Liu
 // 11092015
 
@@ -13,13 +14,11 @@ describe('server', function () {
   before(function () {
     boot();
   });
-
-  describe('homepage', function(){
+  describe('GET homepage', function(){
     it('should respond to GET',function(done){
       superagent.get('http://localhost:'+port).end(function(err, res){
         if (err)
           throw err;
-        console.log("res:" +res);
         expect(res.status).to.equal(200);
         done();
       });

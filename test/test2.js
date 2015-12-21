@@ -1,3 +1,4 @@
+// example from BDD with Expect.js, but I changed intp use expect property of chai
 var expect = require('chai').expect;
 var expected, current;
 before(function(){
@@ -6,7 +7,7 @@ before(function(){
 describe('String#split', function(){
   beforeEach(function(){
     current = 'a,b,c'.split(',');
-  })
+  });
   it('should return an array', function(){
     expect(Array.isArray(current)).to.be.true;
   });
@@ -17,4 +18,4 @@ describe('String#split', function(){
       expect(expected[i]).equal(current[i]);
     }
   })
-})
+});
