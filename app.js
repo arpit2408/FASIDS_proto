@@ -1,9 +1,6 @@
 var express = require('express');
-
 var http = require('http');
 var path = require('path');
-
-
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 
@@ -63,7 +60,6 @@ app.post('/users/signin', passport.authenticate('local',{failureRedirect:'/users
   } else {
     return res.redirect("back");
   }
-
   // res.redirect("/");
 });
 app.use('/users', users);
@@ -101,8 +97,8 @@ app.use(function(err, req, res, next) {
 });
 var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
 var server = http.createServer(app);
-var boot = function () {
-  server.listen(app.get('port'),ip, function(){
+var boot = function (override_port) {
+  server.listen(override_port || app.get('port'),ip, function(){
     console.info('Express server listening on port ' + app.get('port'));
   });
 }
@@ -110,10 +106,10 @@ var shutdown = function() {
   server.close();
 }
 if (require.main === module) {
-  boot();
+  boot(3000);
 } else {
   console.info('Running app as a module')
-  exports.boot = boot;
+  exports.boot = boot.bind(null, 3001);  // for test purpose, I have to set port at 3001 to avoid confliction
   exports.shutdown = shutdown;
   exports.port = app.get('port');
 }

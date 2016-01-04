@@ -159,9 +159,12 @@ router.get('/qa/question',function (req, res, next){
 });
 
 /* TODO: destroy one post and its relationship in collection relationship*/
-router.delete('/qa/question', ensureAdmin, function (req, res, next){
-  req.DB_POST.findOne({_id:req.query.qid}).exec(function (err, target_post){
-    target_post.destroy( function onDestroy(err){
+router.delete('/qa/edit_post', ensureAdmin, function (req, res, next){
+  req.DB_POST.findOne({_id:req.query.post_id}).exec(function (err, target_post){
+    target_post.destroy( function onDestroy(err, deleted_post_id){
+      if (err) return next(err);
+      if (!deleted_post_id) return next( new Error("System Error: delete reply failure"));
+      res.json({api_result:"success", api_route:"/qa/edit_post", api_method:"DELETE", target_post: target_post.toJSON() } );
 
     });
   });
