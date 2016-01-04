@@ -106,7 +106,7 @@ var shutdown = function() {
   server.close();
 }
 if (require.main === module) {
-  boot(3000);
+  boot();
 } else {
   console.info('Running app as a module')
   exports.boot = boot.bind(null, 3001);  // for test purpose, I have to set port at 3001 to avoid confliction
