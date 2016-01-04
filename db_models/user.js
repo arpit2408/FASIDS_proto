@@ -7,7 +7,7 @@ var user_schema = new mongoose.Schema({
   "password_hash":String,
   "email":{type: String, index:{unique: true}},
   "usercat":{type:Number, min:0, max:4},
-  "receive_updates":Boolean,
+  "receive_updates":Boolean
   // "wishlist":Array,    // ObjectId literal array
   //regarding OAuth
 },{ collection:'user'});
@@ -16,9 +16,6 @@ var user_schema = new mongoose.Schema({
 user_schema.method({
   displayName: function(){
     return this.first_name + " " + this.last_name;
-  },
-  resetPassword: function(){
-    console.log("user.js 20: code placehoder");
   },
 
   // cb is the callback of save

@@ -122,9 +122,14 @@ mongo --quiet fasids --eval 'printjson(  db.ant_distribution.aggregate([ {$group
 
 为remote mongo导入数据
 mongoimport -u <username> -p <password here> -h <ip here> --db fasids --collection ant_distribution --file ant_distri.json --jsonArray
+mongoimport -u <username> -p <password here> -h <ip here> --db fasids --collection fire_ant_product --file products.json --jsonArray
+本地情况：mongoimport --db fasids --collection post --file posts.json --jsonArray
+Find ./data/product_images.mongoscript.js, run this script at Mongo Console
+
 
 下载nodejslog
 rhc scp fasids download ./remotelogs/ /var/lib/openshift/5611efe689f5cf7c68000079/app-root/logs/nodejs.log
+
 
 
 
@@ -156,3 +161,6 @@ get    "/landscape/fire_ant_products"  show list of all fire_ant_products
 get    "/landscape/antdistribution"    show counties map
 get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  api for antdistribution
 */
+
+
+415 Aaron

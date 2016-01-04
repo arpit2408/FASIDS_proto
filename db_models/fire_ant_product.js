@@ -43,18 +43,13 @@ fire_ant_product_schema.method({
           break;
         default:
           amount = "No valid coverage";
-
       } 
-
     } else {
       amount = "No Data"
     }
     return amount;
   }
-
 });
-
-
 
 // helper function of schema
 var saveCB = function( err, instance){
