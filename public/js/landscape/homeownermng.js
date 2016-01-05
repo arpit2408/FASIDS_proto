@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+  var glblprefix = $("#homeownermng-src").data("glblprefix");
   (function settingMapContainerHeight(){
     // The reason might because the nav bar gives padding 70,
     $("#mapcover").height($(window).height() - 1.5 * $(".navbar").height());
@@ -135,12 +135,12 @@ $(document).ready(function(){
       }
 
       if (page_status.model_op==="patch"){
-        location.href="/landscape/treatment/" + this_polygon._id;
+        location.href = glblprefix + "/landscape/treatment/" + this_polygon._id;
         return;
       }
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
       $('input#geojson').val(JSON.stringify(geoJsonPolygon));
-      console.log( JSON.stringify(geoJsonPolygon) );
+      console.log( JSON.stringify(geoJsonPolygon));
       $('form#treatment').submit(); // commit it for for dubug
     } else if (map_tool_register.get("map_tool_save") === true){
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
@@ -332,7 +332,6 @@ $(document).ready(function(){
             console.error(e);
             gmap.setCenter(results[0].geometry.location);
           }
-          console.log(JSON.stringify(results[0]));
         } else {
           // alert("Geocode was not successful for the following reason: " + status);
           $(".errormessage-container").removeClass("hidden");

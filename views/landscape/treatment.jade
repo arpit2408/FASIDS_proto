@@ -48,7 +48,8 @@ block renderBody
         p 
           | The total area is #{ geojson.properties.total_area.toFixed(1) } m
           sup 2
-        if geojson.properties.treatment.toLowerCase() === "imt"
+
+        if geojson.properties.treatment && geojson.properties.treatment.toLowerCase() === "imt"
           p 
             | Mound density is #{geojson.properties.mound_density} / m
             sup 2

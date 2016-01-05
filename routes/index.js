@@ -307,7 +307,7 @@ router.get('/landscape/homeownermng/:geojson_id', function (req, res, next){
       isAuthenticated: req.isAuthenticated(),
       user: processReqUser(req.user),
       page_status:{model_op:"patch", isAuthenticated: req.isAuthenticated()},
-      patch_url:'/landscape/homeownermng/'+req.params.geojson_id+"/patch"
+      patch_url: glblprefix + '/landscape/homeownermng/'+req.params.geojson_id+"/patch"
     }); 
   });  // end of findById()
 });
@@ -342,8 +342,8 @@ router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, fu
       e.status = 404
       return next(e);
     }
-    if (the_polygon.properties.owner.toString()!== req.user._id){
-      var e = new Error("is not authorized for requested resource");
+    if (the_polygon.properties.owner.toString() !== req.user._id.toString()){
+      var e = new Error("is not authorized for requested resource: " +  the_polygon.properties.owner.toString() + "," +req.user._id );
       e.status = 401;
       return next(e);
     }

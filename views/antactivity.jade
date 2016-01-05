@@ -2,8 +2,10 @@ extends layout
 
 block additionalCSS
   link(href='#{glblprefix}/assets/fullcalendar-2.4.0/fullcalendar.css', rel='stylesheet', type='text/css', media='screen')
-  link(href='#{glblprefix}/css/antactivity.css', rel='stylesheet', type='text/css', media='screen')
-
+  if (glblprefix === "")
+    link(href='/css/antactivity.css', rel='stylesheet', type='text/css', media='screen')
+  else
+    link(href='#{glblprefix}/css/antactivity_iisnode_compatible.css', rel='stylesheet', type='text/css', media='screen')
 block renderBody
   include snippets/breadcrum
   +breadcrumb(breadcrumTitle, pathToHere)
