@@ -110,6 +110,7 @@ block renderBody
   .hidden
     form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
       input#geojson(type='text', name="geojson")
+    //- patch_url is from index.js: router     route : GET /landscape/homeownermng/:geojson_id
     form#patch( action="#{patch_url}", method="post")
       input(type="text", name="geojson")
     // This is used to
@@ -126,5 +127,5 @@ block additionalJS
   // mapcover depends on backbone.js and underscore.js
   script(src="#{glblprefix}/assets/mapcover/js/mapcover.js")
   script(src="#{glblprefix}/js/landscape/DeleteMenu.js")
-  script(src="#{glblprefix}/js/landscape/homeownermng.js" )
+  script(src="#{glblprefix}/js/landscape/homeownermng.js" , data-glblprefix=glblprefix, id="homeownermng-src")
 
