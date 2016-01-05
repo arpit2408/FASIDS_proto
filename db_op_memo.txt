@@ -1,20 +1,6 @@
 /*remove all */
 db.user.remove({})
 
-qa href: /qa/question?qid=15101153335863
-
-{
-  "_id" : ObjectId("5612de9f8f8b79964776581c"),
-  "role" : 1,
-  "poster_id" : ObjectId("5611f401ce5001a4267c83d3"),
-  "post_cat" : 1,
-  "post_title" : "test first post",
-  "post_time" : ISODate("2015-10-05T20:33:35.863Z"),
-  "content" : "test first posttest first post",
-  "poster_fullname" : "Bowei Liu",
-  "__v" : 0
-}
-
  db.post.find({role:1}).pretty()
 
 
