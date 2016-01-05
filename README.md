@@ -2,7 +2,7 @@ Fire Ant Spatial Information and Decision Support
 ===
 
 ## Synopsis
-------
+
 This readme is about **Fire Ant Spatial Information and Decision Support (FASIDS)**. This Software as a Service project is funded by [Texas A&M AgriLife Extension](http://agrilifeextension.tamu.edu/), and is supervised by Prof. Robert Coulson at Department of Entomology. Bowei Liu is responsible for the implementation of this version of FASIDS.
 This SaaS project aims at fascilitating management of imported fire ant.  It has mainly three purposes:
 1. Landscape tool in fire ant management
@@ -14,7 +14,7 @@ This project adopts [MEAN stack](http://blog.mongodb.org/post/49262866911/the-me
 The project is currently hosted at [OpenShift Redhat cloud](http://fasids-u7yhjm.rhcloud.com/) for testing purpose. The IIS hosted site is only internally accessible from TAMU. 
 
 ## Features and Usage
-------
+
 Mark to be treated area on map, put land usuage, memo, and fire ant mound denstiy to it, and save it to your profile. 
 ![save treatment area](http://fasids-u7yhjm.rhcloud.com/img/screenshots/draw_area.jpg)
 
@@ -36,17 +36,17 @@ Log into your account, enter user dashboard. Your polygon will be listed there.
 You can click the "edit" enter edit mode of this polygon again.
 
 ## Tests
----
+
 Describe and show how to run the tests with code examples.
 
 ## Contributors
----
+
 Bowei Liu, Computer Engineering Major, Master of Engineering candidate, Texas A&M Unviersity. **Actively seeking one full-time position in software development beginning at August 2016**.
 
 Maria D. Tchakerian, Associate Research Scientist, Dept. of Entomology, Texas A&M University 
 
 ## License
----
+
 
 The MIT License
 
