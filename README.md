@@ -3,7 +3,7 @@ Fire Ant Spatial Information and Decision Support
 
 ## Synopsis
 
-This readme is about **Fire Ant Spatial Information and Decision Support (FASIDS)**. This Software as a Service project is funded by [Texas A&M AgriLife Extension](http://agrilifeextension.tamu.edu/), and is supervised by Prof. Robert Coulson at Department of Entomology. Bowei Liu is responsible for the implementation of this version of FASIDS.
+This readme is about **Fire Ant Spatial Information and Decision Support (FASIDS)**. This Software as a Service project is funded by [Texas A&M AgriLife Extension](http://agrilifeextension.tamu.edu/), and is supervised by Prof. [Robert Coulson](http://entomology.tamu.edu/people/coulson-robert/) at Department of Entomology. Bowei Liu is responsible for the implementation of this version of FASIDS.
 This SaaS project aims at fascilitating management of imported fire ant.  It has mainly three purposes:
 1. Landscape tool in fire ant management
 2. Fire ant management knowledge base 
