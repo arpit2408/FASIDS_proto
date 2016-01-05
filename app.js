@@ -1,9 +1,6 @@
 var express = require('express');
-
 var http = require('http');
 var path = require('path');
-
-
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 
@@ -60,9 +57,10 @@ app.use('/', index_route);
 app.post('/users/signin', passport.authenticate('local',{failureRedirect:'/users/signin',failureFlash:true, sucessFlash: true}),function (req, res, next){
   if (typeof req.query.referral_url !== "undefined" && req.query.referral_url.search(/signin/) === -1){
     return res.redirect(req.query.referral_url);
-  } 
-
-  res.redirect("/");
+  } else {
+    return res.redirect("back");
+  }
+  // res.redirect("/");
 });
 app.use('/users', users);
 app.use('/api', api_route);
@@ -99,8 +97,8 @@ app.use(function(err, req, res, next) {
 });
 var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
 var server = http.createServer(app);
-var boot = function () {
-  server.listen(app.get('port'),ip, function(){
+var boot = function (override_port) {
+  server.listen(override_port || app.get('port'),ip, function(){
     console.info('Express server listening on port ' + app.get('port'));
   });
 }
@@ -111,7 +109,7 @@ if (require.main === module) {
   boot();
 } else {
   console.info('Running app as a module')
-  exports.boot = boot;
+  exports.boot = boot.bind(null, 3001);  // for test purpose, I have to set port at 3001 to avoid confliction
   exports.shutdown = shutdown;
   exports.port = app.get('port');
 }

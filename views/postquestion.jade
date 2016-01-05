@@ -49,6 +49,7 @@ block renderBody
       .divide20
       .row.final-buttons
         .col-xs-11.col-xs-offset-1
+          a.btn.border-black#delete-post-btn(href='#') Delete Post
           a.btn.border-black(href='#') Save draft
 
           a.btn.border-black(href='#') preview
@@ -85,4 +86,19 @@ block additionalJS
       if ($('meta[name="to_be_edited_post.post_title"]').length>0){
         $("input[name=title]").val($('meta[name="to_be_edited_post.post_title"]').attr("content"));
       }
+    
+      $("#delete-post-btn").click(function deleteBtnCB( event){
+        event.preventDefault();
+        $.ajax({
+          method :"DELETE",
+          success: function (data, textStatus, jqXHR){
+            console.log(data);
+            if (data.target_post.role === 1){
+              location.pathname ="/qa/"; 
+            } else if (data.target_post.role === 2){
+              location.href = location.origin +"/qa/question?qid=" + data.target_post.reply_to_mainpost;
+            }
+          }
+        });
+      })
     });
