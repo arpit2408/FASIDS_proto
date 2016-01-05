@@ -1,8 +1,8 @@
 extends ../layout
 
 block additionalCSS
-  link(href="/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
-  link(href='/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
+  link(href="/node/fasids/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
+  link(href='/node/fasids/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
 
 block renderBody
   //-include ../snippets/breadcrum
@@ -121,10 +121,10 @@ block renderBody
 
 block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
-  script(src="/underscorejs/underscore-min.js")
-  script(src="/js/backbone-min.js")
+  script(src="/node/fasids/underscorejs/underscore-min.js")
+  script(src="/node/fasids/js/backbone-min.js")
   // mapcover depends on backbone.js and underscore.js
-  script(src="/assets/mapcover/js/mapcover.js")
-  script(src="/js/landscape/DeleteMenu.js")
-  script(src="/js/landscape/homeownermng.js" )
+  script(src="/node/fasids/assets/mapcover/js/mapcover.js")
+  script(src="/node/fasids/js/landscape/DeleteMenu.js")
+  script(src="/node/fasids/js/landscape/homeownermng.js" )
 
