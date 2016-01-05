@@ -1,10 +1,10 @@
 extends ../layout
 
 block additionalCSS
-  link(href='/node/fasids/css/pace_loadingbar.css', rel='stylesheet', type='text/css', media='screen')  
-  link(href="/node/fasids/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
+  link(href='#{glblprefix}/css/pace_loadingbar.css', rel='stylesheet', type='text/css', media='screen')  
+  link(href="#{glblprefix}/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
   //I wrote the less into homeownermng.less just because I do not want create more styling file for this
-  link(href='/node/fasids/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
+  link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
 
 block renderBody
   .mapcover#mapcover
@@ -59,9 +59,9 @@ block additionalJS
       Is Observed: <%=observations%>
     </div>
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
-  script(src="/node/fasids/underscorejs/underscore-min.js")
-  script(src="/node/fasids/js/backbone-min.js")
-  script(src="/node/fasids/assets/pace_pageloading/pace.min.js")
+  script(src="#{glblprefix}/underscorejs/underscore-min.js")
+  script(src="#{glblprefix}/js/backbone-min.js")
+  script(src="#{glblprefix}/assets/pace_pageloading/pace.min.js")
   // mapcover depends on backbone.js and underscore.js
-  script(src="/node/fasids/assets/mapcover/js/mapcover.js")
-  script(src="/node/fasids/js/landscape/antdistribution.js" )
+  script(src="#{glblprefix}/assets/mapcover/js/mapcover.js")
+  script(src="#{glblprefix}/js/landscape/antdistribution.js" )

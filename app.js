@@ -95,24 +95,29 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-// var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
-// var server = http.createServer(app);
-// var boot = function (override_port) {
-//   server.listen(override_port || app.get('port'),ip, function(){
-//     console.info('Express server listening on port ' + app.get('port'));
-//   });
-// }
-// var shutdown = function() {
-//   server.close();
-// }
-// if (require.main === module) {
-//   boot();
-// } else {
-//   console.info('Running app as a module')
-//   exports.boot = boot.bind(null, 3001);  // for test purpose, I have to set port at 3001 to avoid confliction
-//   exports.shutdown = shutdown;
-//   exports.port = app.get('port');
-// }
 
-windows_base.use('/node/fasids', app);
-windows_base.listen(process.env.PORT);
+if (process.env.NONEIISNODE){
+  var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
+  var server = http.createServer(app);
+  var boot = function (override_port) {
+    server.listen(override_port || app.get('port'),ip, function(){
+      console.info('Express server listening on port ' + app.get('port'));
+    });
+  }
+  var shutdown = function() {
+    server.close();
+  }
+  if (require.main === module) {
+    boot();
+  } else {
+    console.info('Running app as a module')
+    exports.boot = boot.bind(null, 3001);  // for test purpose, I have to set port at 3001 to avoid confliction
+    exports.shutdown = shutdown;
+    exports.port = app.get('port');
+  }
+}
+else{
+  windows_base.use('/node/fasids', app);
+  windows_base.listen(process.env.PORT);
+}
+
