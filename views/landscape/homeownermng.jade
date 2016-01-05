@@ -108,7 +108,7 @@ block renderBody
             button.btn.btn-default(type='button', data-dismiss='modal') Close
             button.btn.btn-primary#save-prepared-treatment(type='button') Save changes
   .hidden
-    form#treatment(target="_blank",action="/landscape/treatment", method="post")
+    form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
       input#geojson(type='text', name="geojson")
     form#patch( action="#{patch_url}", method="post")
       input(type="text", name="geojson")

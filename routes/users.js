@@ -1,7 +1,7 @@
 var express = require('express');
 var _ = require('underscore');
 var router = express.Router();
-
+var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
 
 function processReqUser ( req_user){  
   if (req_user) var temp_user = req_user.toObject();
@@ -14,7 +14,7 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.redirect("/users/signin?referral_url=" + req.originalUrl );
+    res.redirect(glblprefix + "/users/signin?referral_url=" + req.originalUrl );
   }
 }
 
@@ -119,7 +119,7 @@ router.post('/signup', function (req, res, next){
 
 router.get('/logout', function (req, res, next){
   req.logout();
-  res.redirect("/");
+  res.redirect(glblprefix + "/");
 })
 
 router.get("/dashboard",ensureAuthenticated, function (req, res, next) {

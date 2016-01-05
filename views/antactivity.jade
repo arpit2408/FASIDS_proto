@@ -1,8 +1,8 @@
 extends layout
 
 block additionalCSS
-  link(href='/assets/fullcalendar-2.4.0/fullcalendar.css', rel='stylesheet', type='text/css', media='screen')
-  link(href='/css/antactivity.css', rel='stylesheet', type='text/css', media='screen')
+  link(href='#{glblprefix}/assets/fullcalendar-2.4.0/fullcalendar.css', rel='stylesheet', type='text/css', media='screen')
+  link(href='#{glblprefix}/css/antactivity.css', rel='stylesheet', type='text/css', media='screen')
 
 block renderBody
   include snippets/breadcrum
@@ -75,8 +75,8 @@ block additionalJS
       </tr>
     </table>
   //- 35.4kb
-  script(src='/assets/moment/moment.min.js')
-  script(src='/assets/fullcalendar-2.4.0/fullcalendar.min.js')
-  script(src='/underscorejs/underscore-min.js')
+  script(src='#{glblprefix}/assets/moment/moment.min.js')
+  script(src='#{glblprefix}/assets/fullcalendar-2.4.0/fullcalendar.min.js')
+  script(src='#{glblprefix}/underscorejs/underscore-min.js')
   //- script(src='/simpleWeather/jquery.simpleWeather.min.js')
-  script(src='/js/antactivity.js')
+  script(src='#{glblprefix}/js/antactivity.js')
