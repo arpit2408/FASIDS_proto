@@ -43,7 +43,7 @@ $(document).ready(function onReady(){
     infowindow.open(gmap);
   }
 
-  gmap.data.loadGeoJson("/help-file/data/counties/tx_counties.geojson", null, function processFeature( feature_array){
+  gmap.data.loadGeoJson("/node/fasids/help-file/data/counties/tx_counties.geojson", null, function processFeature( feature_array){
     feature_array.forEach(function iteratee (element, index){
       counties_hash[element.getProperty("COUNTY")] = element;
       counties_hash[element.getProperty("FIPS")]   = element;
@@ -100,7 +100,7 @@ $(document).ready(function onReady(){
       });
       ClassRef.$el.find("li").removeClass("active");
       // console.log("/landscape/antdistribution_lookup?"+ $.param(mapped));
-      $.get("/landscape/antdistribution_lookup" , mapped, function (data){
+      $.get("/node/fasids/landscape/antdistribution_lookup" , mapped, function (data){
         ClassRef.model.set("observation_map", data);
         console.log(data);
         _.each(ClassRef.model.get("revert_style_cache"), function (fips, array_index, ar){
