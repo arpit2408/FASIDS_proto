@@ -1,13 +1,13 @@
 extends layout
 
 block additionalCSS
-  link(href='/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
-  link(href='/wysihtml/examples/css/stylesheet.css', rel='stylesheet', type='text/css', media='screen')
+  link(href='#{glblprefix}/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
+  link(href='#{glblprefix}/wysihtml/examples/css/stylesheet.css', rel='stylesheet', type='text/css', media='screen')
 
 block renderBody
   include snippets/breadcrum
   +breadcrumb(breadcrumTitle, pathToHere)
-  -function actionPath (to_be_edited_post){ if (to_be_edited_post){ return "/qa/edit_post?post_id="+to_be_edited_post._id ;} else return "/qa/posting";}
+  -function actionPath (to_be_edited_post){ if (to_be_edited_post){ return glblprefix + "/qa/edit_post?post_id="+to_be_edited_post._id ;} else return glblprefix + "/qa/posting";}
   .container
     if to_be_edited_post
       meta(name="to_be_edited_post", content=to_be_edited_post.content)
@@ -61,9 +61,10 @@ block renderBody
 
 
 block additionalJS
-  script(src="/wysihtml/dist/wysihtml5x-toolbar.min.js")
-  script(src="/wysihtml/parser_rules/advanced_and_extended.js")
-  script.
+  script(src="#{glblprefix}/wysihtml/dist/wysihtml5x-toolbar.min.js")
+  script(src="#{glblprefix}/wysihtml/parser_rules/advanced_and_extended.js")
+  script(data-glblprefix="#{glblprefix}" , id="postquestionjade-js").
+    var glblprefix = $("#postquestionjade-js").data("glblprefix");
     var editor = new wysihtml5.Editor('editor', {
       toolbar: 'toolbar',
       parserRules:  wysihtml5ParserRules
@@ -94,9 +95,9 @@ block additionalJS
           success: function (data, textStatus, jqXHR){
             console.log(data);
             if (data.target_post.role === 1){
-              location.pathname ="/qa/"; 
+              location.pathname = glblprefix + "/qa/"; 
             } else if (data.target_post.role === 2){
-              location.href = location.origin +"/qa/question?qid=" + data.target_post.reply_to_mainpost;
+              location.href = location.origin + glblprefix + "/qa/question?qid=" + data.target_post.reply_to_mainpost;
             }
           }
         });

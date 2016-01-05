@@ -4,7 +4,7 @@ var Promise = require('promise');
 var router = express.Router();
 var _ = require('underscore');
 var readFile = Promise.denodeify(require('fs').readFile); // see https://www.promisejs.org/
-
+var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
 function readJSON(filename, callback){  //// see https://www.promisejs.org/
   // If a callback is provided, call it with error as the first argument
   // and result as the second argument, then return `undefined`.
@@ -16,7 +16,7 @@ function ensureAdmin(req, res, next){
   if (req.isAuthenticated() && req.user.usercat === 0){
     next();
   } else{
-    res.redirect("/users/signin?referral_url=" + req.originalUrl );
+    res.redirect( glblprefix  + "/users/signin?referral_url=" + req.originalUrl );
   }
 }
 
@@ -24,7 +24,7 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.redirect("/users/signin?referral_url=" + req.originalUrl );
+    res.redirect(glblprefix + "/users/signin?referral_url=" + req.originalUrl );
   }
 }
 
@@ -124,7 +124,7 @@ router.post('/qa/question', function (req, res, next) {
       if (!main_post) return next(new Error("Did not find this main_post"));
       main_post.addOneReply(reply._id, function onSave(err){
         if (err) return next(err);
-        return res.redirect('/qa/question?qid='+req.query.qid);
+        return res.redirect(glblprefix + '/qa/question?qid='+req.query.qid);
       });
     });
   });
@@ -191,7 +191,7 @@ router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
   newPost = new req.DB_POST(newPost);
   newPost.save( function (error){
     if (error) return next(error);
-    return res.redirect('/qa');
+    return res.redirect(glblprefix + '/qa');
   });
 });
 
@@ -259,9 +259,9 @@ router.post('/qa/edit_post', ensureAuthenticated, function (req, res, next){
     post.save(function (error){
       if (error) return next(error);
       if (post.role == 1)
-        return res.redirect('/qa/question?qid=' + post._id);
+        return res.redirect(glblprefix + '/qa/question?qid=' + post._id);
       else if (post.role == 2)
-        return res.redirect('/qa/question?qid=' + post.reply_to_mainpost);
+        return res.redirect(glblprefix + '/qa/question?qid=' + post.reply_to_mainpost);
     })
   });
 });
@@ -353,7 +353,7 @@ router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, fu
     });
     the_polygon.save( function(error){
       if (error) return next(error);
-      res.redirect("/landscape/homeownermng/" + req.params.geojson_id);
+      res.redirect(glblprefix + "/landscape/homeownermng/" + req.params.geojson_id);
     });
   });
 });
@@ -410,7 +410,7 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
     if (error) {
       return next(error);
     }
-    res.redirect('/landscape/treatment/'+db_geojson._id.toString());
+    res.redirect(glblprefix + '/landscape/treatment/'+db_geojson._id.toString());
   });
 });
 /* this route is used to display products*/

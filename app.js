@@ -22,6 +22,7 @@ var mongoose = require('mongoose'),  // newly added, regarding init express
 
 var app = express();
 var windows_base = express();  // adding common prefix router
+var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
 // view engine setup
 app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 3000)
 app.set('views', path.join(__dirname, 'views'));
@@ -54,7 +55,7 @@ app.use(function(req, res, next){
 
 // routing
 app.use('/', index_route);
-app.post('/users/signin', passport.authenticate('local',{failureRedirect:'/users/signin',failureFlash:true, sucessFlash: true}),function (req, res, next){
+app.post('/users/signin', passport.authenticate('local',{failureRedirect: glblprefix + '/users/signin',failureFlash:true, sucessFlash: true}),function (req, res, next){
   if (typeof req.query.referral_url !== "undefined" && req.query.referral_url.search(/signin/) === -1){
     return res.redirect(req.query.referral_url);
   } else {

@@ -1,7 +1,7 @@
 extends layout
 
 block additionalCSS
-  link(href='/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
+  link(href='#{glblprefix}/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
 block renderBody
   -function getDataString(date){
     -return momentlib(date).fromNow();
@@ -16,7 +16,7 @@ block renderBody
     -var str = Object.keys(paging_condition).map(function(key) {
     -    return key + '=' + paging_condition[key];
     -}).join('&');
-    -return '/qa?'+str;
+    -return '#{glblprefix}/qa?'+str;
   -}
   mixin paging(paging_condition)
     //- paging_nation is like following
@@ -76,7 +76,7 @@ block renderBody
   .container.main-qa
     .row
       .col-xs-3.col-xs-offset-1
-        a.btn.btn.btn-theme-dark(href="/qa/posting") 
+        a.btn.btn.btn-theme-dark(href="#{glblprefix}/qa/posting") 
           i.fa.fa-plus
           | NEW QUESTION
       .col-xs-8.tabs
@@ -84,15 +84,15 @@ block renderBody
           - paging_condition.sort = "newest"
         ul.nav.nav-tabs
           li(role='presentation' class='#{(paging_condition.sort==="newest")?"active":""}')
-            a(href='/qa?sort=newest') newest
+            a(href='#{glblprefix}/qa?sort=newest') newest
           li(role='presentation' class='#{(paging_condition.sort==="frequent")?"active":""}')
-            a(href='/qa?sort=frequent') frequent
+            a(href='#{glblprefix}/qa?sort=frequent') frequent
           li(role='presentation' class='#{(paging_condition.sort==="votes")?"active":""}')
-            a(href='/qa?sort=votes') votes
+            a(href='#{glblprefix}/qa?sort=votes') votes
           li(role='presentation' class='#{(paging_condition.sort==="active")?"active":""}')
-            a(href='/qa?sort=active') active
+            a(href='#{glblprefix}/qa?sort=active') active
           li(role='presentation' class='#{(paging_condition.sort==="unanswered")?"active":""}')
-            a(href='/qa?sort=unanswered') unanswered
+            a(href='#{glblprefix}/qa?sort=unanswered') unanswered
     hr
     .qa-post-titles
       //- posts is from controller
@@ -118,7 +118,7 @@ block renderBody
               .col-sm-7
                 .row
                   .col-xs-12
-                    a.post-title(href="/qa/question?qid=#{post._id}") #{post.post_title} 
+                    a.post-title(href="#{glblprefix}/qa/question?qid=#{post._id}") #{post.post_title} 
                 .row
                   .col-xs-12.text-muted=post.preivew()
 
@@ -147,7 +147,7 @@ block renderBody
               .col-sm-7
                 .row
                   .col-xs-12 
-                    a.post-title(href="/qa/question?qid=#{post._id}") #{post.post_title} 
+                    a.post-title(href="#{glblprefix}/qa/question?qid=#{post._id}") #{post.post_title} 
                 .row
                   .col-xs-12.text-muted=post.preivew()
 
