@@ -20,8 +20,6 @@ var post_schema = new mongoose.Schema({
   "stars":{type:Number, required: true},
   "content":{type:String, required: true}
 },{ collection:'post'});
-var models = require('./index.js');
-var User = models.User;
 /*regarding main post*/
 // {
 //   "_id" : default  
@@ -94,19 +92,28 @@ post_schema.method({
   destroy : function ( callback){
     var this_post = this;
     this_post.remove(function onRemovePostInstance (err, post){
-      if (err){ return callback(err);}
-      models.Relationship.remove({"operation_receiver_id": post._id}, function (err){
-        if (err){
-          return callback(err);
-        }
-        if (post.role === 2){
+      if (err) return callback(err);
+      this_post.model("Relationship").remove({"operation_receiver_id": post._id}, function (err){
+        if (err) return callback(err);
+        if (post.role === 2){  // This is one reply to certain post
+          this_post.model("Post").findById(this_post.reply_to_mainpost, null, {}, function exec (error, main_post){
+            var this_post_index_at_mainreplies = main_post.replies.indexOf(this_post._id);
+            if (this_post_index_at_mainreplies >-1){
+              main_post.replies.splice(this_post_index_at_mainreplies); // method usage  some_array.splice(start_index, delete_count[, item1, item2,..,])
+            } else {
+              console.log("[ERROR] main_post delete find to be deleted reply in replies array");
+            }
+            main_post.save();
+            return callback(null, this_post._id);
+          });
+        }else{
+          return callback(null, this_post._id);
         }
         console.log("[INFO] post: " + post._id + " removed");
       });
     });
   }
 });
-
 /*example promise*/
 function readFile(filename, enc){
   return new Promise(function (fulfill, reject){

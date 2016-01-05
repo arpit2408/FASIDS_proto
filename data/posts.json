@@ -1,0 +1,34 @@
+[
+        {
+                "_id" : ObjectId("568ab7d1a85b39a81926f5d6"),
+                "role" : 2,
+                "poster_id" : ObjectId("56783a5dceccf9007e576ebb"),
+                "post_time" : ISODate("2016-01-04T18:20:01.367Z"),
+                "reply_to_post" : null,
+                "reply_to_mainpost" : ObjectId("568ab7c3ce224ff5aa3aadb6"),
+                "content" : "reply",
+                "votes" : 0,
+                "stars" : 0,
+                "replies" : [ ],
+                "updated_at" : ISODate("2016-01-04T18:20:01.367Z"),
+                "__v" : 0
+        },
+        {
+                "_id" : ObjectId("568ab7c3ce224ff5aa3aadb6"),
+                "role" : 1,
+                "poster_id" : ObjectId("56783a5dceccf9007e576ebb"),
+                "post_cat" : 1,
+                "post_title" : "test12",
+                "post_time" : ISODate("2016-01-03T16:32:14.339Z"),
+                "post_viewed" : 4,
+                "replied_post" : 1,
+                "votes" : 0,
+                "stars" : 1,
+                "content" : "content12",
+                "replies" : [
+                        ObjectId("568ab7d1a85b39a81926f5d6")
+                ],
+                "updated_at" : ISODate("2016-01-03T16:32:14.339Z"),
+                "__v" : 1
+        }
+]
