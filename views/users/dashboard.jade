@@ -1,6 +1,6 @@
 extends ../layout
 block additionalCSS
-  link(href='/css/users/index.css', rel='stylesheet', type='text/css', media='screen')    
+  link(href='#{glblprefix}/css/users/index.css', rel='stylesheet', type='text/css', media='screen')    
 
 block renderBody
   // following .container is just for subnav container
@@ -63,7 +63,7 @@ block renderBody
                     tr
                       th(scope='row')=index+1
                       td
-                        a(href="/qa/question?qid=#{question._id.toString()}")
+                        a(href="#{glblprefix}/qa/question?qid=#{question._id.toString()}")
                           b=question.post_title
                       td=question.post_viewed
                       td=question.replied_post
@@ -88,7 +88,7 @@ block renderBody
                       th(scope='row')=index+1
                       td
                         | Reply To : 
-                        a(href="/qa/question?qid=#{answer.reply_to_mainpost._id.toString()}#reply-#{answer._id.toString()}")
+                        a(href="#{glblprefix}/qa/question?qid=#{answer.reply_to_mainpost._id.toString()}#reply-#{answer._id.toString()}")
                           b=answer.reply_to_mainpost.post_title
                       td=answer.votes
                       td=answer.stars
@@ -103,11 +103,11 @@ block renderBody
                 .col-xs-3.polygon-preview Preview Pic here
                 .col-xs-4=db_polygon.properties.polygon_name?db_polygon.properties.polygon_name:"No Available Name yet"
                 .col-xs-5.text-right.polygon-operations
-                  a(href="/landscape/homeownermng/#{db_polygon._id}")
+                  a(href="#{glblprefix}/landscape/homeownermng/#{db_polygon._id}")
                     span.fa.fa-map-o.fa-lg
                     | &nbsp; Edit
 
-                  a.http-action-link(href="/landscape/homeownermng/#{db_polygon._id}", data-http-method="delete" ) 
+                  a.http-action-link(href="#{glblprefix}/landscape/homeownermng/#{db_polygon._id}", data-http-method="delete" ) 
                     span.fa.fa-remove.fa-lg
                     | &nbsp; Delete
               .divide20
@@ -120,4 +120,4 @@ block renderBody
 
   
 block additionalJS
-  script(src="/js/users/dashboard.js" )
+  script(src="#{glblprefix}/js/users/dashboard.js" )

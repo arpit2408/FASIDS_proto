@@ -2,7 +2,7 @@ extends ../layout
 
 block additionalCSS
   //- I just share the use of this homeownermng.less
-  link(href='/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
+  link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
 
 block renderBody
 
@@ -48,7 +48,8 @@ block renderBody
         p 
           | The total area is #{ geojson.properties.total_area.toFixed(1) } m
           sup 2
-        if geojson.properties.treatment.toLowerCase() === "imt"
+
+        if geojson.properties.treatment && geojson.properties.treatment.toLowerCase() === "imt"
           p 
             | Mound density is #{geojson.properties.mound_density} / m
             sup 2
@@ -70,6 +71,6 @@ block renderBody
 
 block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
-  script(src="/underscorejs/underscore-min.js")
-  script(src="/js/backbone-min.js")
-  script(src="/js/landscape/treatment.js" )
+  script(src="#{glblprefix}/underscorejs/underscore-min.js")
+  script(src="#{glblprefix}/js/backbone-min.js")
+  script(src="#{glblprefix}/js/landscape/treatment.js" )

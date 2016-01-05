@@ -3,9 +3,9 @@
 extends ../layout
 
 block additionalCSS
-  link(href='/css/users/index.css', rel='stylesheet', type='text/css', media='screen')
+  link(href='#{glblprefix}/css/users/index.css', rel='stylesheet', type='text/css', media='screen')
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js", type="text/javascript")
-  script(src="/assets/ui-validate/dist/validate.js", type="text/javascript")
+  script(src="#{glblprefix}/assets/ui-validate/dist/validate.js", type="text/javascript")
   
   
 
@@ -20,9 +20,9 @@ block renderBody
       .col-xs-3
         ul.sidenav-list
           li(class='#{active_subsection==="basic_info"?"active":""}')
-            a(href="/users/account/basic_info") Basic info
+            a(href="#{glblprefix}/users/account/basic_info") Basic info
           li(class='#{active_subsection==="security"?"active":""}')
-            a(href="/users/account/security") Security
+            a(href="#{glblprefix}/users/account/security") Security
       .col-xs-9#angular_forms(ng-app="account_ng", ng-controller="account_ctrl")
         case active_subsection
           when "basic_info"
@@ -30,7 +30,7 @@ block renderBody
               .panel-heading
                 | Basic Info
               .panel-body
-                form( action="/users/account/basic_info", method="post")
+                form( action="#{glblprefix}/users/account/basic_info", method="post")
                   .row
                     .col-xs-3.text-right
                       label(for='email') Email address
@@ -69,7 +69,7 @@ block renderBody
                 | Change Your Passsord
               .panel-body
 
-                form(action="/users/account/security" ,name ="password_form", method="post")
+                form(action="#{glblprefix}/users/account/security" ,name ="password_form", method="post")
                   .row
                     .col-xs-3.text-right
                       label(for='old_password') Old password
@@ -102,7 +102,7 @@ block renderBody
               .panel-heading
                 | Reset Your Password
               .panel-body
-                form(action="/users/account/reset_password", name="reset_password_form", method="post")
+                form(action="#{glblprefix}/users/account/reset_password", name="reset_password_form", method="post")
                   .row
                     .col-xs-3.text-right Security email
                     .col-xs-5
@@ -120,5 +120,5 @@ block renderBody
   .divide30
 
 block additionalJS
-  script(src="/js/users/account.js", type="text/javascript")
+  script(src="#{glblprefix}/js/users/account.js", type="text/javascript")
 
