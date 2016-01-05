@@ -150,6 +150,9 @@ get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  api for antdist
 */
 
 
+sublime file search filter
+C:\Program Files\iisnode\www\fasids,-*.css, -*.jade
+
 
 check 
 Post roughly okay

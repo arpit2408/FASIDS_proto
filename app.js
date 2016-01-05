@@ -120,7 +120,7 @@ if (process.env.NONEIISNODE){
   }
 }
 else{
-  windows_base.use('/node/fasids', app);
+  windows_base.use(glblprefix, app);
   windows_base.listen(process.env.PORT);
 }
 
