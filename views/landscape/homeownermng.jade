@@ -1,8 +1,8 @@
 extends ../layout
 
 block additionalCSS
-  link(href="/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
-  link(href='/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
+  link(href="#{glblprefix}/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
+  link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
 
 block renderBody
   //-include ../snippets/breadcrum
@@ -108,8 +108,9 @@ block renderBody
             button.btn.btn-default(type='button', data-dismiss='modal') Close
             button.btn.btn-primary#save-prepared-treatment(type='button') Save changes
   .hidden
-    form#treatment(target="_blank",action="/landscape/treatment", method="post")
+    form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
       input#geojson(type='text', name="geojson")
+    //- patch_url is from index.js: router     route : GET /landscape/homeownermng/:geojson_id
     form#patch( action="#{patch_url}", method="post")
       input(type="text", name="geojson")
     // This is used to
@@ -121,10 +122,10 @@ block renderBody
 
 block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
-  script(src="/underscorejs/underscore-min.js")
-  script(src="/js/backbone-min.js")
+  script(src="#{glblprefix}/underscorejs/underscore-min.js")
+  script(src="#{glblprefix}/js/backbone-min.js")
   // mapcover depends on backbone.js and underscore.js
-  script(src="/assets/mapcover/js/mapcover.js")
-  script(src="/js/landscape/DeleteMenu.js")
-  script(src="/js/landscape/homeownermng.js" )
+  script(src="#{glblprefix}/assets/mapcover/js/mapcover.js")
+  script(src="#{glblprefix}/js/landscape/DeleteMenu.js")
+  script(src="#{glblprefix}/js/landscape/homeownermng.js" , data-glblprefix=glblprefix, id="homeownermng-src")
 

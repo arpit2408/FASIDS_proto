@@ -21,7 +21,8 @@ var mongoose = require('mongoose'),  // newly added, regarding init express
     mongoId = mongoose.Types.ObjectId();
 
 var app = express();
-
+var windows_base = express();  // adding common prefix router
+var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
 // view engine setup
 app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 3000)
 app.set('views', path.join(__dirname, 'views'));
@@ -54,7 +55,7 @@ app.use(function(req, res, next){
 
 // routing
 app.use('/', index_route);
-app.post('/users/signin', passport.authenticate('local',{failureRedirect:'/users/signin',failureFlash:true, sucessFlash: true}),function (req, res, next){
+app.post('/users/signin', passport.authenticate('local',{failureRedirect: glblprefix + '/users/signin',failureFlash:true, sucessFlash: true}),function (req, res, next){
   if (typeof req.query.referral_url !== "undefined" && req.query.referral_url.search(/signin/) === -1){
     return res.redirect(req.query.referral_url);
   } else {
@@ -92,24 +93,34 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: {}
+    error: {},
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user)
   });
 });
-var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
-var server = http.createServer(app);
-var boot = function (override_port) {
-  server.listen(override_port || app.get('port'),ip, function(){
-    console.info('Express server listening on port ' + app.get('port'));
-  });
+
+if (process.env.NONEIISNODE){
+  var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
+  var server = http.createServer(app);
+  var boot = function (override_port) {
+    server.listen(override_port || app.get('port'),ip, function(){
+      console.info('Express server listening on port ' + app.get('port'));
+    });
+  }
+  var shutdown = function() {
+    server.close();
+  }
+  if (require.main === module) {
+    boot();
+  } else {
+    console.info('Running app as a module')
+    exports.boot = boot.bind(null, 3001);  // for test purpose, I have to set port at 3001 to avoid confliction
+    exports.shutdown = shutdown;
+    exports.port = app.get('port');
+  }
 }
-var shutdown = function() {
-  server.close();
+else{
+  windows_base.use(glblprefix, app);
+  windows_base.listen(process.env.PORT);
 }
-if (require.main === module) {
-  boot();
-} else {
-  console.info('Running app as a module')
-  exports.boot = boot.bind(null, 3001);  // for test purpose, I have to set port at 3001 to avoid confliction
-  exports.shutdown = shutdown;
-  exports.port = app.get('port');
-}
+

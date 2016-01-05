@@ -1,3 +1,5 @@
+
+-var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
 doctype html
 html
   head
@@ -6,19 +8,19 @@ html
     meta(name='viewport', content='width=device-width, initial-scale=1')
     title #{title}
     // Bootstrap, must
-    link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet')
+    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css', rel='stylesheet')
     
     // custom css, must
-    link(href='/css/style.css', rel='stylesheet', type='text/css', media='screen')
+    link(href="#{glblprefix}/css/style.css", rel='stylesheet', type='text/css', media='screen')
     
     // font awesome for icons, must
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
     // animated css
-    link(href='/css/animate.css', rel='stylesheet', type='text/css', media='screen')
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css', rel='stylesheet', type='text/css', media='screen')
     // google fonts
     link(href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,600,700,800', rel='stylesheet', type='text/css')
     // mega menu
-    link(href='/css/yamm.css', rel='stylesheet', type='text/css')
+    link(href="#{glblprefix}/css/yamm.css", rel='stylesheet', type='text/css')
     block additionalCSS
     // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
     // WARNING: Respond.js doesn't work if you view the page via file://
@@ -48,7 +50,7 @@ body
         ul.nav.navbar-nav.navbar-right
           li(class='#{(activePage=="Home")?"active ":""}')
             // Home
-            a(href='/' ) Home
+            a(href='#{glblprefix}/' ) Home
           // menu home li end here
           li(class='#{(activePage=="Landscape")?"active dropdown":"dropdown"}')
             a.dropdown-toggle(href='#', class="", data-toggle="dropdown")
@@ -56,11 +58,11 @@ body
               i.fa.fa-angle-down
             ul.dropdown-menu(role='menu')
               li
-                a(href='/landscape/homeownermng') Home Owner Management Tool
+                a(href='#{glblprefix}/landscape/homeownermng') Home Owner Management Tool
               li
-                a(href='/landscape/antdistribution') Texas Ant Distribution Map
+                a(href='#{glblprefix}/landscape/antdistribution') Texas Ant Distribution Map
               li
-                a(href='/landscape/fire_ant_products') Fire Ant Products
+                a(href='#{glblprefix}/landscape/fire_ant_products') Fire Ant Products
           // menu Portfolio li end here
           li(class='#{(activePage=="Reports")?"active dropdown":"dropdown"}')
             a.dropdown-toggle(href='#', class='', data-toggle="dropdown")
@@ -73,10 +75,10 @@ body
                 a(href='#') Invasive Ant Monitoring Tool
           // menu blog li end here
           li(class='#{(activePage=="Ants")?"active":null}')
-            a(href='/antactivity') FIRE ANT ACTIVITY
+            a(href='#{glblprefix}/antactivity') FIRE ANT ACTIVITY
           // menu pages li end here
           li.dropdown(class='#{(activePage=="Questions")?"active":null}')
-            a(href='/qa') Q &amp; A
+            a(href='#{glblprefix}/qa') Q &amp; A
           // menu Shop li end here
           if (!isAuthenticated)
             li.dropdown
@@ -84,7 +86,7 @@ body
                 i.fa.fa-lock
                 |  Sign In
               .dropdown-menu.dropdown-menu-right.dropdown-login-box.animated.fadeInUp
-                form(role='form', action='/users/signin', method='post')
+                form(role='form', action='#{glblprefix}/users/signin', method='post')
                   h4 Signin
                   .form-group
                     .input-group
@@ -106,10 +108,10 @@ body
                     hr
                     p
                       | Don't have an account! 
-                      a(href='/users/signup') Register Now
+                      a(href='#{glblprefix}/users/signup') Register Now
                     p 
                       | Forgot your password? 
-                      a(href="/users/forgot_password") Reset Now
+                      a(href="#{glblprefix}/users/forgot_password") Reset Now
           else
             li.dropdown
               a.dropdown-toggle(href="#", data-toggle='dropdown') 
@@ -117,15 +119,15 @@ body
                 i.fa.fa-angle-down
               ul.dropdown-menu(role='menu')
                 li
-                  a(href='/users/dashboard') User dashboard
+                  a(href='#{glblprefix}/users/dashboard') User dashboard
                 li
                   a(href='#') Inbox
                 li
                   a(href='#') Your Geojson Polygons
                 li
-                  a(href='/users/account/basic_info') Account
+                  a(href='#{glblprefix}/users/account/basic_info') Account
                 li
-                  a(href='/users/logout') Log out
+                  a(href='#{glblprefix}/users/logout') Log out
           // menu login li end here
       // /.nav-collapse
     // container
@@ -191,31 +193,31 @@ body
             ul.list-inline.f2-work
               li
                 a(href='portfolio-single.html')
-                  img.img-responsive(src='/img/img-1.jpg', alt='')
+                  img.img-responsive(src='#{glblprefix}/img/img-1.jpg', alt='')
               li
                 a(href='portfolio-single.html')
-                  img.img-responsive(src='/img/img-2.jpg', alt='')
+                  img.img-responsive(src='#{glblprefix}/img/img-2.jpg', alt='')
               li
                 a(href='portfolio-single.html')
-                  img.img-responsive(src='/img/img-3.jpg', alt='')
+                  img.img-responsive(src='#{glblprefix}/img/img-3.jpg', alt='')
               li
                 a(href='portfolio-single.html')
-                  img.img-responsive(src='/img/img-4.jpg', alt='')
+                  img.img-responsive(src='#{glblprefix}/img/img-4.jpg', alt='')
               li
                 a(href='portfolio-single.html')
-                  img.img-responsive(src='/img/img-5.jpg', alt='')
+                  img.img-responsive(src='#{glblprefix}/img/img-5.jpg', alt='')
               li
                 a(href='portfolio-single.html')
-                  img.img-responsive(src='/img/img-6.jpg', alt='')
+                  img.img-responsive(src='#{glblprefix}/img/img-6.jpg', alt='')
               li
                 a(href='portfolio-single.html')
-                  img.img-responsive(src='/img/img-7.jpg', alt='')
+                  img.img-responsive(src='#{glblprefix}/img/img-7.jpg', alt='')
               li
                 a(href='portfolio-single.html')
-                  img.img-responsive(src='/img/img-8.jpg', alt='')
+                  img.img-responsive(src='#{glblprefix}/img/img-8.jpg', alt='')
               li
                 a(href='portfolio-single.html')
-                  img.img-responsive(src='/img/img-9.jpg', alt='')
+                  img.img-responsive(src='#{glblprefix}/img/img-9.jpg', alt='')
         // footer col
         .col-md-3.col-sm-6.margin30
           .footer-col
@@ -236,15 +238,15 @@ body
   // default footer end here
   // scripts and plugins
   // must need plugin jquery
-  script(src='/js/jquery.min.js')
-  script(src='/js/jquery-migrate.min.js')
+  script(src="#{glblprefix}/js/jquery.min.js")
+  script(src="#{glblprefix}/js/jquery-migrate.min.js")
   // bootstrap js plugin
-  script(src='/bootstrap/js/bootstrap.min.js', type='text/javascript')
+  script(src="#{glblprefix}/bootstrap/js/bootstrap.min.js", type='text/javascript')
   // sticky header
-  script(type='text/javascript', src='/js/jquery.sticky.js')
+  script(src="#{glblprefix}/js/jquery.sticky.js" , type='text/javascript',)
   // on scroll animation BOWEI: I need this
-  script(src='/js/wow.min.js', type='text/javascript')
+  script(src="#{glblprefix}/js/wow.min.js", type='text/javascript')
   // customizable plugin edit according to your needs, this custom.js is with ASSAN theme package
-  script(src='/js/custom.js', type='text/javascript')
+  script(src="#{glblprefix}/js/custom.js", type='text/javascript')
   block additionalJS
 

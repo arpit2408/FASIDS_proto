@@ -1,6 +1,20 @@
 /*remove all */
 db.user.remove({})
 
+qa href: /qa/question?qid=15101153335863
+
+{
+  "_id" : ObjectId("5612de9f8f8b79964776581c"),
+  "role" : 1,
+  "poster_id" : ObjectId("5611f401ce5001a4267c83d3"),
+  "post_cat" : 1,
+  "post_title" : "test first post",
+  "post_time" : ISODate("2015-10-05T20:33:35.863Z"),
+  "content" : "test first posttest first post",
+  "poster_fullname" : "Bowei Liu",
+  "__v" : 0
+}
+
  db.post.find({role:1}).pretty()
 
 
@@ -14,17 +28,7 @@ weahter memo
 provider: http://openweathermap.org/api
 64bb5bb6fbdeb48105b321b7c6ddae37
 
-
-
-/
-      var paths = this_polygon.getPaths();
-      var last_path = paths.getAt(paths.getLength()-1);
-      last_path.push(event.latLng);
-      paths.setAt(paths.getLength()-1, last_path);
-      this.setPaths( paths);
-
-
-
+GeoJson feature example
 {
    "type":"FeatureCollection",
    "features":[
@@ -107,8 +111,12 @@ db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:
 mongo --quiet fasids --eval 'printjson(  db.ant_distribution.aggregate([ {$group:{_id:"$genus", species_array:{$addToSet:"$species"}}},{$sort:{_id:1}}]).toArray() )' > output.json
 
 为remote mongo导入数据
+remote mongoDB
 mongoimport -u <username> -p <password here> -h <ip here> --db fasids --collection ant_distribution --file ant_distri.json --jsonArray
+local mongoDB
+mongoimport --db fasids --collection ant_distribution --file ant_distri.json --jsonArray
 mongoimport -u <username> -p <password here> -h <ip here> --db fasids --collection fire_ant_product --file products.json --jsonArray
+Then I need to run ./data/productimages.mongoscript.js
 本地情况：mongoimport --db fasids --collection post --file posts.json --jsonArray
 Find ./data/product_images.mongoscript.js, run this script at Mongo Console
 
@@ -149,4 +157,9 @@ get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  api for antdist
 */
 
 
-415 Aaron
+sublime file search filter
+C:\Program Files\iisnode\www\fasids,-*.css, -*.jade
+
+
+check 
+Post roughly okay

@@ -1,8 +1,8 @@
 extends layout
 
 block additionalCSS
-  link(href='/css/qa/qa.css', rel='stylesheet', type='text/css', media='screen')
-  link(href='/wysihtml/examples/css/stylesheet.css', rel='stylesheet', type='text/css', media='screen')
+  link(href="#{glblprefix}/css/qa/qa.css", rel='stylesheet', type='text/css', media='screen')
+  link(href="#{glblprefix}/wysihtml/examples/css/stylesheet.css", rel='stylesheet', type='text/css', media='screen')
 
 block renderBody
   mixin userCatString(usercat)
@@ -110,10 +110,11 @@ block renderBody
     .divide15
 
 block additionalJS
-  script(src="/wysihtml/dist/wysihtml5x-toolbar.min.js")
-  script(src="/wysihtml/parser_rules/advanced_and_extended.js")
+  script(src="#{glblprefix}/wysihtml/dist/wysihtml5x-toolbar.min.js")
+  script(src="#{glblprefix}/wysihtml/parser_rules/advanced_and_extended.js")
   if (isAuthenticated)
-    script.
+    script(data-glblprefix="#{glblprefix}" , id="questionjade-js").
+      var glblprefix = $("#questionjade-js").data("glblprefix");
       var editor = new wysihtml5.Editor('editor', {
         toolbar: 'toolbar',
         parserRules:  wysihtml5ParserRules
@@ -129,7 +130,7 @@ block additionalJS
           query_operation_receivers.push( $(value).data("target-post-id") ); 
         });
         /* try find all relations */
-        $.ajax("/api/batchlookuprelation",{
+        $.ajax(glblprefix + "/api/batchlookuprelation",{
           data:{
             query_operater_id: $(".fa.fa-caret-up.fa-2").data("user-id"),
             query_operation_receivers: JSON.stringify(query_operation_receivers)
@@ -166,7 +167,7 @@ block additionalJS
         $(".fa.fa-caret-up.fa-2,.fa.fa-caret-down.fa-2,.fa-star").click(function onClickUpVote(e){
           $this = $(this);
           if ($this.hasClass("active-relation")){
-            $.ajax("/api/delrelation", {
+            $.ajax(glblprefix + "/api/delrelation", {
               data:{
                 operation_receiver_id:$this.data("target-post-id"), 
                 operater_id: $this.data("user-id"),
@@ -192,7 +193,7 @@ block additionalJS
           } else {
             var operation_value = $this.hasClass('fa-caret-up')?1:-1;
           }
-          $.ajax("/api/addrelation", {
+          $.ajax(glblprefix + "/api/addrelation", {
             data:{
               operation_receiver_id:$this.data("target-post-id"), 
               operater_id: $this.data("user-id"),
@@ -219,7 +220,7 @@ block additionalJS
         
         $(".editable-post").click(function (event){
           var query = {post_id: $(this).data("post-id")};
-          window.location.href = "/qa/edit_post?" + $.param(query);
+          window.location.href = glblprefix+ "/qa/edit_post?" + $.param(query);
         });
 
       });
