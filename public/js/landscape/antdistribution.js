@@ -2,7 +2,7 @@ $(document).ready(function onReady(){
   var glblprefix = $("#antdistributionjs-SRC").data("glblprefix");
   (function settingMapContainerHeight(){
     // The reason might because the nav bar gives padding 70,
-    var mapcontainer_height = $(window).height() - 1.5 * $(".navbar").height();
+    var mapcontainer_height = $(window).height() - 1 * $(".navbar").height();
     $("#mapcover").height(mapcontainer_height);
   })();  
   // logic begins
