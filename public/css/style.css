@@ -2160,6 +2160,10 @@ h3.heading-progress {
   clear: both; }
   #footer p {
     color: #999; }
+    #footer p a {
+      color: #fff; }
+      #footer p a:hover {
+        color: #999; }
 
 .footer-col h3 {
   color: #fff;
@@ -2240,12 +2244,6 @@ h3.heading-progress {
 
 #footer-option .footer-btm {
   background-color: #0c0c0c; }
-
-#footer-option .contact a {
-  color: #777; }
-
-#footer-option .contact a:hover {
-  color: #500000; }
 
 /************twitter feed, this part needs php*************
   .tweet only  found at footer section of pages:
