@@ -348,32 +348,42 @@ p.sub-text{
   @include border-radius (0px);
   margin-bottom: 0;
   width:100%;
-  min-height: 70px;
-  padding: 10px 0;
+  min-height: 50px;
+  padding: 0;
   @include box-shadow (rgba(0, 0, 0, 0.117647) 0px 1px 3px);
-  background-color: rgba(255,255,255,0.9);
+  background-color: $maroon-alpha;
   clear: both;
-  @include transition (all 0.4s ease-in-out)
+  @include transition (all 0.4s ease-in-out);
+  .navbar-header {
+    #TAMUlogo{
+      height: 50px;
+      width:56px;
+    }
+  }
 }
 
-.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
-  color: $skincolor;
-  background-color: transparent;
+.navbar-default .navbar-nav>.active>a, 
+.navbar-default .navbar-nav>.active>a:hover, 
+.navbar-default .navbar-nav>.active>a:focus {
+  color: $lightcolor;
+  background-color: darken($maroon-alpha,10%);
 }
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
-  color: $skincolor;
-  background-color: transparent;
+.navbar-default .navbar-nav>.open>a, 
+.navbar-default .navbar-nav>.open>a:hover, 
+.navbar-default .navbar-nav>.open>a:focus {
+  color: $lightcolor;
+  background-color: darken($maroon-alpha,10%);
 }
 .navbar-brand{
   font-weight: 700;
-  color:#000 !important;
+  color:white !important;
   font-size: 30px;
   line-height: 20px;
   font-style: normal;
   text-transform: uppercase;
 }
 .navbar-default .navbar-nav>li>a {
-  color: #444;
+  color: $lightcolor;
   font-weight: 600;
   font-size: 13px;
   letter-spacing: 0px;
@@ -381,7 +391,7 @@ p.sub-text{
   font-family: $title-font;
 }
 .navbar-default .navbar-nav>li>a:hover {
-  color: $skincolor;
+  // color: $skincolor;
 
 }
 .navbar-brand img{
@@ -416,7 +426,7 @@ p.sub-text{
 }
 
 .dropdown-menu .label{
-  margin-top: 6px;
+  margin-top: 0px;
 }
 .navbar .dropdown-menu li a:hover{
   background-color: #f5f5f5;

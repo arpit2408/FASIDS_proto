@@ -283,6 +283,7 @@ router.get('/landscape/homeownermng', function (req, res, next) {
   res.render("landscape/homeownermng.jade",{
     isAuthenticated: req.isAuthenticated(),
     user: processReqUser(req.user),
+    activePage:"Landscape",
     page_status:{model_op:"create",isAuthenticated: req.isAuthenticated()}
   });
 });
@@ -437,6 +438,7 @@ router.get('/landscape/antdistribution', function (req, res, next){
     if (err) return next(err);
     res.render( "landscape/antdistribution.jade", {
       genus_species    : genus_species,
+      activePage       : "Landscape",
       isAuthenticated  : req.isAuthenticated(),
       user             : processReqUser(req.user),
     });
