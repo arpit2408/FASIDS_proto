@@ -2,7 +2,7 @@ $(document).ready(function(){
   var glblprefix = $("#homeownermng-src").data("glblprefix");
   (function settingMapContainerHeight(){
     // The reason might because the nav bar gives padding 70,
-    $("#mapcover").height($(window).height() - 1.5 * $(".navbar").height());
+    $("#mapcover").height($(window).height() - 1 * $(".navbar").height());
   })();    
   google.maps.Polygon.prototype.my_getBounds=function(){
       var bounds = new google.maps.LatLngBounds();
