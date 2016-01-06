@@ -4,6 +4,12 @@
 #footer {
   p {
     color:#999;
+    a{
+      color:$lightcolor;
+      &:hover{
+        color:#999;
+      }
+    }
   }
   background: darken($maroon, 10%);
   font-size: 0.9em;
@@ -89,12 +95,6 @@
 }
 #footer-option .footer-btm{
   background-color: #0c0c0c;
-}
-#footer-option .contact a{
-  color:#777;
-}
-#footer-option .contact a:hover{
-  color:$skincolor;
 }
 
 
