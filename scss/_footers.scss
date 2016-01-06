@@ -5,7 +5,7 @@
   p {
     color:#999;
   }
-  background: #111;
+  background: darken($maroon, 10%);
   font-size: 0.9em;
   padding: 80px 0 0;
   position: relative;
@@ -37,7 +37,7 @@
   color:#777;
 }
 .contact a:hover{
-  color:$skincolor;
+  color:$lightcolor;
 }
 .f2-work li{
   margin: 2px;
