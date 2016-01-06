@@ -14,6 +14,9 @@
 .pic-below-title .breadcrumb-text-row h3 {
   color: #eee;
 }
+h2.title.text-center {
+  color: #500000;
+}
 .lightbluebg {
   background-color: #f7f9fa;
 }
