@@ -391,8 +391,8 @@ p.sub-text{
   font-family: $title-font;
 }
 .navbar-default .navbar-nav>li>a:hover {
-  // color: $skincolor;
-
+  background-color: darken($maroon-alpha,10%);
+  color: $lightcolor;
 }
 .navbar-brand img{
   width:80px;
