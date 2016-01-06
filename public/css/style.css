@@ -401,6 +401,10 @@ p.sub-text {
   text-transform: uppercase;
   font-family: "Raleway", sans-serif; }
 
+.navbar-default .navbar-nav > li > a:hover {
+  background-color: rgba(29, 0, 0, 0.9);
+  color: #fff; }
+
 .navbar-brand img {
   width: 80px;
   height: auto; }
