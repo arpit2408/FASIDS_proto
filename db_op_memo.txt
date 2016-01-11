@@ -115,7 +115,12 @@ remote mongoDB
 mongoimport -u <username> -p <password here> -h <ip here> --db fasids --collection ant_distribution --file ant_distri.json --jsonArray
 local mongoDB
 mongoimport --db fasids --collection ant_distribution --file ant_distri.json --jsonArray
+
+remote mongoDB
 mongoimport -u <username> -p <password here> -h <ip here> --db fasids --collection fire_ant_product --file products.json --jsonArray
+
+local mongoDB
+mongoimport  --db fasids --collection fire_ant_product --file products.json --jsonArray
 Then I need to run ./data/productimages.mongoscript.js
 本地情况：mongoimport --db fasids --collection post --file posts.json --jsonArray
 Find ./data/product_images.mongoscript.js, run this script at Mongo Console
