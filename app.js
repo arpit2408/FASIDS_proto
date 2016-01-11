@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var flash = require('connect-flash');
 var index_route = require('./routes/index');
 var users = require('./routes/users');
+var blog_route = require('./routes/blog');
 var api_route = require('./routes/api')
 
 /*if this app is running on openshift, env var should have OPENSHIFT_MONGODB_DB_URL*/
@@ -58,13 +59,15 @@ app.use('/', index_route);
 app.post('/users/signin', passport.authenticate('local',{failureRedirect: glblprefix + '/users/signin',failureFlash:true, sucessFlash: true}),function (req, res, next){
   if (typeof req.query.referral_url !== "undefined" && req.query.referral_url.search(/signin/) === -1){
     return res.redirect(req.query.referral_url);
-  } else {
+  } else if (typeof req.header('Referer') !== "undefined" && req.header('Referer').search(/signin/) === -1  ) {
     return res.redirect("back");
+  } else {
+    return res.redirect(glblprefix + "/");
   }
-  // res.redirect("/");
 });
 app.use('/users', users);
 app.use('/api', api_route);
+app.use('/blog', blog_route)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
