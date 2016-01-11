@@ -62,7 +62,7 @@ get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  api for antdist
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', { 
+  res.render('index', {
     title: 'FASIDS',
     activePage:'Home',
     isAuthenticated: req.isAuthenticated(),
