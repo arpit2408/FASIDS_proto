@@ -66,13 +66,13 @@ body
           // menu Portfolio li end here
           li(class='#{(activePage=="Reports")?"active dropdown":"dropdown"}')
             a.dropdown-toggle(href='#', class='', data-toggle="dropdown")
-              | REPORTS
+              | KNOWLEDGE ARCHIVES
               i.fa.fa-angle-down
             ul.dropdown-menu(role='menu')
               li
-                a(href='#') Management Reports
+                a(href='#{glblprefix}/blogs/first-blog') First blog
               li
-                a(href='#') Invasive Ant Monitoring Tool
+                a(href='#') Invalid link
           // menu blog li end here
           li(class='#{(activePage=="Ants")?"active":null}')
             a(href='#{glblprefix}/antactivity') FIRE ANT ACTIVITY
