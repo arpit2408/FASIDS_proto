@@ -67,7 +67,7 @@ app.post('/users/signin', passport.authenticate('local',{failureRedirect: glblpr
 });
 app.use('/users', users);
 app.use('/api', api_route);
-app.use('/blog', blog_route)
+app.use('/blogs', blog_route)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

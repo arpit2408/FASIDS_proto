@@ -3,5 +3,219 @@ extends ../layout
 block additionalCSS
 
 block renderBody
+  include ../snippets/breadcrum
+  +breadcrumb(breadcrumTitle, pathToHere)
+  .divide60
+  // blog full main container
+  .container
+    .row
+      .col-md-8
+        .blog-post
+          div
+            img.img-responsive(src='http://fireant.tamu.edu/files/2012/10/IMG0003.jpg', alt='workimg')
+          ul.list-inline.post-detail
+            li
+              | by 
+              a(href='#') FASIDS OFFICIAL
+            li
+              i.fa.fa-calendar
+              | Jan. 11th 2016
+            li
+              i.fa.fa-tag
+              a(href='#') Knowledge
+            //- li
+            //-   i.fa.fa-comment
+            //-   a(href='#') 6 Comments
+          h2 How can I tell if I have fire ants?
+          //- p.dropcap
+          //-   | Sed iaculis condimentum nibh posuere gravida. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          //-   span.colored-text  Donec mollis tempor erat
+          //- p
+          //-   | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem qu
+          //- p.lead
+          //-   | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem
+          p.dropcap You can tell you have fire ants if…
+          p You see a mound of fluffy worked soil, particularly a few days after a heavy rain.
+          p 
+            a(href='http://fireant.tamu.edu/files/2011/12/img0026_sm.jpg')
+            img.alignright.size-full.wp-image-413(title='img0026_sm', src='https://agrilife.org/fireant/files/2011/12/img0026_sm.jpg', alt='')
+          p
+            | The mound has no opening in the center like most ant mounds.Red imported fire ants leave and enter the mound housing the colony through underground tunnels.
+          p
+            a(href='http://fireant.tamu.edu/files/2011/12/img0031_sm.jpg')
+              img.size-full.wp-image-411.alignleft(title='img0031_sm', src='https://agrilife.org/fireant/files/2011/12/img0031_sm.jpg', alt='')
+          p
+            | Undisturbed mounds in pastures can reach 18 inches in height, but most mounds in turfgrass areas are usually just a few inches tall. When you shovel into the colony’s mound of soil you see white objects. This is the brood – the eggs, larvae and pupae of developing ants.
+          p
+            | Fire ants are small, only about 1/8″ to 1/4″ long. Variation in size is a distinguishing characteristic of imported fire ants. Many other ant species are uniform in size.
+          p
+            a(href='http://fireant.tamu.edu/files/2011/12/actual_size.jpg')
+              img.alignright.size-full.wp-image-414(title='actual_size', src='https://agrilife.org/fireant/files/2011/12/actual_size.jpg', alt='', width='90', height='68')
+          p
+            | When you disturb the mound, dozens to hundreds of reddish-brown worker ants crawl up vertical surfaces (like grasses and other objects) on and around the mound. Few native ants charge up vertical surfaces.
+           a(href='http://fireant.tamu.edu/files/2011/12/img0050_sm.jpg')
+            img.alignright.size-full.wp-image-415(title='img0050_sm', src='https://agrilife.org/fireant/files/2011/12/img0050_sm.jpg', alt='', width='100', height='150')
+          p
+            | If you get stung it feels like being burned. A day or so later, the imported fire ant’s unique venom forms a white fluid filled pustule or blister at the red sting site that is very characteristic – only fire ant venom causes this symptom!
+          p
+            | Worker ants bite (with mandibles) and sting (with stingers) aggressively and repeatedly.
+          p For more information:
+          p
+            a(title='Learn', href='http://fireant.tamu.edu/learn/') Ant Facts
+            br
+            a(title='Fact Sheets', href='http://fireant.tamu.edu/materials/fact-sheets/') Fact Sheets and Publications about fire ants
+            br
+            a(href='http://today.agrilife.org/2003/04/23/protect-against-potentially-deadly-fire-ant-stings/', onclick="_gaq.push(['_trackEvent', 'outbound-article', 'http://today.agrilife.org/2003/04/23/protect-against-potentially-deadly-fire-ant-stings/', 'Protect Against Deadly Fire Ant Stings']);") Protect Against Deadly Fire Ant Stings
+
+        // blog post
+        .about-author
+          h4.colored-text About the Author
+          img.img-responsive(src='#{glblprefix}/img/team-3.jpg', alt='author_profile')
+          p
+            | FASIDS is one project of KEL lab of Department of Entomology of TAMU. The purpose of this project is to aim management of imported fire ant. The project is consisted of
+            | map or landscape tools, question and answer section, and reports and knowledge base. 
+            span.colored-text
+              a(href="https://www.linkedin.com/in/boweiliujs") Bowei Liu 
+            |is the developer of this project. 
+        // about author
+        //- .comment-post
+          h3 3 Comments
+          .row
+            .col-md-12
+              .comment-list
+                h4
+                  img.img-responsive(src='#{glblprefix}/img/team-2.jpg', alt='replier_profile')
+                  | by User Name1
+                  a.btn.btn-xs.btn-theme-dark(href='#') Reply
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
+              // comments list
+            .col-md-10.col-md-offset-1
+              .comment-list
+                h4
+                  img.img-responsive(src='#{glblprefix}/img/team-3.jpg', alt='replier_profile')
+                  | by User Name2
+                  a.btn.btn-xs.btn-theme-dark(href='#') Reply
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
+              // comments list
+            .col-md-12
+              .comment-list
+                h4
+                  img.img-responsive(src='#{glblprefix}/img/team-4.jpg', alt='replier_profile')
+                  | by User Name3
+                  a.btn.btn-xs.btn-theme-dark(href='#') Reply
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
+              // comments list
+        // comments
+        ul.pager
+          li.previous
+            a(href='#') ← Previous Blog
+          li.next
+            a(href='#') Next Blog →
+        // pager
+        .divide60
+        //- .comment-form
+          h3 Leave Comment
+          .form-contact
+            form(role='form')
+              .form-group
+                label(for='name') Name
+                input#name.form-control(type='email', required='')
+              .form-group
+                label(for='email') Email
+                input#email.form-control(type='password', required='')
+              .form-group
+                label(for='message') Comment
+                textarea#message.form-control(rows='7', required='')
+              button.btn.btn-theme-bg.btn-lg.pull-right(type='submit') Comment
+      // col
+      .col-md-3.col-md-offset-1
+        .sidebar-box.margin40
+          h4 Search
+          form.search-widget(role='form')
+            input.form-control(type='text')
+            i.fa.fa-search
+        // sidebar-box
+        .sidebar-box.margin40
+          h4 Text widget
+          p
+            | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie.
+        // sidebar-box
+        .sidebar-box.margin40
+          h4 Categories
+          ul.list-unstyled.cat-list
+            li
+              a(href='#') Marketing
+              i.fa.fa-angle-right
+            li
+              a(href='#') Videos
+              i.fa.fa-angle-right
+            li
+              a(href='#') Sports
+              i.fa.fa-angle-right
+            li
+              a(href='#') Fashion
+              i.fa.fa-angle-right
+            li
+              a(href='#') Media
+              i.fa.fa-angle-right
+            li
+              a(href='#') Seo
+              i.fa.fa-angle-right
+            li
+              a(href='#') Marketing
+              i.fa.fa-angle-right
+        // sidebar-box
+        .sidebar-box.margin40
+          h4 Popular Post
+          ul.list-unstyled.popular-post
+            li
+              .popular-img
+                a(href='#')
+                  img.img-responsive(src='#{glblprefix}/img/img-7.jpg', alt='')
+              .popular-desc
+                h5
+                  a(href='#') blog post image
+                h6 31st july 2014
+            li
+              .popular-img
+                a(href='#')
+                  img.img-responsive(src='#{glblprefix}/img/img-8.jpg', alt='')
+              .popular-desc
+                h5
+                  a(href='#') blog post image
+                h6 31st july 2014
+            li
+              .popular-img
+                a(href='#')
+                  img.img-responsive(src='#{glblprefix}/img/img-9.jpg', alt='')
+              .popular-desc
+                h5
+                  a(href='#') blog post image
+                h6 31st july 2014
+        // sidebar-box
+        .sidebar-box.margin40
+          h4 Tag Cloud
+          .tag-list
+            a(href='#') Wordpress
+            a(href='#') Design
+            a(href='#') Graphics
+            a(href='#') Seo
+            a(href='#') Development
+            a(href='#') Marketing
+            a(href='#') fashion
+            a(href='#') Media
+            a(href='#') Photoshop
+      // sidebar-col
+    // row for blog post
+  
+  .divide60
+
+
 
 block additionalJS
+
+
+
