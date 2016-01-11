@@ -3,6 +3,7 @@ var moment = require('moment');
 var Promise = require('promise');
 var router = express.Router();
 var _ = require('underscore');
+var routesHelpers = require('./routesHelpers');
 var readFile = Promise.denodeify(require('fs').readFile); // see https://www.promisejs.org/
 var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
 function readJSON(filename, callback){  //// see https://www.promisejs.org/
@@ -20,20 +21,10 @@ function ensureAdmin(req, res, next){
   }
 }
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    res.redirect(glblprefix + "/users/signin?referral_url=" + req.originalUrl );
-  }
-}
-
-function processReqUser ( req_user){  
-  if (req_user) var temp_user = req_user.toObject();
-  else return null;
-  delete temp_user.password_hash; 
-  return temp_user;
-}
+// function
+var ensureAuthenticated = routesHelpers.ensureAuthenticated;
+// function
+var processReqUser = routesHelpers.processReqUser;
 // callback of promise catch
 function thisError(err){
   return next(err);
@@ -104,7 +95,7 @@ router.get('/qa', function (req, res, next){
 });
 
 /* POST replies at path: "/qa/question" */
-router.post('/qa/question', function (req, res, next) {
+router.post('/qa/question', ensureAuthenticated, function (req, res, next) {
   var reply = {
     role:2,
     poster_id: req.user._id,

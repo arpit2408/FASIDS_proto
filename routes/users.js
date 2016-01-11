@@ -1,22 +1,9 @@
-var express = require('express');
 var _ = require('underscore');
-var router = express.Router();
+var router = require('express').Router();
 var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
-
-function processReqUser ( req_user){  
-  if (req_user) var temp_user = req_user.toObject();
-  else return null;
-  temp_user.display_name = req_user.displayName();
-  delete temp_user.password_hash; 
-  return temp_user;
-}
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    res.redirect(glblprefix + "/users/signin?referral_url=" + req.originalUrl );
-  }
-}
+var routesHelpers = require('./routesHelpers');
+var processReqUser = routesHelpers.processReqUser;
+var ensureAuthenticated = routesHelpers.ensureAuthenticated;
 
 /* all the routes under "/users"*/
 /* */
