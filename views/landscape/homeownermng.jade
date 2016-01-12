@@ -13,7 +13,7 @@ block renderBody
         .col-xs-12
           .input-group
             //- span.input-group-addon Search
-            input.form-control#map-input-geosearch(type='text', placeholder='Search FASIDS using address, aipcode...')
+            input.form-control#map-input-geosearch(type='text', placeholder='Search FASIDS using address, zipcode...')
             span.input-group-btn
               //- button.btn#map-input-geosearch-btn(data-toggle="tooltip", data-placement="bottom" ,title="Search")
               button.btn#map-input-geosearch-btn()
@@ -27,18 +27,21 @@ block renderBody
       .row
         .col-xs-12 
           if page_status.model_op === 'create'
-            span.btn.btn-default.fa.fa-mouse-pointer#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
+            span.btn.btn-default#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
+              //- .fa.fa-mouse-pointer
+              | Place vertex
           else if page_status.model_op === 'patch'
             span.btn.btn-default.fa.fa-floppy-o.fa-lg#map-tool-save(data-operation = "map_tool_save")
+              //- | Save
       .row
         .col-xs-12
-          span.btn.btn-default#map-tool-hole(data-operation = "map_tool_holing") Draw hole
+          span.btn.btn-default#map-tool-hole(data-operation = "map_tool_holing") Remove Area
       .row
         .col-xs-12
           span.btn.btn-default#map-tool-editpolygon(data-operation="map_tool_editpolygon") Edit shape
       .row
         .col-xs-12
-          span.btn.btn-default#map-tool-setproperties(data-operation="map_tool_setproperties") Set Properties
+          span.btn.btn-default#map-tool-setproperties(data-operation="map_tool_setproperties") Set Treatment
       .row
         .col-xs-12
           if page_status.model_op === "create"
