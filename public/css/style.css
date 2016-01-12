@@ -707,7 +707,7 @@ input[type="color"]:focus,
       position: absolute;
       top: 0;
       left: 0;
-      background: url(../img/plus.png) no-repeat center center rgba(79, 130, 233, 0.7);
+      background: url(../img/plus.png) no-repeat center center rgba(80, 0, 0, 0.6);
       -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
       filter: alpha(opacity=0);
       opacity: 0;
