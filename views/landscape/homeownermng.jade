@@ -2,7 +2,7 @@ extends ../layout
 
 block additionalCSS
   link(href="#{glblprefix}/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
-  link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
+  link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')
 
 block renderBody
   //-include ../snippets/breadcrum
@@ -63,6 +63,8 @@ block renderBody
           .modal-body
             form#purpose
               div
+                b Land Use Type
+              div
                 label.radio-inline
                   input#housebuilding-radio(type='radio', name='landusage', value='housebuilding')
                   |  House &amp; Building
@@ -72,7 +74,9 @@ block renderBody
                 label.radio-inline
                   input#vegetablegarden-radio(type='radio', name='landusage', value='vegetablegarden')
                   |  Vegetable Garden
-              .divide30
+              .divide15
+              div 
+                b Treatment Type
               div
                 label.radio-inline
                   input#imt-radio(type='radio', name='treatment', value='imt')
@@ -80,7 +84,7 @@ block renderBody
                 label.radio-inline
                   input#broadcast-radio(type='radio', name='treatment', value='broadcast')
                   |  Broadcast Baits
-              .divide20
+              .divide15
               .row
                 .col-xs-4
                   .form-group
@@ -103,13 +107,9 @@ block renderBody
                   .form-group
                     label(for='polygon-address') Notes
                     textarea#polygon-address.form-control( name="notes", row="4" ,placeholder='Brief notes about this polygon')
-
-
-
-
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal') Close
-            button.btn.btn-primary#save-prepared-treatment(type='button') Save changes
+            button.btn.btn-primary#save-prepared-treatment(type='button') Finish Preparation
   .hidden
     form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
       input#geojson(type='text', name="geojson")

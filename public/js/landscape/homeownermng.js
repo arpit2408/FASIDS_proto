@@ -92,6 +92,7 @@ $(document).ready(function(){
     }
   });
   var polygons = [];
+  var saved_polygons = [];
   var spherical = google.maps.geometry.spherical;  // computing library
   var drawingPath = new google.maps.Polyline({
     path: [],
@@ -133,14 +134,16 @@ $(document).ready(function(){
       if(!page_status.isAuthenticated){
         return alert("Please sign in before submit this polygon to server\n I will make this alert look nicer in future");
       }
-
       if (page_status.model_op==="patch"){
         location.href = glblprefix + "/landscape/treatment/" + this_polygon._id;
         return;
       }
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
       $('input#geojson').val(JSON.stringify(geoJsonPolygon));
-      console.log( JSON.stringify(geoJsonPolygon));
+      if (this_polygon.saved === true){
+        return alert("This polygon has already been saved, please go to your profile to check");
+      }
+      this_polygon.saved = true;
       $('form#treatment').submit(); // commit it for for dubug
     } else if (map_tool_register.get("map_tool_save") === true){
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
@@ -231,6 +234,9 @@ $(document).ready(function(){
           $('textarea[name='+key+']').val(value);
         }
       });
+      if($('#broadcast-radio').is(":checked")){
+        $("#mound-density-input").prop('disabled', true);
+      }
     },
     initialize: function (){
       var ClassRef = this;
@@ -375,7 +381,7 @@ $(document).ready(function(){
   
     convertPaths:function(MVCArray, tbr_a){
       var ClassRef = this;
-      console.log("asdf");
+      // console.log("asdf");
       if ( MVCArray.getAt(0).hasOwnProperty("lat")  ){
         // arrived deepest Array level
         MVCArray.forEach(function (element, index){
@@ -496,4 +502,14 @@ $(document).ready(function(){
     }
     map_tool_helper.codeAddress(input);
   });
+
+  $('#broadcast-radio, #imt-radio').change(function(){
+    if($('#broadcast-radio').is(":checked")){
+      $("#mound-density-input").prop('disabled', true);
+    } else {
+      $("#mound-density-input").prop('disabled', false);
+    }
+  });
+
 });
+
