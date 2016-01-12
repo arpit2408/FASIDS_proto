@@ -63,17 +63,18 @@ body
                 a(href='#{glblprefix}/landscape/antdistribution') Texas Ant Distribution Map
               li
                 a(href='#{glblprefix}/landscape/fire_ant_products') Fire Ant Products
-          // menu Portfolio li end here
-          li(class='#{(activePage=="Reports")?"active dropdown":"dropdown"}')
-            a.dropdown-toggle(href='#', class='', data-toggle="dropdown")
-              | KNOWLEDGE ARCHIVES
+          //- li(class='#{(activePage=="Blog")?"active dropdown":"dropdown"}')
+            a.dropdown-toggle(href='#{glblprefix}/blogs', class='', data-toggle="dropdown")
+              | OFFICIAL BLOG
               i.fa.fa-angle-down
             ul.dropdown-menu(role='menu')
               li
                 a(href='#{glblprefix}/blogs/first-blog') First blog
-              li
-                a(href='#') Invalid link
+          li(class='#{(activePage=="Blog")?"active dropdown":"dropdown"}')
+            a(href='#{glblprefix}/blogs', class='')
+              | OFFICIAL BLOG
           // menu blog li end here
+
           li(class='#{(activePage=="Ants")?"active":null}')
             a(href='#{glblprefix}/antactivity') FIRE ANT ACTIVITY
           // menu pages li end here
@@ -195,31 +196,31 @@ body
             h3 Featured Work
             ul.list-inline.f2-work
               li
-                a(href='portfolio-single.html')
+                a(href='#')
                   img.img-responsive(src='#{glblprefix}/img/img-1.jpg', alt='')
               li
-                a(href='portfolio-single.html')
+                a(href='#')
                   img.img-responsive(src='#{glblprefix}/img/img-2.jpg', alt='')
               li
-                a(href='portfolio-single.html')
+                a(href='#')
                   img.img-responsive(src='#{glblprefix}/img/img-3.jpg', alt='')
               li
-                a(href='portfolio-single.html')
+                a(href='#')
                   img.img-responsive(src='#{glblprefix}/img/img-4.jpg', alt='')
               li
-                a(href='portfolio-single.html')
+                a(href='#')
                   img.img-responsive(src='#{glblprefix}/img/img-5.jpg', alt='')
               li
-                a(href='portfolio-single.html')
+                a(href='#')
                   img.img-responsive(src='#{glblprefix}/img/img-6.jpg', alt='')
               li
-                a(href='portfolio-single.html')
+                a(href='#')
                   img.img-responsive(src='#{glblprefix}/img/img-7.jpg', alt='')
               li
-                a(href='portfolio-single.html')
+                a(href='#')
                   img.img-responsive(src='#{glblprefix}/img/img-8.jpg', alt='')
               li
-                a(href='portfolio-single.html')
+                a(href='#')
                   img.img-responsive(src='#{glblprefix}/img/img-9.jpg', alt='')
         // footer col
         .col-md-3.col-sm-6.margin30
