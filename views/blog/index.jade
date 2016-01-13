@@ -6,6 +6,11 @@ block renderBody
   .container.blog-left-img
     .row
       .col-md-8
+        if (user && user.usercat === 0)
+          .post-btn-row
+            .row
+              .col-xs-12.margin20
+                a.btn.btn-lg.btn-theme-dark(href="./blogs/create") New Post
         .blog-post
           .row
             .col-md-6.margin20
@@ -19,13 +24,13 @@ block renderBody
               ul.list-inline.post-detail
                 li
                   | by 
-                  a(href='#') assan
+                  a(href='#') FASIDS OFFICIAL
                 li
                   i.fa.fa-calendar
                   |  31st july 2014
                 li
                   i.fa.fa-tag
-                  a(href='#') Sports
+                  a(href='#') Knowledge
               h2
                 a(href='blogs/first-blog') How can I tell if I have fire ants?
               p
@@ -46,7 +51,7 @@ block renderBody
               ul.list-inline.post-detail
                 li
                   | by 
-                  a(href='#') assan
+                  a(href='#') FASIDS OFFICIAL
                 li
                   i.fa.fa-calendar
                   |  31st july 2014
@@ -73,7 +78,7 @@ block renderBody
               ul.list-inline.post-detail
                 li
                   | by 
-                  a(href='#') assan
+                  a(href='#') FASIDS OFFICIAL
                 li
                   i.fa.fa-calendar
                   |  31st july 2014
