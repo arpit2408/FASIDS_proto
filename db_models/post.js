@@ -83,8 +83,9 @@ post_schema.method({
     param:
       length: how long the pure text content will be returned, the preview text need use this method
   */
-  preivew: function (){
-    return this.getPureTextContent(80) + "...";
+  preivew: function ( number){
+    if (number === null) { number = 80;} 
+    return this.getPureTextContent(number) + "...";
   },
   getPureTextContent: function (length){
     return htmlToText.fromString(this.content,{
@@ -174,16 +175,18 @@ post_schema.static({
     });
   },
   */
-  getAllMainPosts: function ( condition ,callback) {   // I can put sort parameter here
+  getPostsOfRole: function ( condition , roleNumber ,callback) {   // I can put sort parameter here
     var Model = this;
     if (typeof condition === "undefined"){
-      console.log("[INFO] getAllMainPosts of post.js received undefined sort argument");
+      console.log("[INFO] getPostsOfRole of post.js received undefined sort argument");
       condition = {limit: 15, skip: 0, sort:"newest"};
     }
+    if (!roleNumber) roleNumber = 1;
     if (!condition.limit){condition.limit = 15;}
     if (!condition.skip) { condition.skip = 0;}
     if (!condition.sort){ condition.sort = "newest";}
-    Model.count({role:1}, function afterCount(err, count){
+
+    Model.count({role:roleNumber}, function afterCount(err, count){
       condition.count = count;
       var to_be_sorted_field = "post_time";
       var increasing = 1;
@@ -204,13 +207,13 @@ post_schema.static({
           break;
         case "unanswered":
           sort_param[to_be_sorted_field] = order;
-          return callback(err , Model.find({"replied_post":0, "role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param));
+          return callback(err , Model.find({"replied_post":0, "role":roleNumber}).skip(condition.skip).limit(condition.limit).sort(sort_param));
           break;
         default:
           // the default value has already being assigned
       }
       sort_param[to_be_sorted_field] = order;
-      return callback( null, Model.find({"role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param) );
+      return callback( null, Model.find({"role":roleNumber}).skip(condition.skip).limit(condition.limit).sort(sort_param) );
       // Model.find({"role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param).exec(callback);
     });
   },

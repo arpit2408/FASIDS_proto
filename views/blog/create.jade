@@ -1,0 +1,43 @@
+extends ../layout
+
+block additionalCSS
+
+  link(href='#{glblprefix}/assets/editablemarkdown/css/font-awesome.css', rel='stylesheet')
+  link(rel='stylesheet', href='#{glblprefix}/assets/editablemarkdown/hallo.css')
+  link(type='text/css', href='#{glblprefix}/assets/editablemarkdown/jquery-ui-1.8.16.custom.css', rel='stylesheet')
+
+block renderBody
+  .divide60
+  .container
+    .row
+      .col-xs-10.col-xs-offset-1
+        article
+          .editable(contenteditable='true')
+            h1 Hallo — editing Markdown in WYSIWYG
+            p
+              a(href='http://hallojs.org/hallo/') Hallo
+              |  is the simplest web editor imaginable. Instead of cluttered forms or toolbars, you edit your web content as it is. Just you, your web design, and your content.
+            p
+              | Actually, this text you're reading has Hallo loaded. To try it out, just click here and start writing. If you want to make more comprehensive modifications, just select some text.
+            p
+              strong Note:
+              |  you can also edit the Markdown source below
+        form(method="post")
+          input(type="text", name="post_title", placeholder="title here")
+          textarea#source(name="content")
+          .divide15
+          button.btn.btn-theme-bg(type="submit") Publish Blog Post
+  .divide60
+
+
+
+block additionalJS
+  script(type='text/javascript', src='#{glblprefix}/assets/editablemarkdown/jquery-ui-1.10.0.custom.min.js')
+  script(type='text/javascript', src='#{glblprefix}/assets/editablemarkdown/rangy-core-1.2.3.js')
+  
+  script(type='text/javascript', src='#{glblprefix}/assets/editablemarkdown/hallo.js')
+
+  script(src='#{glblprefix}/assets/editablemarkdown/showdown.js')
+  script(src='#{glblprefix}/assets/editablemarkdown/to-markdown.js')
+  script(src='#{glblprefix}/assets/editablemarkdown/editor.js')
+

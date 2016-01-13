@@ -73,7 +73,7 @@ router.get('/', function (req, res, next) {
 /*visit the qa forum*/
 router.get('/qa', function (req, res, next){
   var paging_condition = _.pick(req.query,'sort','skip','limit');
-  req.DB_POST.getAllMainPosts(paging_condition, function cb (err, query){
+  req.DB_POST.getPostsOfRole(paging_condition, 1,function cb (err, query){
     if (err) return next(err);
     if (!query) return next( new Error("no query"));
     // query is like Model.find({"role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param) 
