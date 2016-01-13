@@ -29,7 +29,7 @@ block renderBody
           if page_status.model_op === 'create'
             span.btn.btn-default#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
               //- .fa.fa-mouse-pointer
-              | Place vertex
+              | Draw Polygon
           else if page_status.model_op === 'patch'
             span.btn.btn-default.fa.fa-floppy-o.fa-lg#map-tool-save(data-operation = "map_tool_save")
               //- | Save
