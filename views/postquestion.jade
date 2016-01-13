@@ -49,7 +49,8 @@ block renderBody
       .divide20
       .row.final-buttons
         .col-xs-11.col-xs-offset-1
-          a.btn.border-black#delete-post-btn(href='#') Delete Post
+          if (user && user.usercat === 0)
+            a.btn.border-black#delete-post-btn(href='#') Delete Post
           a.btn.border-black(href='#') Save draft
 
           a.btn.border-black(href='#') preview
