@@ -40,9 +40,20 @@
   .popular-img{
     float: left;
     margin-right: 10px;
-    a img{
-      width:60px;
+    // overflow: hidden;
+    height: 60px;
+    width : 60px;
+    background-size:auto 60px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    img {
+      // width: auto;
+      // height: 60px;
+      width: auto;
       height: 60px;
+    }
+    a {
+
     }
   }
   .popular-desc{
