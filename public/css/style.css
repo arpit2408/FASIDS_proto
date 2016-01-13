@@ -73,15 +73,17 @@ hr {
   padding: 3px 6px; }
 
 a {
-  color: #333;
+  color: #830000;
   -moz-transition: all 200ms ease-in;
   -o-transition: all 200ms ease-in;
   -webkit-transition: all 200ms ease-in;
   transition: all 200ms ease-in; }
 
-a:hover,
+a:hover {
+  color: #333;
+  text-decoration: none; }
+
 a:focus {
-  color: #500000;
   text-decoration: none; }
 
 .colored-text {
@@ -601,7 +603,7 @@ input[type="color"]:focus,
   letter-spacing: 0px;
   font-family: 'Raleway', sans-serif;
   font-size: 12px;
-  text-transform: uppercase; }
+  text-transform: capitalize; }
 
 .btn-lg {
   padding: 14px 28px 13px 28px;
@@ -634,6 +636,10 @@ input[type="color"]:focus,
 .btn-theme-dark {
   background-color: #333;
   color: #fff;
+  -moz-transition: all 200ms ease-in;
+  -o-transition: all 200ms ease-in;
+  -webkit-transition: all 200ms ease-in;
+  transition: all 200ms ease-in;
   -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
   -ms-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
@@ -707,7 +713,7 @@ input[type="color"]:focus,
       position: absolute;
       top: 0;
       left: 0;
-      background: url(../img/plus.png) no-repeat center center rgba(80, 0, 0, 0.6);
+      background: url(../img/plus.png) no-repeat center center rgba(80, 0, 0, 0.5);
       -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
       filter: alpha(opacity=0);
       opacity: 0;
@@ -2309,14 +2315,15 @@ h3.heading-progress {
   margin: 0;
   padding: 0; }
   .social-1 li {
-    padding: 0; }
+    padding: 0;
+    margin-right: 4px; }
     .social-1 li a i {
       width: 32px;
       height: 32px;
       line-height: 32px;
       text-align: center;
       color: #fff;
-      font-size: 16px;
+      font-size: 20px;
       -webkit-border-radius: 2px;
       -moz-border-radius: 2px;
       -ms-border-radius: 2px;
@@ -2327,16 +2334,6 @@ h3.heading-progress {
       transition: all 200ms ease-in; }
       .social-1 li a i:hover {
         opacity: 0.8; }
-      .social-1 li a i.fa-facebook {
-        background-color: #3b5998; }
-      .social-1 li a i.fa-twitter {
-        background-color: #0084b4; }
-      .social-1 li a i.fa-google-plus {
-        background-color: #c63d2d; }
-      .social-1 li a i.fa-pinterest {
-        background-color: #cb2027; }
-      .social-1 li a i.fa-dribbble {
-        background-color: #ea4c89; }
 
 /*************only found in home-soon.html*************/
 /*************only found in home-soon.html*************/
@@ -2753,7 +2750,7 @@ label span {
 
 .tag-list a {
   display: inline-block;
-  margin-right: 3px;
+  margin-right: 2px;
   margin-bottom: 3px;
   padding: 3px 6px;
   color: #777;

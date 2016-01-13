@@ -358,32 +358,19 @@ h3.heading-progress {
   padding: 0;
   li {
     padding: 0;
+    margin-right: 4px;
+
     a i {
       width: 32px;
       height: 32px;
       line-height: 32px;
       text-align: center;
       color: #fff;
-      font-size: 16px;
+      font-size: 20px;
       @include border-radius(2px);
       @include transition(all 200ms ease-in);
       &:hover {
         opacity: 0.8;
-      }
-      &.fa-facebook {
-        background-color: #3b5998;
-      }
-      &.fa-twitter {
-        background-color: #0084b4;
-      }
-      &.fa-google-plus {
-        background-color: #c63d2d;
-      }
-      &.fa-pinterest {
-        background-color: #cb2027;
-      }
-      &.fa-dribbble { 
-        background-color: #ea4c89;
       }
     }
   }
