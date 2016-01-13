@@ -1,0 +1,45 @@
+doctype html
+// saved from url=(0033)http://hallojs.org/demo/markdown/
+html
+  head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    meta(charset='utf-8')
+    title Hallo.js - Editing Markdown in WYSIWYG
+    link(href='./assets/bootstrap.css', rel='stylesheet')
+    link(href='./assets/font-awesome.css', rel='stylesheet')
+    link(rel='stylesheet', href='./assets/hallo.css')
+    link(type='text/css', href='./assets/jquery-ui-1.8.16.custom.css', rel='stylesheet')
+  body
+    header
+      a(href='https://github.com/bergie/hallo')
+        img(style='position: absolute; top: 0; right: 0; border: 0;', src='./assets/fork-me.png', alt='Fork me on GitHub')
+    article
+      .editable(contenteditable='true')
+        h1 Hallo — editing Markdown in WYSIWYG
+        p
+          a(href='http://hallojs.org/hallo/') Hallo
+          |  is the simplest web editor imaginable. Instead of cluttered forms or toolbars, you edit your web content as it is. Just you, your web design, and your content.
+        p
+          | Actually, this text you're reading has Hallo loaded. To try it out, just click here and start writing. If you want to make more comprehensive modifications, just select some text.
+        p
+          strong Note:
+          |  you can also edit the Markdown source below
+    textarea#source
+    footer
+      p
+        strong Hallo.js
+        |  is 
+        a(href='http://www.opensource.org/licenses/mit-license.php', rel='license') free software
+        |  developed by 
+        a(href='http://bergie.iki.fi/') Henri Bergius
+        |  for the 
+        a(href='http://iks-project.eu/') IKS Project
+        |  and co-funded by the European Union
+    script(type='text/javascript', async='', src='./assets/ga.js')
+    script(type='text/javascript', src='./assets/jquery-1.9.1.min.js')
+    script(type='text/javascript', src='./assets/jquery-ui-1.10.0.custom.min.js')
+    script(type='text/javascript', src='./assets/rangy-core-1.2.3.js')
+    script(type='text/javascript', src='./assets/hallo.js')
+    script(src='./assets/showdown.js')
+    script(src='./assets/to-markdown.js')
+    script(src='./assets/editor.js')

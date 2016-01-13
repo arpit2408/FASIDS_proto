@@ -2,6 +2,9 @@ extends ../layout
 
 block additionalCSS
 block renderBody
+  -function getDateString(date){
+    -return momentlib(date).format("MMM Do YYYY");
+  -}
   .divide80
   .container.blog-left-img
     .row
@@ -11,87 +14,120 @@ block renderBody
             .row
               .col-xs-12.margin20
                 a.btn.btn-lg.btn-theme-dark(href="./blogs/create") New Post
-        .blog-post
+        //- .blog-post
+        //-   .row
+        //-     .col-md-6.margin20
+        //-       a(href='blogs/first-blog')
+        //-         .item-img-wrap
+        //-           img.img-responsive(src='http://fireant.tamu.edu/files/2012/10/IMG0003.jpg', alt='workimg')
+        //-           .item-img-overlay
+        //-             span
+        //-       // work link
+        //-     .col-md-6.margin20
+        //-       ul.list-inline.post-detail
+        //-         li
+        //-           | by 
+        //-           a(href='#') FASIDS OFFICIAL
+        //-         li
+        //-           i.fa.fa-calendar
+        //-           |  31st july 2014
+        //-         li
+        //-           i.fa.fa-tag
+        //-           a(href='#') Knowledge
+        //-       h2
+        //-         a(href='blogs/first-blog') How can I tell if I have fire ants?
+        //-       p
+        //-         |You can tell you have fire ants if you see a mound of fluffy worked soil, particularly a few days after a heavy rain....
+        //-       p
+        //-         a.btn.btn-theme-dark(href='blogs/first-blog') Read More...
+        //- // blog post
+        //- .blog-post
+        //-   .row
+        //-     .col-md-6.margin20
+        //-       a(href='blogs/first-blog')
+        //-         .item-img-wrap
+        //-           img.img-responsive(src='#{glblprefix}/img/img-5.jpg', alt='workimg')
+        //-           .item-img-overlay
+        //-             span
+        //-       // work link
+        //-     .col-md-6.margin20
+        //-       ul.list-inline.post-detail
+        //-         li
+        //-           | by 
+        //-           a(href='#') FASIDS OFFICIAL
+        //-         li
+        //-           i.fa.fa-calendar
+        //-           |  31st july 2014
+        //-         li
+        //-           i.fa.fa-tag
+        //-           a(href='#') Sports
+        //-       h2
+        //-         a(href='#') Lorem ipsum dollor sit amet
+        //-       p
+        //-         | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
+        //-       p
+        //-         a.btn.btn-theme-dark(href='blogs/first-blog') Read More...
+        //- // blog post
+        //- .blog-post
+        //-   .row
+        //-     .col-md-6.margin20
+        //-       a(href='blogs/first-blog')
+        //-         .item-img-wrap
+        //-           img.img-responsive(src='#{glblprefix}/img/img-3.jpg', alt='workimg')
+        //-           .item-img-overlay
+        //-             span
+        //-       // work link
+        //-     .col-md-6.margin20
+        //-       ul.list-inline.post-detail
+        //-         li
+        //-           | by 
+        //-           a(href='#') FASIDS OFFICIAL
+        //-         li
+        //-           i.fa.fa-calendar
+        //-           |  31st july 2014
+        //-         li
+        //-           i.fa.fa-tag
+        //-           a(href='#') Sports
+        //-       h2
+        //-         a(href='blogs/first-blog') Lorem ipsum dollor sit amet
+        //-       p
+        //-         | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
+        //-       p
+        //-         a.btn.btn-theme-dark(href='blogs/first-blog') Read More...
+        //- // blog post
+
+        if posts.length === 0
           .row
             .col-md-6.margin20
-              a(href='blogs/first-blog')
-                .item-img-wrap
-                  img.img-responsive(src='http://fireant.tamu.edu/files/2012/10/IMG0003.jpg', alt='workimg')
-                  .item-img-overlay
-                    span
-              // work link
-            .col-md-6.margin20
-              ul.list-inline.post-detail
-                li
-                  | by 
-                  a(href='#') FASIDS OFFICIAL
-                li
-                  i.fa.fa-calendar
-                  |  31st july 2014
-                li
-                  i.fa.fa-tag
-                  a(href='#') Knowledge
-              h2
-                a(href='blogs/first-blog') How can I tell if I have fire ants?
-              p
-                |You can tell you have fire ants if you see a mound of fluffy worked soil, particularly a few days after a heavy rain....
-              p
-                a.btn.btn-theme-dark(href='blogs/first-blog') Read More...
-        // blog post
-        .blog-post
-          .row
-            .col-md-6.margin20
-              a(href='blogs/first-blog')
-                .item-img-wrap
-                  img.img-responsive(src='#{glblprefix}/img/img-5.jpg', alt='workimg')
-                  .item-img-overlay
-                    span
-              // work link
-            .col-md-6.margin20
-              ul.list-inline.post-detail
-                li
-                  | by 
-                  a(href='#') FASIDS OFFICIAL
-                li
-                  i.fa.fa-calendar
-                  |  31st july 2014
-                li
-                  i.fa.fa-tag
-                  a(href='#') Sports
-              h2
-                a(href='#') Lorem ipsum dollor sit amet
-              p
-                | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
-              p
-                a.btn.btn-theme-dark(href='blogs/first-blog') Read More...
-        // blog post
-        .blog-post
-          .row
-            .col-md-6.margin20
-              a(href='blogs/first-blog')
-                .item-img-wrap
-                  img.img-responsive(src='#{glblprefix}/img/img-3.jpg', alt='workimg')
-                  .item-img-overlay
-                    span
-              // work link
-            .col-md-6.margin20
-              ul.list-inline.post-detail
-                li
-                  | by 
-                  a(href='#') FASIDS OFFICIAL
-                li
-                  i.fa.fa-calendar
-                  |  31st july 2014
-                li
-                  i.fa.fa-tag
-                  a(href='#') Sports
-              h2
-                a(href='blogs/first-blog') Lorem ipsum dollor sit amet
-              p
-                | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
-              p
-                a.btn.btn-theme-dark(href='blogs/first-blog') Read More...
-        // blog post
+              h3 No blog post yet
+        else
+          each post, index in posts
+            .blog-post
+              .row
+                .col-md-6.margin20
+                  a(href='blogs/first-blog')
+                    .item-img-wrap
+                      img.img-responsive(src='#{glblprefix}/img/img-5.jpg', alt='workimg')
+                      .item-img-overlay
+                        span
+                  // work link
+                .col-md-6.margin20
+                  ul.list-inline.post-detail
+                    li
+                      | by 
+                      a(href='#')=post.poster_id.displayName()
+                    li
+                      i.fa.fa-calendar
+                      | #{getDateString(post.post_time)}
+                    li
+                      each tag in post.tags
+                        i.fa.fa-tag
+                        a(href='#')=tag
+                  h2
+                    a(href='blogs/first-blog')=post.post_title
+                  p=post.preivew(120)
+                  p
+                    a.btn.btn-theme-dark(href='#') Read More...
 
         ul.pager
           li.previous
