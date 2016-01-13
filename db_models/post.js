@@ -6,7 +6,7 @@ var fs = require('fs');
 var post_schema = new mongoose.Schema({
   "role":Number, // 1 means main_post, 2 means reply
   "poster_id":{type: mongoose.Schema.ObjectId, ref: 'User'},
-  "post_cat":{type:Number, min:0, max:4},   // used for the icons
+  "post_cat":{type:Number, min:0, max:4},   // used for the icons     1 main post in QA, 2 reply to main post, 3 blogpost
   "post_title":String,
   "post_time": Date,
   "updated_at": {type: Date, default: Date.now},
@@ -18,6 +18,8 @@ var post_schema = new mongoose.Schema({
   "replies":[{type:mongoose.Schema.ObjectId, ref:'Post'}],
   "votes":{type:Number, required: true},
   "stars":{type:Number, required: true},
+  "tags":[{type:String}],
+  "active": Boolean,
   "content":{type:String, required: true}
 },{ collection:'post'});
 /*regarding main post*/
@@ -37,7 +39,7 @@ var post_schema = new mongoose.Schema({
 //   "votes" : Number
 // }
 
-/*regardomh followups*/
+/*regarding replies*/
 // {
 //   "_id" : default  
 //   "role":2, // 1 means main_post, 2 means reply
