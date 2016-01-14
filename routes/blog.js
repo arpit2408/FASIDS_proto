@@ -29,10 +29,11 @@ router.get('/', function (req, res, next){
 
 // READ signle blogpost
 router.get('/singlepost/:url_title', function (req, res, next) {
-  console.log(req.params.url_title);
+  // console.log(req.params.url_title);
+  if (glblprefix  !== "") req.params.url_title = req.originalUrl.match(/singlepost\/(.*)/)[1];
   req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).populate("poster_id").exec( function(err, blogpost){
     if (err) return next(err);
-    if (!blogpost) return next(new Error("requested resource not found"));
+    if (!blogpost) return next(new Error("requested resource not found: " + req.originalUrl ));
 
     res.render('blog/singleblog.jade', {
       title: 'BLOG',
@@ -81,6 +82,7 @@ router.post('/create', routesHelpers.ensureGroup.bind([0]), function (req, res, 
 });
 
 router.get('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function (req, res, next){
+  if (glblprefix  !== "") req.params.url_title = req.originalUrl.match(/update\/(.*)/)[1];
   req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).exec( function (err, blogpost){
     if (err) return next(err);
     if (!blogpost) return next( new Error("requested resource not found"));
@@ -101,6 +103,7 @@ router.get('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function (
 * UPDATE api, standard json return
 */
 router.post('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function (req,res,next){
+  if (glblprefix  !== "") req.params.url_title = req.originalUrl.match(/update\/(.*)/)[1];
   req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).exec( function (err, blogpost){
     if (err) return next(err);
     
@@ -118,6 +121,7 @@ router.post('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function 
 
 // DELETE api, standard json return
 router.get('/delete/:url_title',routesHelpers.ensureGroup.bind([0]) ,function (req, res, next){
+  if (glblprefix  !== "") req.params.url_title = req.originalUrl.match(/delete\/(.*)/)[1];
   res.send("DELETE /blogs/delete\n");
 });
 
