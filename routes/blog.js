@@ -117,7 +117,7 @@ router.post('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function 
 
 
 // DELETE api, standard json return
-router.get('/delete',routesHelpers.ensureGroup.bind([0]) ,function (req, res, next){
+router.get('/delete/:url_title',routesHelpers.ensureGroup.bind([0]) ,function (req, res, next){
   res.send("DELETE /blogs/delete\n");
 });
 
