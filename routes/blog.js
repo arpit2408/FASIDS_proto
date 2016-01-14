@@ -28,23 +28,31 @@ router.get('/', function (req, res, next){
 });
 
 // READ signle blogpost
-router.get('/first-blog', function (req, res, next) {
-  res.render('blog/first-blog', {
-    title: 'BLOG',
-    activePage:'Blog',
-    breadcrumTitle:"How can I tell if I have fire ants?",
-    pathToHere:"blogs / first-blog",
-    momentlib:moment,
-    isAuthenticated: req.isAuthenticated(),
-    user: routesHelpers.processReqUser(req.user)
+router.get('/singlepost/:url_title', function (req, res, next) {
+  console.log(req.params.url_title);
+  req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).populate("poster_id").exec( function(err, blogpost){
+    if (err) return next(err);
+    if (!blogpost) return next(new Error("requested resource not found"));
+
+    res.render('blog/singleblog.jade', {
+      title: 'BLOG',
+      activePage:'Blog',
+      breadcrumTitle: blogpost.post_title,
+      pathToHere:"blogs / " + blogpost.url_title,
+      momentlib:moment,
+      isAuthenticated: req.isAuthenticated(),
+      user: routesHelpers.processReqUser(req.user),
+      post:blogpost
+    });
   });
+
 });
 
 // CREATE  part1
-router.get('/create', function (req, res, next){
+router.get('/create', routesHelpers.ensureGroup.bind([0]), function (req, res, next){
   // res.send("GET /blogs/create\n");
   res.render('blog/create',{
-    title: 'Hallo.js - Editing Markdown in WYSIWYG',
+    title: 'Post Blog on FASIDS',
     activePage:'Blog',
     breadcrumTitle:"Create new blog",
     pathToHere:"blogs / create",
@@ -60,6 +68,7 @@ router.post('/create', routesHelpers.ensureAuthenticated, function (req, res, ne
     poster_id: req.user._id,
     post_time: new Date(),
     post_title: req.body.post_title,
+    url_title:req.DB_POST.genUrlTitle(req.body.post_title),
     content: req.body.content,
     votes:0,
     stars:0,
@@ -71,19 +80,47 @@ router.post('/create', routesHelpers.ensureAuthenticated, function (req, res, ne
   });
 });
 
+router.get('/update/:url_title', routesHelpers.ensureAuthenticated, function (req, res, next){
+  req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).exec( function (err, blogpost){
+    if (err) return next(err);
+    if (!blogpost) return next( new Error("requested resource not found"));
+    res.render('blog/create',{
+      title: 'Update Blog on FASIDS',
+      activePage:'Blog',
+      breadcrumTitle:"Update blog",
+      pathToHere:"blogs / update / " + blogpost.url_title,
+      isAuthenticated: req.isAuthenticated(),
+      user: routesHelpers.processReqUser(req.user),
+      post:blogpost
+    });
+  });
+});
 
 /**
 * Will be used for ajax saving function for blogpost
 * UPDATE api, standard json return
 */
-router.patch('/update', function (res,res,next){
-  res.send("PATCH /blogs/update\n");
+router.post('/update/:url_title', routesHelpers.ensureAuthenticated, function (req,res,next){
+  req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).exec( function (err, blogpost){
+    if (err) return next(err);
+    
+    if (!blogpost) return next( new Error("requested resource not found"));
+    blogpost.post_title=  req.body.post_title;
+    blogpost.url_title=req.DB_POST.genUrlTitle(req.body.post_title);
+    blogpost.content= req.body.content;
+    blogpost.save(function (err){
+      if (err) return next(err);
+      res.redirect(glblprefix  +'/blogs/update/' + blogpost.url_title);
+    });
+  });
 });
 
 
 // DELETE api, standard json return
-router.delete('/delete', function (res, res, next){
+router.delete('/delete', function (req, res, next){
   res.send("DELETE /blogs/delete\n");
 });
+
+
 
 module.exports = router;

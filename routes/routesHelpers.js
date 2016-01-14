@@ -26,3 +26,26 @@ exports.ensureAuthenticated = function (req, res, next) {
   }
   return next();
 }
+
+exports.ensureGroup = function (req, res, next){
+  // I have to supply group thru scope bound outside, I have to figure out a better way
+  var group = this;
+  if (!Array.isArray(group)) {group = [0,1,2,3,4,5]; console.error("[ERROR] ensureGroup's scope is not allowed-group array");}
+  switch (req.method){
+    case "GET":
+      if (!req.isAuthenticated()  || group.indexOf(req.user.usercat) < 0 ) {
+        res.redirect(glblprefix + "/users/signin?referral_url=" + req.originalUrl );
+        return;
+      }
+    break;
+    default:
+      if (!req.isAuthenticated() || group.indexOf(req.user.usercat) <0 ) {
+        var nonGETnotAuthorizedError = new Error("HTTP non-GET request not authorized, access level not matched ");
+        nonGETnotAuthorizedError.status = 401;
+        next(nonGETnotAuthorizedError);
+        return; 
+      }
+  }
+  return next();
+
+}

@@ -1,6 +1,7 @@
 jQuery(document).ready(function() {
   // Enable Hallo editor
   jQuery('.editable').hallo({
+    editable:false,
     plugins: {
       'halloformat': {},
       'halloheadings': {},
@@ -36,16 +37,35 @@ jQuery(document).ready(function() {
     if (markdownize(jQuery('.editable').html()) == content) {
       return;
     }
-    var html = htmlize(content);
-    jQuery('.editable').html(html); 
+    jQuery('.editable').html(htmlize(content)); 
   };
 
   // Update Markdown every time content is modified
   jQuery('.editable').bind('hallomodified', function(event, data) {
     showSource(data.content);
   });
+
   jQuery('#source').bind('keyup', function() {
     updateHtml(this.value);
   });
-  showSource(jQuery('.editable').html());
+  
+  // initialize
+  if ($('#source').val() === "")showSource(jQuery('.editable').html());   
+  else  updateHtml($('#source').val());
+  
+
+  // a very simple verification, might change verification into augularJS
+  $("#blogpost-form").submit( function onSubmit(event) {
+    if ( $("input[name=post_title]").val() == ""  ){
+      alert("title cannot be null");
+      event.preventDefault();
+      return;
+    }
+    if ( $("textarea[name=content]").val() == "") {
+      alert("content cannot be null");
+      event.preventDefault();
+      return;
+    }
+  })
+
 }); 
