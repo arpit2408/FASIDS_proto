@@ -2,9 +2,7 @@ extends ../layout
 
 block additionalCSS
 block renderBody
-  -function getDateString(date){
-    -return momentlib(date).format("MMM Do YYYY");
-  -}
+  include ./blogViewUtility
   .divide80
   .container.blog-left-img
     .row
@@ -105,9 +103,9 @@ block renderBody
             .blog-post
               .row
                 .col-md-6.margin20
-                  a(href='blogs/first-blog')
+                  a(href='blogs/singlepost/#{post.url_title}')
                     .item-img-wrap
-                      img.img-responsive(src='#{glblprefix}/img/img-5.jpg', alt='workimg')
+                      img.img-responsive(src='#{getMainPic(post.getMainPicUrl())}', alt='workimg')
                       .item-img-overlay
                         span
                   // work link
@@ -124,10 +122,14 @@ block renderBody
                         i.fa.fa-tag
                         a(href='#')=tag
                   h2
-                    a(href='blogs/first-blog')=post.post_title
+                    a(href='blogs/singlepost/#{post.url_title}')=post.post_title
                   p=post.preivew(120)
                   p
-                    a.btn.btn-theme-dark(href='#') Read More...
+                    a.btn.btn-theme-dark.margin-right-10(href='#') Read More...
+                    if (isAuthenticated && user.usercat === 0)
+                      a.btn.btn-theme-dark.margin-right-10(href="./blogs/update/#{post.url_title}") Update
+                      a.btn.btn-theme-dark(href="./blogs/delete/#{post.url_title}") Delete
+
 
         ul.pager
           li.previous

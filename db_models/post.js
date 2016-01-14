@@ -8,6 +8,7 @@ var post_schema = new mongoose.Schema({
   "poster_id":{type: mongoose.Schema.ObjectId, ref: 'User'},
   "post_cat":{type:Number, min:0, max:4},   // used for the icons     1 main post in QA, 2 reply to main post, 3 blogpost
   "post_title":String,
+  "url_title":{type:String, index:{unique:true}},
   "post_time": Date,
   "updated_at": {type: Date, default: Date.now},
   "post_viewed":Number,
@@ -92,6 +93,16 @@ post_schema.method({
       wordwrap:false
     }).substring(0,length);
   },
+  getMainPicUrl: function (){
+    var url = "";
+    try{
+      var reg = /^!\[.*\]\(([^\s]+)(\s*".*")?\)/;
+      url = this.content.match(reg)[1];
+    } catch (e) {
+      url = "";
+    }
+    return url;
+  },
   destroy : function ( callback){
     var this_post = this;
     this_post.remove(function onRemovePostInstance (err, post){
@@ -134,6 +145,10 @@ post_schema.static({
   getAllFollowUps: function( main_post_id, callback){
     var Model = this;
     Model.findOne({"_id": main_post_id}).populate('replies poster_id').exec(callback);
+  },
+  genUrlTitle: function ( post){
+    if (typeof(post) === "string") return encodeURIComponent( post.replace(/\s+/g, "-"));
+    return encodeURI( post.post_title.replace(/\s+/g, "-").toLowerCase());
   },
   // This method is to populate poster_id of all the replies
   staticLinkPostWithUser:function(mongoArray){

@@ -1,0 +1,131 @@
+extends ../layout
+
+block additionalCSS
+
+block renderBody
+  include ./blogViewUtility
+  include ../snippets/breadcrum
+  +breadcrumb(breadcrumTitle, pathToHere)
+  .divide60
+  // blog full main container
+  .container
+    .row
+      .col-md-8
+        .blog-post
+          if (post.getMainPicUrl() !== "")
+            div
+              img.img-responsive(src='#{getMainPic(post.getMainPicUrl())}', alt='workimg')
+          ul.list-inline.post-detail
+            li
+              | by 
+              a(href='#')=post.poster_id.displayName()
+            li
+              i.fa.fa-calendar
+              | #{getDateString(post.post_time)}
+            li
+              each tag in post.tags
+                i.fa.fa-tag
+                a(href='#')=tag
+            //- li
+            //-   i.fa.fa-comment
+            //-   a(href='#') 6 Comments
+          meta(name="article_markdown", content=post.content)
+          .divide20
+          article
+        // blog post
+        if (isAuthenticated && user.usercat === 0)
+          .row
+            .col-xs-2
+              p Admin Panel
+            .col-xs-9
+              a.btn.btn-theme-bg.margin-right-10(href="../update/#{post.url_title}") update
+              a.btn.btn-theme-bg.margin-right-10(href="../delete/#{post.url_title}") delete
+          .divide50
+        .about-author
+          h4.colored-text About the Author
+          img.img-responsive(src='#{glblprefix}/img/team-3.jpg', alt='author_profile')
+          p
+            | FASIDS is one project of KEL lab of Department of Entomology of TAMU. The purpose of this project is to aim management of imported fire ant. The project is consisted of
+            | map or landscape tools, question and answer section, and reports and knowledge base. 
+            a(href = "http://entomology.tamu.edu/people/coulson-robert/") Prof. Coulson 
+            | oversees and 
+            a(href = "http://entomology.tamu.edu/people/tchakerian-dr-maria-d/") Dr. Maria Tchakerian 
+            | manages this project. 
+            a(href="https://www.linkedin.com/in/boweiliujs") Bowei Liu 
+            | is the software developer of this project. 
+        // end of about author
+        //- .comment-post
+          h3 3 Comments
+          .row
+            .col-md-12
+              .comment-list
+                h4
+                  img.img-responsive(src='#{glblprefix}/img/team-2.jpg', alt='replier_profile')
+                  | by User Name1
+                  a.btn.btn-xs.btn-theme-dark(href='#') Reply
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
+              // comments list
+            .col-md-10.col-md-offset-1
+              .comment-list
+                h4
+                  img.img-responsive(src='#{glblprefix}/img/team-3.jpg', alt='replier_profile')
+                  | by User Name2
+                  a.btn.btn-xs.btn-theme-dark(href='#') Reply
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
+              // comments list
+            .col-md-12
+              .comment-list
+                h4
+                  img.img-responsive(src='#{glblprefix}/img/team-4.jpg', alt='replier_profile')
+                  | by User Name3
+                  a.btn.btn-xs.btn-theme-dark(href='#') Reply
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem quam, adipiscing condimentum tristique vel, eleifend sed turpis. Pellentesque cursus arcu id magna euismod in elementum purus molestie
+              // comments list
+        // comments
+        ul.pager
+          li.previous
+            a(href='#') ← Previous Blog
+          li.next
+            a(href='#') Next Blog →
+        // pager
+        .divide60
+        //- .comment-form
+          h3 Leave Comment
+          .form-contact
+            form(role='form')
+              .form-group
+                label(for='name') Name
+                input#name.form-control(type='email', required='')
+              .form-group
+                label(for='email') Email
+                input#email.form-control(type='password', required='')
+              .form-group
+                label(for='message') Comment
+                textarea#message.form-control(rows='7', required='')
+              button.btn.btn-theme-bg.btn-lg.pull-right(type='submit') Comment
+      // col
+      include ./blogsidebar
+
+    // row for blog post
+  
+  .divide60
+
+
+
+block additionalJS
+  script(src='#{glblprefix}/assets/editablemarkdown/showdown.js')
+  script().
+    var converter = new Showdown.converter();
+    var htmlize = function(content) {
+      return converter.makeHtml(content);
+    };
+    var reg = /^!\[.*\]\(([^\s]+)(\s*".*")?\)/;
+    var htmlContent =  htmlize( jQuery("meta[name=article_markdown]").attr("content").replace( reg,""));
+    jQuery('article').html( htmlContent ); 
+
+
+
+
