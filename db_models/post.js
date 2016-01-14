@@ -147,8 +147,8 @@ post_schema.static({
     Model.findOne({"_id": main_post_id}).populate('replies poster_id').exec(callback);
   },
   genUrlTitle: function ( post){
-    if (typeof(post) === "string") return encodeURIComponent( post.replace(/\s+/g, "-"));
-    return encodeURI( post.post_title.replace(/\s+/g, "-").toLowerCase());
+    if (typeof(post) === "string") return encodeURIComponent( post.replace(/\s+/g, "-").toLowerCase());
+    return encodeURIComponent( post.post_title.replace(/\s+/g, "-").toLowerCase());
   },
   // This method is to populate poster_id of all the replies
   staticLinkPostWithUser:function(mongoArray){

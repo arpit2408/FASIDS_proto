@@ -12,7 +12,7 @@ exports.ensureAuthenticated = function (req, res, next) {
   switch (req.method){
     case "GET":
       if (!req.isAuthenticated()) {
-        res.redirect(glblprefix + "/users/signin?referral_url=" + req.originalUrl );
+        res.redirect(glblprefix + "/users/signin?referral_url=" +  encodeURIComponent(req.originalUrl) );
         return;
       }
     break;
@@ -34,7 +34,7 @@ exports.ensureGroup = function (req, res, next){
   switch (req.method){
     case "GET":
       if (!req.isAuthenticated()  || group.indexOf(req.user.usercat) < 0 ) {
-        res.redirect(glblprefix + "/users/signin?referral_url=" + req.originalUrl );
+        res.redirect(glblprefix + "/users/signin?referral_url=" + encodeURIComponent(req.originalUrl) );
         return;
       }
     break;

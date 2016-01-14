@@ -125,7 +125,7 @@ block renderBody
                     a(href='blogs/singlepost/#{post.url_title}')=post.post_title
                   p=post.preivew(120)
                   p
-                    a.btn.btn-theme-dark.margin-right-10(href='#') Read More...
+                    a.btn.btn-theme-dark.margin-right-10(href='blogs/singlepost/#{post.url_title}') Read More...
                     if (isAuthenticated && user.usercat === 0)
                       a.btn.btn-theme-dark.margin-right-10(href="./blogs/update/#{post.url_title}") Update
                       a.btn.btn-theme-dark(href="./blogs/delete/#{post.url_title}") Delete
