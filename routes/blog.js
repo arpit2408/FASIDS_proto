@@ -62,7 +62,7 @@ router.get('/create', routesHelpers.ensureGroup.bind([0]), function (req, res, n
 });
 
 // CREATE part2
-router.post('/create', routesHelpers.ensureAuthenticated, function (req, res, next){
+router.post('/create', routesHelpers.ensureGroup.bind([0]), function (req, res, next){
   var newblogpost = new req.DB_POST({
     role:3,
     poster_id: req.user._id,
@@ -80,7 +80,7 @@ router.post('/create', routesHelpers.ensureAuthenticated, function (req, res, ne
   });
 });
 
-router.get('/update/:url_title', routesHelpers.ensureAuthenticated, function (req, res, next){
+router.get('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function (req, res, next){
   req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).exec( function (err, blogpost){
     if (err) return next(err);
     if (!blogpost) return next( new Error("requested resource not found"));
@@ -100,7 +100,7 @@ router.get('/update/:url_title', routesHelpers.ensureAuthenticated, function (re
 * Will be used for ajax saving function for blogpost
 * UPDATE api, standard json return
 */
-router.post('/update/:url_title', routesHelpers.ensureAuthenticated, function (req,res,next){
+router.post('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function (req,res,next){
   req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).exec( function (err, blogpost){
     if (err) return next(err);
     
@@ -117,7 +117,7 @@ router.post('/update/:url_title', routesHelpers.ensureAuthenticated, function (r
 
 
 // DELETE api, standard json return
-router.delete('/delete', function (req, res, next){
+router.get('/delete',routesHelpers.ensureGroup.bind([0]) ,function (req, res, next){
   res.send("DELETE /blogs/delete\n");
 });
 
