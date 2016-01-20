@@ -125,11 +125,13 @@ router.get("/dashboard",ensureAuthenticated, function (req, res, next) {
     var db_polygons = results[1];
     var questions = [];
     var answers = [];
+    var blogpost = [];
     results[0].forEach(function (result, index, ar){
       if (result.role){
         // console.log("ehjhe");
         if (result.role === 1) questions.push(result);
-        else  answers.push(result);
+        else if (result.role === 2)  answers.push(result);
+        else if (result.role === 3) blogpost.push(result);
       }
     });
     res.render("users/dashboard.jade", {
