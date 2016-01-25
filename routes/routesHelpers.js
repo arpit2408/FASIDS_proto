@@ -1,5 +1,6 @@
 // routesHelpers.js, this file stores some commonly used helper functions used in routes file
-var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
+var glblprefix = process.env.GLOBALPREFIX ||"";
+exports.glblprefix = process.env.GLOBALPREFIX ||"";
 exports.processReqUser = function ( req_user){  
   if (req_user) var temp_user = req_user.toObject();
   else return null;
