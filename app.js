@@ -23,7 +23,7 @@ var mongoose = require('mongoose'),  // newly added, regarding init express
 
 var app = express();
 var windows_base = express();  // adding common prefix router
-var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
+var glblprefix = process.env.GLOBALPREFIX ||"";
 // view engine setup
 app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 3000)
 app.set('views', path.join(__dirname, 'views'));
@@ -102,7 +102,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-if (process.env.NONEIISNODE){
+if (glblprefix === ""){
   var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
   var server = http.createServer(app);
   var boot = function (override_port) {

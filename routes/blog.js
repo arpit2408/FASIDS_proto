@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var moment = require('moment');
 var router = require('express').Router();
-var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
 var routesHelpers = require('./routesHelpers');
+var glblprefix = routesHelpers.glblprefix;
 
 // READ index
 router.get('/', function (req, res, next){

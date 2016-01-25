@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var router = require('express').Router();
-var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
 var routesHelpers = require('./routesHelpers');
+var glblprefix = routesHelpers.glblprefix;
 var processReqUser = routesHelpers.processReqUser;
 var ensureAuthenticated = routesHelpers.ensureAuthenticated;
 

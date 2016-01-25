@@ -5,7 +5,7 @@ var router = express.Router();
 var _ = require('underscore');
 var routesHelpers = require('./routesHelpers');
 var readFile = Promise.denodeify(require('fs').readFile); // see https://www.promisejs.org/
-var glblprefix = (process.env.NONEIISNODE) ? "":"/node/fasids";
+var glblprefix = routesHelpers.glblprefix;
 function readJSON(filename, callback){  //// see https://www.promisejs.org/
   // If a callback is provided, call it with error as the first argument
   // and result as the second argument, then return `undefined`.
