@@ -3,7 +3,8 @@ extends ../layout
 block additionalCSS
   link(href="#{glblprefix}/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
   link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')
-
+  script(src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
+  script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js")
 block renderBody
   //-include ../snippets/breadcrum
   .mapcover#mapcover
@@ -52,6 +53,7 @@ block renderBody
       .row
         .col-xs-12
           span.btn.btn-default#map-tool-cancel cancel
+  //- .modal-container(ng-app="preparationModal", ng-controller="preparationModalCtrl")
   .modal-container
     #purpose-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
       .modal-dialog(role='document')
@@ -59,7 +61,7 @@ block renderBody
           .modal-header
             button.close(type='button', data-dismiss='modal', aria-label='Close')
               span(aria-hidden='true') ×
-            h4#myModalLabel.modal-title Prepare treatment
+            h4#myModalLabel.modal-title {{title}}
           .modal-body
             form#purpose
               div
@@ -86,20 +88,25 @@ block renderBody
                   |  Broadcast Baits
               .divide15
               .row
-                .col-xs-4
+                .col-xs-5
                   .form-group
                     label(for='mound-density-input') Mound Density
                     .input-group
                       input#mound-density-input.form-control(type='number', name='mound_density', placeholder='Put mound density here')
                       .input-group-addon
-                        | m
+                        | ft
                         sup 2
-              
+                  .form-group
+                    label(for='mound-number-input') Mound Number
+                    .input-group
+                      input#mound-number-input.form-control(type='number', name='mound_number', placeholder='Put estimated mound number here')
+                      .input-group-addon
+                        | mds
                   .form-group
                     label(for='polygon-name') Polygon Name
                     input#polygon-name.form-control(type='text', name='polygon_name', placeholder='The polygon name')
 
-                .col-xs-8
+                .col-xs-7
                   .form-group
                     label(for='polygon-address') Polygon Address
                     input#polygon-address.form-control(type='text', name='address', placeholder='The address where the polygon is located')

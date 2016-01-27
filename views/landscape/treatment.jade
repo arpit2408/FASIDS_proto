@@ -46,13 +46,15 @@ block renderBody
       .col-xs-12
         h4 Selected #{geojson.properties.treatment} Method
         p 
-          | The total area is #{ geojson.properties.total_area.toFixed(1) } m
+          | The total area is #{ geojson.convertMtSquareToFtSquare().toFixed(1) } ft
           sup 2
 
         if geojson.properties.treatment && geojson.properties.treatment.toLowerCase() === "imt"
           p 
-            | Mound density is #{geojson.properties.mound_density} / m
+            | Mound density is #{geojson.convertMoundDensityIntoFt()} / ft
             sup 2
+          p Estimated there are #{geojson.getMoundsNum()} mounds.
+
     hr
     .comparison-table-container
       table.table.table-striped

@@ -12,7 +12,7 @@ var polygon_geojson_schema = new mongoose.Schema({
   properties:{
     landusage:String,
     total_area:Number,
-    mound_density:Number,
+    mound_density:Number,  // input is imperial units ft^2
     polygon_name:String,
     address:String,
     notes:String, // used by user to input their notes about this polygon
@@ -32,7 +32,31 @@ var polygon_geojson_schema = new mongoose.Schema({
 // define instance methods
 polygon_geojson_schema.method({
   // someMethod: function (...){}
+  convertMtSquareToFtSquare: function (){
+    return this.properties.total_area * 10.76391045;
+  },
 
+  convertMoundDensityIntoFt: function (){
+    return this.properties.mound_density / 10.76391045;
+  },
+  getMoundsNum : function (){
+    return (this.properties.total_area * this.properties.mound_density).toFixed(1);
+  }
+});
+
+polygon_geojson_schema.static({
+  convertMtSquareToFtSquare: function ( mtSquare){
+    return mtSquare * 10.76391045;
+  },
+  convertFtSquareToMtSquare: function ( footSquare){
+    return footSquare /10.76391045;
+  },
+  convertMoundDensityIntoMetric: function ( ftSquareDensity){
+    return ftSquareDensity  * 10.76391045;
+  },
+  convertMoundDensityIntoFt: function (mtSquareDensity){
+    return mtSquareDensity  / 10.76391045;
+  }
 });
 
 
