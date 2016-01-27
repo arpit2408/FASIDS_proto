@@ -25,11 +25,6 @@ function ensureAdmin(req, res, next){
 var ensureAuthenticated = routesHelpers.ensureAuthenticated;
 // function
 var processReqUser = routesHelpers.processReqUser;
-// callback of promise catch
-function thisError(err){
-  return next(err);
-}
-
 /*routes
 get    "/" index page
 //********* Q & A **********
@@ -272,6 +267,7 @@ router.get('/antactivity', function (req, res, next){
 /*map applications */
 router.get('/landscape/homeownermng', function (req, res, next) {
   res.render("landscape/homeownermng.jade",{
+    title: 'Landscape Management Tool | FASIDS',
     isAuthenticated: req.isAuthenticated(),
     user: processReqUser(req.user),
     activePage:"Landscape",
@@ -327,6 +323,7 @@ router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, fu
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
   }
+  geojson.properties.mound_density = req.db_models.PolygonGeojson.convertMoundDensityIntoMetric(geojson.properties.mound_density);
   req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
     if (error) return next(error);
     if (!the_polygon){
@@ -396,6 +393,7 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
   }
+  geojson.properties.mound_density = req.db_models.PolygonGeojson.convertMoundDensityIntoMetric(geojson.properties.mound_density);
   geojson.properties.owner = req.user._id;
   var db_geojson = new req.db_models.PolygonGeojson(geojson);
   db_geojson.save( function ( error){

@@ -44,6 +44,7 @@ $(document).ready(function(){
       zoom: 14,
       zoomControl:false,    //left side
       panControl:false,     //left top corner: 
+      tilt:0,
       // mapTypeControl:false  //right top corner: "map|satellite"
       mapTypeControlOptions: {
         // style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
@@ -51,7 +52,18 @@ $(document).ready(function(){
       }
   });
 
+
   // preparing modal
+  // The preparation modal is one ng app, I do not know why there is loading error when initing angularAPPs
+  // ( function (){
+  //   var preparationModal = angular.module("preparationModal",['ngRoute']);
+  //   preparationModal.controller("preparationModalCtrl", function ($scope){
+  //     $scope.title  = "test";
+  //   });
+
+  // })();
+
+
   $("#save-prepared-treatment").click(function savePreparedTreatment(){
     var target_polygon = window.target_polygon;
     var formdata = $("form#purpose").serializeArray();
@@ -62,6 +74,7 @@ $(document).ready(function(){
       if ( value[1].match(/^\d+(\.\d+)*$/g ) ){ value[1] = Number(value[1]); } // whole string match number pattern can be casted into string, otherwise, keep string
       data[value[0]] = value[1];
     });
+    if (data['mound_number']) delete data['mound_number'];
     console.log(data);
     if (target_polygon !== null ){
       _.extendOwn(target_polygon.properties, data);
@@ -216,6 +229,7 @@ $(document).ready(function(){
     },
 
     fillForm: function(jq_modal_form, target_polygon){
+      var ClassRef = this;
       jq_modal_form.find("input[type=radio]").prop("checked",false);
       jq_modal_form.find("input[type=number], input[type=text], textarea").val("");
       if (target_polygon.properties.landusage){
@@ -227,6 +241,13 @@ $(document).ready(function(){
 
       var omitted_properties = _.omit(target_polygon.properties, ["landusage","treatment"]);
       _.each(omitted_properties, function (value, key, obj){
+        if (key==="mound_density") {
+          if ($('input[name='+key+']')){
+            $('input[name='+key+']').val(value / 10.763910); 
+            $('#mound-number-input').val(map_tool_helper.getTotalAreaOf(target_polygon) * value );
+            return;
+          }
+        }
         if ($('input[name='+key+']')){
           $('input[name='+key+']').val(value);
         }
@@ -503,13 +524,22 @@ $(document).ready(function(){
     map_tool_helper.codeAddress(input);
   });
 
+
+
   $('#broadcast-radio, #imt-radio').change(function(){
     if($('#broadcast-radio').is(":checked")){
       $("#mound-density-input").prop('disabled', true);
+      $("#mound-number-input").prop('disabled', true);
     } else {
       $("#mound-density-input").prop('disabled', false);
+      $("#mound-number-input").prop('disabled', false);
     }
   });
-
+  $('#mound-density-input').keyup(function (){
+    $('#mound-number-input').val( $('#mound-density-input').val() * 10.76391045 *  map_tool_helper.getTotalAreaOf( window.target_polygon) );
+  });
+  $('#mound-number-input').keyup(function (){
+    $('#mound-density-input').val( $('#mound-number-input').val() / 10.76391045 /  map_tool_helper.getTotalAreaOf( window.target_polygon) );
+  });
 });
 
