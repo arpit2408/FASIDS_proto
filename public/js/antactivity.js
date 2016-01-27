@@ -105,15 +105,17 @@ $(document).ready(function(){
         var i = 0 ;
         var day_from_today = 0;
         var forecast4 = [[],[],[],[],[],[]];
+        
         data.list.forEach(function(element, index, ar){
           var tempDate = new Date(element.dt * 1000);
-          day_from_today = tempDate.getDate() - crtDate.getDate();
-
-          forecast4[day_from_today ].push(element);
-
+          day_from_today = tempDate.getDate() - crtDate.getDate();  //  At the end of month this could be a bug
+          if (day_from_today >= 0) {
+            forecast4[day_from_today ].push(element);
+            i ++;
+          }
         });
 
-        forecast4 = forecast4.slice(0,5);
+        forecast4 = forecast4.slice(0,i);
         //prepare forecast4_daysummary
 
         var forecast4_length = forecast4.length
