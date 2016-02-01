@@ -144,25 +144,12 @@ $(document).ready(function(){
       map_tool_register.fillForm($('form#purpose'), target_polygon);
       $("#purpose-modal").modal("show");
     } else if ( map_tool_register.get("map_tool_genresult") === true){
-      if(!page_status.isAuthenticated){
-        return alert("Please sign in before submit this polygon to server\n I will make this alert look nicer in future");
-      }
-      if (page_status.model_op==="patch"){
-        location.href = glblprefix + "/landscape/treatment/" + this_polygon._id;
-        return;
-      }
-      var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
-      $('input#geojson').val(JSON.stringify(geoJsonPolygon));
-      if (this_polygon.saved === true){
-        return alert("This polygon has already been saved, please go to your profile to check");
-      }
-      this_polygon.saved = true;
-      $('form#treatment').submit(); // commit it for for dubug
+      
+      map_tool_helper.saveAndGenResult(this_polygon);
+
     } else if (map_tool_register.get("map_tool_save") === true){
-      var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
-      $('form#patch input').val(JSON.stringify(geoJsonPolygon) );
-      console.log(JSON.stringify(geoJsonPolygon)  );
-      $('form#patch').submit();
+      map_tool_helper.saveOnly(this_polygon);
+
     }
     else {
     }
@@ -331,8 +318,13 @@ $(document).ready(function(){
       });
 
       this.on("change:map_tool_genresult", function (){
-        if (ClassRef.get("map_tool_genresult")  === true){
+        if (ClassRef.get("map_tool_genresult")  === true){  // user clicked save and genresult
           $("#map-tool-genresult").addClass("active");
+          if (polygons.length === 1){
+            map_tool_helper.saveAndGenResult(polygons[0]);
+            ClassRef.set("map_tool_genresult", false);
+          }
+
         } else {
           $("#map-tool-genresult").removeClass("active");
         }    
@@ -340,6 +332,8 @@ $(document).ready(function(){
       this.on("change:map_tool_save", function (){
         if (ClassRef.get("map_tool_save")  === true){
           $("#map-tool-save").addClass("active");
+          map_tool_helper.saveOnly(polygons[0]);
+          ClassRef.set("map_tool_save", false);
         } else {
           $("#map-tool-save").removeClass("active");
         }    
@@ -499,6 +493,30 @@ $(document).ready(function(){
       map_tool_register.renderPolygonProperly(temp_polygon);
       var bounds = new google.maps.LatLngBounds(temp_polygon.properties.bounds.sw, temp_polygon.properties.bounds.ne);
       gmap.fitBounds(bounds);
+    },
+    saveAndGenResult: function (this_polygon){
+
+      if(!page_status.isAuthenticated){
+        return alert("Please sign in before submit this polygon to server\n I will make this alert look nicer in future");
+      }
+      if (page_status.model_op==="patch"){
+        location.href = glblprefix + "/landscape/treatment/" + this_polygon._id;
+        return;
+      }
+      var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
+      $('input#geojson').val(JSON.stringify(geoJsonPolygon));
+      if (this_polygon.saved === true){
+        return alert("This polygon has already been saved, please go to your profile to check");
+      }
+      this_polygon.saved = true;
+      $('form#treatment').submit(); // commit it for for dubug
+
+    },
+    saveOnly: function(this_polygon){
+      var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
+      $('form#patch input').val(JSON.stringify(geoJsonPolygon) );
+      console.log(JSON.stringify(geoJsonPolygon)  );
+      $('form#patch').submit();
     }
 
   }; // end of map_tool_helper
