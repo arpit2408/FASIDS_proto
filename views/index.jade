@@ -5,13 +5,13 @@ block additionalCSS
 block renderBody
   .divide60
 
-  h2.title.text-center Fire Ant Spatial Information and Decision Support (FASIDS)
+  h2.title.text-center Fire Ant Spatial Information and Decision Support (FASIDS) system
   
   .pic-below-title.parallax-window(data-parallax="scroll", data-image-src="#{glblprefix}/img/bg-6.jpg")
     .container
       .row.breadcrumb-text-row
         .col-xs-12.text-center
-          h3 FASIDS helps you plan with ease
+          h3 FASIDS: A product of the Knowledge Engineering Laboratory
           p 
             | Do not know which kind of fire ant control product to choose? 
             br 
@@ -30,7 +30,7 @@ block renderBody
             .services-box-info
               h4 Knowledge base
               p
-                | FASIDS synthesizes an existing Red Imported Fire Ant (RIFA) knowledge base to increase the efficieny of RIFA control across Texas.
+                | FASIDS provides a synthesis of information for use in suprression of the Red Imported Fire Ant (RIFA)
 
         .col-md-4.margin20
           .services-box(data-wow-delay='0.2s', style='visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;')
@@ -40,7 +40,7 @@ block renderBody
             .services-box-info
               h4 Statewide Data
               p
-                | Store and display statewide data about distribution, abundance, and treatment of RIFA impacts.
+                | FASIDS provides an archive of statewide data on the distribution and abundance of the Read Imported Fire and related invasive species.
 
         .col-md-4.margin20
           //-.wow.animated.fadeInUp, I removed classed at left
@@ -51,22 +51,20 @@ block renderBody
             .services-box-info
               h4 Information Sharing
               p
-                | Encourage individuals and organizations facing RIFA management issues to share the information in a way that benefits all RIFA stakeholders
+                | FASIDS provides a means of sharing information on the Red Imported Fire Ant among stakeholders
 
   section#services-bg-wrap
     .container
       .row
        .col-xs-12.text-center
-          h3 Our Misson
+          h3 Our Goal
         .col-xs-8.col-xs-offset-2
           hr
         .col-xs-12.text-center
           p
-            | Equipped with academic knowledge and state-of-art Internet technology;
+            | The goal of FASIDS isto provide a synthesis of knowledge gained from research
             br
-            |  FASIDS aims to integrate, interpret, and deliver red imported fire ant (RIFA)
-            br
-            |  information for planning, porblem solving, and decision making. 
+            |  on the Red Imported Fire Ant for the purposes of planning, problem-solvin, and decision making
   .container
     .divide30
     .row
@@ -76,18 +74,19 @@ block renderBody
         div
           h2 Manage Fire Ants on Maps
           p
-            | Our customized Google map application allows you to measure the area of treatment. It suggests what fire ant products suit your needs, and calculates the amount of product required for treatment.
+            | Through the use of Google Maps API, this module provides a means of measuring the proposed area of treatment
+            | , suggests suitable products for use suppresssion, and calculates the amount of product requried for treatment.
         ul.list-unstyled
           li
             i.fa.fa-check
-            |  Draw and mark area on map
+            |  Define the boundary of the treatment area on a map
           li
             i.fa.fa-check
-            |  Save marked area to profile
+            |  Save the defined area to a profile
           li
             i.fa.fa-check
-            |  Received suggested fire ant treatment products and calculated amount of product needed for applications
-        a.btn.border-theme(href='#{glblprefix}/landscape/homeownermng') Visit Homeowner Tool
+            |  Received suggested ant treatment products and calculated amount of product needed for applications
+        a.btn.border-theme(href='#{glblprefix}/landscape/homeownermng') Visit Landscape Management Tool
     .divide30
 
   .lightbluebg
@@ -96,9 +95,9 @@ block renderBody
       .row
         .col-md-6.img-responsive
           div
-            h2 Find Ant Distribution
+            h2 Distribution of Ant Species in Texas
             p
-              | Our map application allows to display the distributions of ant by their scientific names within the State of Texas.
+              | This module provides access by scientific name to spatially explicit distributions of ant species in Texas.
           ul.list-unstyled
             li
               i.fa.fa-check
@@ -116,19 +115,19 @@ block renderBody
         img.img-responsive(src='#{glblprefix}/img/screenshots/QAindex.png' ,alt='fire ant distribution')
       .col-md-6
         div
-          h2 Have Questions? Do you want to share solutions?
+          h2 Questions and Answers Exchange
           p
-            | Try our Question &amp; Answer section. Rate the answers or save the answers by giving a star.
+            | This module facilitates interaction among stakeholders through posting questions and answers and rating responses.
         ul.list-unstyled
           li
             i.fa.fa-check
-            |  Post questions and answers on map in Rich Text Format
+            |  Post questions and answers in Rich Text Format
           li
             i.fa.fa-check
             |  Post Editable Functionality
           li
             i.fa.fa-check
-            |  Rate questions and answers
+            |  Evaluate questions and answers
         a.btn.border-theme(href='#{glblprefix}/qa') Visit Q &amp; A
     .divide30
 
