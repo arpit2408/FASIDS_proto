@@ -1,5 +1,5 @@
-sass style.scss style.css
-copy /Y style.css "..\public\css\"
-copy /Y style.css.map "..\public\css\"
-del /Q style.css
-del /Q style.css.map
+
+copy /y .\style.css ..\public\css
+copy /y .\style.css.map ..\public\css
+del /q .\style.css
+del /q .\style.css.map
