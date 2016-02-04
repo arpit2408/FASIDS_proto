@@ -374,6 +374,9 @@ p.sub-text {
   .navbar-default .navbar-header #TAMUlogo {
     height: 50px;
     width: 56px; }
+  .navbar-default .navbar-header #KELlogo {
+    width: 80px;
+    height: 40px; }
 
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
@@ -2610,7 +2613,7 @@ label span {
   #clients-carousel .center-heading h2 {
     color: #fff; }
 
-/*cta-1 and cta-2 are adjacent to footer, see career.html and element.html, 类似宣言*/
+/*cta-1 and cta-2 are adjacent to footer, see career.html and element.html, 绫讳技瀹ｈ█*/
 #cta-1 {
   padding: 40px 0;
   background-color: #500000;
