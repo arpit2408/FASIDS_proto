@@ -8,7 +8,7 @@ var post_schema = new mongoose.Schema({
   "poster_id":{type: mongoose.Schema.ObjectId, ref: 'User'},
   "post_cat":{type:Number, min:0, max:4},   // used for the icons     1 main post in QA, 2 reply to main post, 3 blogpost
   "post_title":String,
-  "url_title":{type:String, index:{unique:true}},
+  "url_title":{type:String, required: false},  // URL title no need to be uniq
   "post_time": Date,
   "updated_at": {type: Date, default: Date.now},
   "post_viewed":Number,
