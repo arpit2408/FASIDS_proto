@@ -95,6 +95,7 @@ router.post('/qa/question', ensureAuthenticated, function (req, res, next) {
     role:2,
     poster_id: req.user._id,
     post_time: new Date(),
+    // need to assign urlTitle
     reply_to_post: (req.query.replyto)?req.query.replyto:null,
     reply_to_mainpost:req.query.qid,
     content: req.body.content,
@@ -166,6 +167,7 @@ router.post('/qa/posting', ensureAuthenticated, function (req, res, next){
     poster_id: req.user._id,
     post_cat:(req.body.post_cat)?parseInt(req.body.post_cat):1,
     post_title:req.body.title,
+    url_title: req.DB_POST.genUrlTitle(req.body.title),
     post_time:currentDate,
     post_viewed:0,
     replied_post:0,
