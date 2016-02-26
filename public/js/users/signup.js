@@ -1,8 +1,9 @@
 var app = angular.module('signupForm', []);
 app.controller('signupCtrl', ['$scope', function($scope) {
   $scope.submit = function(user) {
+    var prefix = (location.hostname.search("fasids.tamu.edu") >= 0 )? "/node/fasids" :"";
 
-    $.get( "/api/lookupuser?targetuser="+encodeURIComponent(user.email)  , function( data ) {
+    $.get( prefix + "/api/lookupuser?targetuser="+encodeURIComponent(user.email)  , function( data ) {
       if (data.api_result.search("no such user")>=0){
         $("#signup-form").submit();
       } else {
