@@ -117,6 +117,21 @@ block renderBody
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal') Close
             button.btn.btn-primary#save-prepared-treatment(type='button') Finish Preparation
+
+
+  .modal.fade(tabindex='-1', role='dialog', id='signin-required-modal')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h4.modal-title Sign in needed 
+        .modal-body
+          p Please sign in at right-top corner before using landscape management.
+        .modal-footer
+          button.btn.btn-default(type='button', data-dismiss='modal') Close
+
+
   .hidden
     form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
       input#geojson(type='text', name="geojson")

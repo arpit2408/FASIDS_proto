@@ -3,22 +3,25 @@ $(document).ready(function(){
   (function settingMapContainerHeight(){
     // The reason might because the nav bar gives padding 70,
     $("#mapcover").height($(window).height() - 1 * $(".navbar").height());
-  })();    
+  })();
+
   google.maps.Polygon.prototype.my_getBounds=function(){
       var bounds = new google.maps.LatLngBounds();
       this.getPath().forEach(function(element,index){
         // console.log("DEBUGG:" + element.toString());
         bounds.extend(element);
       })
-      if (bounds.isEmpty()){alert("FK")}
-      // console.log(bounds.toString());
-      // console.log(bounds.getCenter().toString());
+      if (bounds.isEmpty()){alert("bounds should not be empty")}
       return bounds;
   }
   var page_status = JSON.parse($("meta[name=\"page_status\"]").attr("content"));
 
   // map_tool_register state updated by map tool panel buttons 
   $("#map-tools-box .btn:not(:last)").click( function mapToolOpUpdating(){
+    if (page_status.isAuthenticated === false){
+      $('#signin-required-modal').modal("show"); // if user has not signed, he cannot use these function
+      return;
+    }
     var target_property = $(this).attr("data-operation");
     if (map_tool_register.get(target_property) === true){
       map_tool_register.set(target_property,false);
