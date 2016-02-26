@@ -5,7 +5,7 @@ app.controller('signupCtrl', ['$scope', function($scope) {
 
     $.get( prefix + "/api/lookupuser?targetuser="+encodeURIComponent(user.email)  , function( data ) {
       if (data.api_result.search("no such user")>=0){
-        $("#signup-form").submit();
+        $("form[name=signupform]").submit();
       } else {
         return alert("the email address has been used for registration");
       }
