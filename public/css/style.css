@@ -574,6 +574,24 @@ input[type="color"],
   -o-transition: all 200ms ease-in;
   -webkit-transition: all 200ms ease-in;
   transition: all 200ms ease-in; }
+  select.ng-invalid.ng-not-empty,
+  textarea.ng-invalid.ng-not-empty,
+  input[type="text"].ng-invalid.ng-not-empty,
+  input[type="password"].ng-invalid.ng-not-empty,
+  input[type="datetime"].ng-invalid.ng-not-empty,
+  input[type="datetime-local"].ng-invalid.ng-not-empty,
+  input[type="date"].ng-invalid.ng-not-empty,
+  input[type="month"].ng-invalid.ng-not-empty,
+  input[type="time"].ng-invalid.ng-not-empty,
+  input[type="week"].ng-invalid.ng-not-empty,
+  input[type="number"].ng-invalid.ng-not-empty,
+  input[type="email"].ng-invalid.ng-not-empty,
+  input[type="url"].ng-invalid.ng-not-empty,
+  input[type="search"].ng-invalid.ng-not-empty,
+  input[type="tel"].ng-invalid.ng-not-empty,
+  input[type="color"].ng-invalid.ng-not-empty,
+  .form-control.ng-invalid.ng-not-empty {
+    background-color: #fedadc; }
 
 textarea:focus,
 input[type="text"]:focus,

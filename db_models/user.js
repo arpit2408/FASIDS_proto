@@ -6,7 +6,7 @@ var user_schema = new mongoose.Schema({
   "last_name":String,
   "password_hash":String,
   "email":{type: String, index:{unique: true}},
-  "usercat":{type:Number, min:0, max:4},
+  "usercat":{type:Number, min:0, max:4},  // 0 means admin
   "receive_updates":Boolean
   // "wishlist":Array,    // ObjectId literal array
   //regarding OAuth

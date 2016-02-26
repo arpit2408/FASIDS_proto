@@ -565,6 +565,10 @@ input[type="color"],
   @include box-shadow (none);
   background: #FFF;
   @include transition (all 200ms ease-in);
+
+  &.ng-invalid.ng-not-empty{
+    background-color: lighten(#FA787E,20%);
+  }
 }
 textarea:focus,
 input[type="text"]:focus,

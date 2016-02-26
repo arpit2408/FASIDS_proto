@@ -90,4 +90,24 @@ apirouter.get("/getrelation", APIEnsureAuthenticated, function (req, res, next )
   });
 });
 
+
+apirouter.get('/lookupuser', function(req, res, next){
+  var targetUser = req.query.targetuser;
+  var api_route = req.baseUrl +req.path;
+  if (!targetUser){  // in  valid user
+    res.status(404).json({api_result:"error: invalid targetuser query", api_route:api_route});
+    return;
+  }
+  req.DB_USER.findOne({email: targetUser}, function queryCallBack(err, user){
+    if (err) return res.status(500).json({api_result:"error : " + err.message, api_route: api_route});
+    if (!user) return res.json({ api_result:"success : no such user" , api_route: api_route});  // major reason i think it success is that this api is used for confliction preventing
+    var toBeOutputUser = user.toObject();
+    delete toBeOutputUser.password_hash;
+    return res.json({api_result:"success : found user", api_route:api_route, user:toBeOutputUser});
+  });
+});
+
+
+
+
 module.exports = apirouter;
