@@ -73,7 +73,7 @@ router.get('/qa', function (req, res, next){
     if (!query) return next( new Error("no query"));
     // query is like Model.find({"role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param) 
     query.populate('poster_id replies reply_to_mainpost').exec(function (err, posts){
-
+      posts = _.filter(posts, function(post){  return  post.poster_id !== null;});
       res.render('qa', {title:'Question and Answers | FASIDS',
         breadcrumTitle:"Questions and Answers",
         pathToHere:"qa",
@@ -451,6 +451,13 @@ router.get('/landscape/antdistribution_lookup', function (req, res, next){
     res.json(tbr);
   });
 
+});
+
+
+// 02/29/2016 
+router.get('/landscape/instructions', function (req, res, next){
+
+  res.render('landscape/instructions');
 });
 
 module.exports = router;

@@ -18,17 +18,25 @@ $(document).ready(function(){
 
   // map_tool_register state updated by map tool panel buttons 
   $("#map-tools-box .btn:not(:last)").click( function mapToolOpUpdating(){
+    var target_property = $(this).attr("data-operation");
+    if (target_property  === "tutorial" ){
+      console.log(glblprefix);
+      window.open(glblprefix + "/landscape/instructions" );
+      return;
+    }
     if (page_status.isAuthenticated === false){
       $('#signin-required-modal').modal("show"); // if user has not signed, he cannot use these function
       return;
     }
-    var target_property = $(this).attr("data-operation");
-    if (map_tool_register.get(target_property) === true){
-      map_tool_register.set(target_property,false);
-    } else {
-      map_tool_register.clearAllStatus();
-      map_tool_register.set(target_property, true);
-    }
+    
+    if (target_property  !== "tutorial" ){
+      if (map_tool_register.get(target_property) === true){
+        map_tool_register.set(target_property,false);
+      } else {
+        map_tool_register.clearAllStatus();
+        map_tool_register.set(target_property, true);
+      }
+    } 
   });
   $("#map-tool-cancel").click(function mapToolCanceling (){
     map_tool_register.clearAllStatus();
