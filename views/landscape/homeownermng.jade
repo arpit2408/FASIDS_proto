@@ -49,7 +49,9 @@ block renderBody
             span.btn.btn-default#map-tool-genresult(data-operation="map_tool_genresult") Save &amp; See Result
           else if page_status.model_op === "patch"
             span.btn.btn-default#map-tool-genresult(data-operation="map_tool_genresult") See Result
-
+      .row
+        .col-xs-12
+          span.btn.btn-default(data-operation="tutorial") Instructions
       .row
         .col-xs-12
           span.btn.btn-default#map-tool-cancel cancel
@@ -61,11 +63,11 @@ block renderBody
           .modal-header
             button.close(type='button', data-dismiss='modal', aria-label='Close')
               span(aria-hidden='true') ×
-            h4#myModalLabel.modal-title {{title}}
+            h4#myModalLabel.modal-title Edit treatment properties
           .modal-body
             form#purpose
               div
-                b Land Use Type
+                b Land Usage Type
               div
                 label.radio-inline
                   input#housebuilding-radio(type='radio', name='landusage', value='housebuilding')

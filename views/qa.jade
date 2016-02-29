@@ -102,65 +102,65 @@ block renderBody
             h3 No question fits the filter
       else
         each post, index in posts
-          if index % 2 === 1
-            .row.qa-post-title-row.even-numbered-post-row
-              .col-sm-1.col-sm-offset-1.text-center
-                .votes-number=post.votes
-                .votes-text votes
-                .divide10
-                .answers-number=post.replied_post
-                .answers-text answers
-                .divide10
-                .views-combination
-                  span.views-number=post.post_viewed
-                  span.views-text  views
+            if index % 2 === 1
+              .row.qa-post-title-row.even-numbered-post-row
+                .col-sm-1.col-sm-offset-1.text-center
+                  .votes-number=post.votes
+                  .votes-text votes
+                  .divide10
+                  .answers-number=post.replied_post
+                  .answers-text answers
+                  .divide10
+                  .views-combination
+                    span.views-number=post.post_viewed
+                    span.views-text  views
 
-              .col-sm-7
-                .row
-                  .col-xs-12
-                    a.post-title(href="#{glblprefix}/qa/question?qid=#{post._id}") #{post.post_title} 
-                .row
-                  .col-xs-12.text-muted=post.preivew()
+                .col-sm-7
+                  .row
+                    .col-xs-12
+                      a.post-title(href="#{glblprefix}/qa/question?qid=#{post._id}") #{post.post_title} 
+                  .row
+                    .col-xs-12.text-muted=post.preivew()
 
-              .col-sm-3
-                .row
-                  .col-xs-3 [ICON]
-                  .col-xs-9
-                    .row
-                      .col-xs-12
-                        | #{post.poster_id.displayName()}
-                    .row
-                      .col-xs-12
-                        | posted #{getDataString(post.post_time)}
-          else
-            .row.qa-post-title-row
-              .col-sm-1.col-sm-offset-1.text-center
-                .votes-number=post.votes
-                .votes-text votes
-                .divide10
-                .answers-number=post.replied_post
-                .answers-text answers
-                .views-combination
-                .divide10
-                  span.views-number=post.post_viewed
-                  span.views-text  views
-              .col-sm-7
-                .row
-                  .col-xs-12 
-                    a.post-title(href="#{glblprefix}/qa/question?qid=#{post._id}") #{post.post_title} 
-                .row
-                  .col-xs-12.text-muted=post.preivew()
+                .col-sm-3
+                  .row
+                    .col-xs-3 [ICON]
+                    .col-xs-9
+                      .row
+                        .col-xs-12
+                          | #{post.poster_id.displayName()}
+                      .row
+                        .col-xs-12
+                          | posted #{getDataString(post.post_time)}
+            else
+              .row.qa-post-title-row
+                .col-sm-1.col-sm-offset-1.text-center
+                  .votes-number=post.votes
+                  .votes-text votes
+                  .divide10
+                  .answers-number=post.replied_post
+                  .answers-text answers
+                  .views-combination
+                  .divide10
+                    span.views-number=post.post_viewed
+                    span.views-text  views
+                .col-sm-7
+                  .row
+                    .col-xs-12 
+                      a.post-title(href="#{glblprefix}/qa/question?qid=#{post._id}") #{post.post_title} 
+                  .row
+                    .col-xs-12.text-muted=post.preivew()
 
-              .col-sm-3
-                .row
-                  .col-xs-3 [ICON]
-                  .col-xs-9
-                    .row
-                      .col-xs-12
-                        | #{post.poster_id.displayName()}
-                    .row
-                      .col-xs-12
-                        | posted #{getDataString(post.post_time)}
+                .col-sm-3
+                  .row
+                    .col-xs-3 [ICON]
+                    .col-xs-9
+                      .row
+                        .col-xs-12
+                          | #{post.poster_id.displayName()}
+                      .row
+                        .col-xs-12
+                          | posted #{getDataString(post.post_time)}
 
 
     .divide10

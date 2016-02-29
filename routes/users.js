@@ -20,7 +20,9 @@ router.all('*', function(req, res, next) {
 router.get('/signup', function (req, res, next){
   res.render("signup",{
     breadcrumTitle:"sign up",
-    pathToHere:"users / signup"
+    pathToHere:"users / signup",
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user)
   });
 });
 
