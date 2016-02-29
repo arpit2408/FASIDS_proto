@@ -456,8 +456,11 @@ router.get('/landscape/antdistribution_lookup', function (req, res, next){
 
 // 02/29/2016 
 router.get('/landscape/instructions', function (req, res, next){
-
-  res.render('landscape/instructions');
+  res.render('landscape/instructions',{
+    activePage       : "Landscape",
+    isAuthenticated  : req.isAuthenticated(),
+    user             : processReqUser(req.user)
+  });
 });
 
 module.exports = router;
