@@ -129,7 +129,10 @@ block renderBody
             span(aria-hidden='true') ×
           h4.modal-title Sign in needed 
         .modal-body
-          p Please sign in at right-top corner before using landscape management.
+          p 
+            | Please sign in at right-top corner before using landscape management. If you are first-time user, please check 
+            a(href="#{glblprefix}/landscape/instructions", target="_blank") instructions 
+            | for help.
         .modal-footer
           button.btn.btn-default(type='button', data-dismiss='modal') Close
 
