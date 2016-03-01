@@ -406,6 +406,9 @@ p.sub-text {
   text-transform: uppercase;
   font-family: "Raleway", sans-serif; }
 
+.navbar-default .navbar-nav > li:last-child > a {
+  text-transform: none; }
+
 .navbar-default .navbar-nav > li > a:hover {
   background-color: rgba(29, 0, 0, 0.9);
   color: #fff; }
