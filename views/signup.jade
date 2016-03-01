@@ -25,7 +25,15 @@ block renderBody
                 | Password
                 span * 
               input#password.form-control(type='password',name="password",ng-model="user.minwenpassword" ,placeholder='Password',ng-minlength="6", ng-maxlength="16" required)
-              span(ng-show="signupform.password.$error.minlength||signupform.password.$error.maxlength") Password should be at least 6 characters long, and at most 16 characters long.
+              div(ng-show="signupform.password.$error.minlength||signupform.password.$error.maxlength") Password should be at least 6 characters long, and at most 16 characters long.
+            
+            .form-group
+              label(for='password')
+                | Password validation
+                span * 
+              input#passwordvalid.form-control(type='password',name="passwordvalid",ng-model="user.minwenpasswordvalid" ,placeholder='Input your password again, they need be the same',ng-minlength="6", ng-maxlength="16" required nx-equal-ex="user.minwenpassword")
+              div(ng-show="signupform.passwordvalid.$error.nxEqualEx") Password validation failed, two password should be the same.
+              div(ng-show="signupform.passwordvalid.$error.minlength || signupform.passwordvalid.$error.maxlength") Password validation should be at least 6 characters long, and at most 16 characters long
             .form-group
               label(for='firstname') 
                 | First Name
@@ -36,6 +44,13 @@ block renderBody
                 | Last Name
                 span * 
               input#lastname.form-control(type='text',name="lastname" ng-model="user.last_name" ,placeholder='Enter lastname' required)
+            
+            .form-group
+              label(for='displayName')
+                | Display Name
+                span *
+              input#displayName.form-control(type='text',name="nickname" ng-model="user.nickname" ,placeholder='Enter display name' required)
+
             .form-group
               label(for="usercat")
                 | User Category

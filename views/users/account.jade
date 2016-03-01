@@ -43,11 +43,20 @@ block renderBody
                     .col-xs-5
                       input#first_name.form-control(type='text', placeholder='first name', name="first_name", ng-model="user.first_name", required)
                   .divide20
+                  
                   .row
                     .col-xs-3.text-right
                       label(for='last_name') Last name 
                     .col-xs-5
                       input#last_name.form-control(type='text', placeholder='last name', name="last_name", ng-model="user.last_name", required)
+                  
+                  .divide20
+                  .row
+                    .col-xs-3.text-right
+                      label(for='nickname') Display name 
+                    .col-xs-5
+                      input#nickname.form-control(type='text', placeholder='display name', name="nickname", ng-model="user.nickname", required)
+                  
                   .divide20
                   .row
                     .col-xs-3.text-right
