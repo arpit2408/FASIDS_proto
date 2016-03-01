@@ -4,13 +4,14 @@ mixin path(path)
   else
     each val in path.split("/")
       li 
+
         -var href = "#"
         -var link_text = val.trim()
         if (link_text.match(/^qa$/))
           -link_text = "Q &amp; A"
-          -href = "/qa/"
+          -href = glblprefix + "/qa/"
         else if (link_text === "antactivity")
-          -href = "/antactivity"
+          -href = glblprefix + "/antactivity"
         a(href=href)!=link_text
 mixin breadcrumb(breadcrumTitle, pathToHere)
   .breadcrumb-wrap
