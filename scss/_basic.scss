@@ -396,6 +396,10 @@ p.sub-text{
   text-transform: uppercase;
   font-family: $title-font;
 }
+
+.navbar-default .navbar-nav>li:last-child>a{
+  text-transform: none;
+}
 .navbar-default .navbar-nav>li>a:hover {
   background-color: darken($maroon-alpha,10%);
   color: $lightcolor;
