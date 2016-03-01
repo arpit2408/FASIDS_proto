@@ -117,14 +117,14 @@ body
           else
             li.dropdown
               a.dropdown-toggle(href="#", data-toggle='dropdown') 
-                | #{user.first_name}
+                | #{user.display_name}
                 i.fa.fa-angle-down
               ul.dropdown-menu(role='menu')
                 li
                   a(href='#{glblprefix}/users/dashboard') User dashboard
-                li
+                //- li
                   a(href='#') Inbox
-                li
+                //- li
                   a(href='#') Your Geojson Polygons
                 li
                   a(href='#{glblprefix}/users/account/basic_info') Account

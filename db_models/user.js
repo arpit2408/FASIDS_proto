@@ -4,6 +4,7 @@ var _ = require('underscore');
 var user_schema = new mongoose.Schema({
   "first_name":String,
   "last_name":String,
+  "nickname":{type: String, required: true},
   "password_hash":String,
   "email":{type: String, index:{unique: true}},
   "usercat":{type:Number, min:0, max:4},  // 0 means admin
@@ -15,7 +16,9 @@ var user_schema = new mongoose.Schema({
 // define instance methods
 user_schema.method({
   displayName: function(){
-    return this.first_name + " " + this.last_name;
+    if (this.nickname)
+      return this.nickname;
+    return this.first_name;
   },
 
   // cb is the callback of save

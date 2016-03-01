@@ -92,6 +92,7 @@ router.post('/signup', function (req, res, next){
   new_user.password_hash = req.body.password; 
   new_user.first_name = req.body.firstname;
   new_user.last_name = req.body.lastname;
+  new_user.nickname = req.body.nickname;
   // new_user.receive_updates = req.body.receive_updates|| false;
   new_user.usercat = req.body.usercat;     // 1 is common user
   
@@ -188,9 +189,9 @@ router.post('/account/:active_subsection', ensureAuthenticated, function (req, r
     });
   } else if (req.params.active_subsection === "basic_info"){
     _.each(_.keys(req.body), function (keyname, index, keys){
-      if( typeof req.user[keyname] !== "undefined"){
+      // if( typeof req.user[keyname] !== "undefined"){
         req.user[keyname] = req.body[keyname];
-      }
+      // }
     });
     req.user.save(function ( error){
       if (error) return next(error);
@@ -203,7 +204,7 @@ router.post('/account/:active_subsection', ensureAuthenticated, function (req, r
       res.mailer.send('emails/email.jade', {to:req.user.email, subject:"[FASIDS] Your password has been reset", user:req.user}, function (err){
         if (err){
           console.log(err);
-          res.status(500).send("Internal error cause email cannot be sent");
+          res.status(500).send("Internal error causes email cannot be sent");
           return;
         }
         res.send("email sent");
