@@ -100,7 +100,7 @@ block renderBody
           .panel-body
             each db_polygon , index in polygons 
               .row.polygon-row-dashboard
-                .col-xs-3.polygon-preview Preview Pic here
+                .col-xs-3.polygon-preview=(index+1)
                 .col-xs-4=db_polygon.properties.polygon_name?db_polygon.properties.polygon_name:"No Available Name yet"
                 .col-xs-5.text-right.polygon-operations
                   a(href="#{glblprefix}/landscape/homeownermng/#{db_polygon._id}")
