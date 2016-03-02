@@ -91,7 +91,8 @@ block renderBody
                       label(for='password') New password
                       span.red *
                     .col-xs-5
-                      input#password.form-control(type='password', name="password_hash", required, ng-model="password_hash")
+                      input#password.form-control(type='password', name="password_hash", required, ng-model="password_hash",ng-minlength="6" ng-maxlength="16")
+                      span.red(ng-show="password_form.password_hash.$error.minlength || password_form.password_hash.$error.maxlength ") password length should be 6 to 16 characters  
                   .divide20
                   .row
                     .col-xs-3.text-right
@@ -99,7 +100,7 @@ block renderBody
                       span.red * 
                     .col-xs-5
                       input#confirm_password.form-control(type='password', name="confirm_password_hash", ng-model="confirm_password_hash", required ,
-                      ui-validate=" '$value===password_hash' ", ui-validate-watch=" 'password_hash' ")
+                      ui-validate=" '$value===password_hash' ", ui-validate-watch=" 'password_hash' ", ng-minlength="3" ng-maxlength="10")
 
                       span.red(ng-show="password_form.confirm_password_hash.$error.validator") passwords do not match!
                   .divide20
