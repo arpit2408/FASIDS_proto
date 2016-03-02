@@ -50,3 +50,10 @@ exports.ensureGroup = function (req, res, next){
   return next();
 
 }
+
+exports.isValidPassword = function (toBeTestedPass) {
+  if (!toBeTestedPass) return false;
+  if (typeof toBeTestedPass !== "string") return false;
+  if (toBeTestedPass.length <6 || toBeTestedPass.length >16) return false;
+  return true;
+}

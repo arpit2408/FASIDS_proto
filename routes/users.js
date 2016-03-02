@@ -171,6 +171,8 @@ function accountRenderHelper(req, res, next, active_subsection, flash){
   });
   return;
 }
+
+
 //active_subsection can be 
 //  "security"
 //  "basic_info"
@@ -178,7 +180,11 @@ function accountRenderHelper(req, res, next, active_subsection, flash){
 router.post('/account/:active_subsection', ensureAuthenticated, function (req, res, next){
   if (req.params.active_subsection === "security"){
     if (req.user.password_hash !== req.body.old_password) {
-      accountRenderHelper(req, res, next, "security",{ type:"danger", message:"old password does not match the data in data base." } )
+      accountRenderHelper(req, res, next, "security",{ type:"danger", message:"old password does not match the data in data base." } );
+      return;
+    }
+    if (!routesHelpers.isValidPassword(req.body.password_hash)){
+      accountRenderHelper(req, res, next, "security",{ type:"danger", message:"new password cannot pass server-side validation." } );
       return;
     }
     req.user.password_hash = req.body.password_hash;
