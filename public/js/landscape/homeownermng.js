@@ -88,6 +88,9 @@ $(document).ready(function(){
     if (data['mound_number']) delete data['mound_number'];
     console.log(data);
     if (target_polygon !== null ){
+      if ( data['mound_density'] )
+        data['mound_density'] = data['mound_density']  * 10.76391045;  // convert into metric
+
       _.extendOwn(target_polygon.properties, data);
       map_tool_register.renderPolygonProperly(target_polygon);
       target_polygon = null;
@@ -241,7 +244,7 @@ $(document).ready(function(){
       _.each(omitted_properties, function (value, key, obj){
         if (key==="mound_density") {
           if ($('input[name='+key+']')){
-            $('input[name='+key+']').val(value / 10.763910); 
+            $('input[name='+key+']').val(value / 10.76391045);   // in form , mound_density is shown in form of empire unit
             $('#mound-number-input').val(map_tool_helper.getTotalAreaOf(target_polygon) * value );
             return;
           }
@@ -255,6 +258,7 @@ $(document).ready(function(){
       });
       if($('#broadcast-radio').is(":checked")){
         $("#mound-density-input").prop('disabled', true);
+        $("#mound-number-input").prop('disabled', true);
       }
     },
     initialize: function (){
@@ -340,7 +344,7 @@ $(document).ready(function(){
           $("#map-tool-genresult").removeClass("active");
         }    
       });
-      this.on("change:map_tool_save", function (){
+      this.on("change:map_tool_save", function (){   // used at patch mode
         if (ClassRef.get("map_tool_save")  === true){
           $("#map-tool-save").addClass("active");
           map_tool_helper.saveOnly(polygons[0]);
@@ -536,6 +540,9 @@ $(document).ready(function(){
       });
     },
     saveOnly: function(this_polygon){
+      if (!this_polygon){ 
+        location.reload();
+      };
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
       $('form#patch input').val(JSON.stringify(geoJsonPolygon) );
       console.log(JSON.stringify(geoJsonPolygon)  );

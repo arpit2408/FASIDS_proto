@@ -325,8 +325,8 @@ router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, fu
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
   }
-  if(geojson.properties.mound_density) 
-    geojson.properties.mound_density = req.db_models.PolygonGeojson.convertMoundDensityIntoMetric(geojson.properties.mound_density);
+  // if(geojson.properties.mound_density) 
+  //   geojson.properties.mound_density = req.db_models.PolygonGeojson.convertMoundDensityIntoMetric(geojson.properties.mound_density);
   
   req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
     if (error) return next(error);
@@ -398,9 +398,10 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
   }
-  if (geojson.properties.treatment === 'imt') {
-    geojson.properties.mound_density = req.db_models.PolygonGeojson.convertMoundDensityIntoMetric(geojson.properties.mound_density);
-  }
+  // has already been done in front side
+  // if (geojson.properties.treatment === 'imt') {
+  //   geojson.properties.mound_density = req.db_models.PolygonGeojson.convertMoundDensityIntoMetric(geojson.properties.mound_density);
+  // }
 
   geojson.properties.owner = req.user._id;
   var db_geojson = new req.db_models.PolygonGeojson(geojson);
