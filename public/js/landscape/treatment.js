@@ -2,7 +2,7 @@
 
 $(document).ready(function onDocReady(){
 
-
+  var glblprefix = location.href.search('fasids.tamu.edu') >= 0 ? "/fasids/node" : "";
   function colorOf ( usage){
     var fillColor = "#000000";
     switch(usage){
@@ -46,8 +46,6 @@ $(document).ready(function onDocReady(){
   gmap.fitBounds(bounds);
 
   // var target_geojson_gfeature = new google.maps.Data.Feature(target_geojson);
-  
-
 
   gmap.data.addGeoJson(target_geojson);
 
@@ -58,4 +56,11 @@ $(document).ready(function onDocReady(){
       strokeWeight:2
     });
   });
+  gmap.data.addListener('click', function (event){
+    location.href = glblprefix + "/landscape/homeownermng/" + target_geojson._id;
+  });
+
 });
+
+// For events supported in google map
+//https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent

@@ -102,7 +102,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-if (glblprefix === ""){
+if (glblprefix === ""){  // Linux server launch
   var ip   = process.env.OPENSHIFT_NODEJS_IP  || '127.0.0.1'
   var server = http.createServer(app);
   var boot = function (override_port) {
@@ -120,9 +120,10 @@ if (glblprefix === ""){
     exports.boot = boot.bind(null, 3001);  // for test purpose, I have to set port at 3001 to avoid confliction
     exports.shutdown = shutdown;
     exports.port = app.get('port');
+    exports.server = server;
   }
 }
-else{
+else{  // IISNODE launch
   windows_base.use(glblprefix, app);
   windows_base.listen(process.env.PORT);
 }
