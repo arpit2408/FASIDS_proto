@@ -325,7 +325,9 @@ router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, fu
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
   }
-  geojson.properties.mound_density = req.db_models.PolygonGeojson.convertMoundDensityIntoMetric(geojson.properties.mound_density);
+  if(geojson.properties.mound_density) 
+    geojson.properties.mound_density = req.db_models.PolygonGeojson.convertMoundDensityIntoMetric(geojson.properties.mound_density);
+  
   req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
     if (error) return next(error);
     if (!the_polygon){
