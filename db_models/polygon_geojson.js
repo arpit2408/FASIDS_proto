@@ -44,17 +44,22 @@ polygon_geojson_schema.method({
   }
 });
 
+// need more sanity check for these functions
 polygon_geojson_schema.static({
   convertMtSquareToFtSquare: function ( mtSquare){
+    if (mtSquare === null || typeof mtSquare ==='undefined') return 0;
     return mtSquare * 10.76391045;
   },
   convertFtSquareToMtSquare: function ( footSquare){
+    if (footSquare === null || typeof footSquare === 'undefined') return 0;
     return footSquare /10.76391045;
   },
   convertMoundDensityIntoMetric: function ( ftSquareDensity){
+    if (ftSquareDensity === null || typeof ftSquareDensity === 'undefined') return 0;
     return ftSquareDensity  * 10.76391045;
   },
   convertMoundDensityIntoFt: function (mtSquareDensity){
+    if ( mtSquareDensity === null || typeof mtSquareDensity === 'undefined') return 0;
     return mtSquareDensity  / 10.76391045;
   }
 });
