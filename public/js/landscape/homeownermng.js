@@ -521,7 +521,7 @@ $(document).ready(function(){
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
       $('input#geojson').val(JSON.stringify(geoJsonPolygon));
       if (this_polygon.saved === true){
-        return alert("This polygon has already been saved, please go to your profile to check");
+        return alert("This polygon has already been saved, please go to your user dashboard to check");
       }
       this_polygon.saved = true;
       var $tempForm = $('form#treatment');
