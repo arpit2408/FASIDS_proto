@@ -393,6 +393,7 @@ router.get('/landscape/treatment/:geojson_id', ensureAuthenticated, function (re
 
 // Responsible for Creation of PolygonGeojson model
 router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next){
+  var api_route = req.baseUrl +req.path;
   var geojson = req.body.geojson;
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
@@ -405,9 +406,11 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
   var db_geojson = new req.db_models.PolygonGeojson(geojson);
   db_geojson.save( function ( error){
     if (error) {
-      return next(error);
+      return res.status(500).json(error);  // TODO: the failure response is not json
     }
-    res.redirect(glblprefix + '/landscape/treatment/'+db_geojson._id.toString());
+    res.json(
+      {api_result:"success : PolygonGeojson created", api_route:api_route, treatmentUrl:glblprefix + '/landscape/treatment/'+db_geojson._id.toString()}
+    );
   });
 });
 /* this route is used to display products*/
