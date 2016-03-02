@@ -2,7 +2,7 @@
 
 $(document).ready(function onDocReady(){
 
-  var glblprefix = location.href.search('fasids.tamu.edu') >= 0 ? "/fasids/node" : "";
+  var glblprefix = location.href.search('fasids.tamu.edu') >= 0 ? "/node/fasids" : "";
   function colorOf ( usage){
     var fillColor = "#000000";
     switch(usage){
