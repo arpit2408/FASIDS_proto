@@ -520,8 +520,20 @@ $(document).ready(function(){
         return alert("This polygon has already been saved, please go to your profile to check");
       }
       this_polygon.saved = true;
-      $('form#treatment').submit(); // commit it for for dubug
+      var $tempForm = $('form#treatment');
+      
+      $.ajax({
+        type: "POST",
+        url: $tempForm.attr('action'),
+        data: $tempForm.serialize(),
 
+        success: function(creationApiResult){
+          location.href = creationApiResult.treatmentUrl;
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          alert(errorThrown);
+        }
+      });
     },
     saveOnly: function(this_polygon){
       var geoJsonPolygon = map_tool_helper.geoJsonize( this_polygon,"polygon");
