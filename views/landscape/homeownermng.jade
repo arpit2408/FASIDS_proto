@@ -26,6 +26,9 @@ block renderBody
 
     .mc-static2mapcontainer.panel#map-tools-box
       .row
+        .col-xs-12
+          span.btn.btn-default(data-operation="tutorial") Instructions
+      .row
         .col-xs-12 
           if page_status.model_op === 'create'
             span.btn.btn-default#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
@@ -49,9 +52,6 @@ block renderBody
             span.btn.btn-default#map-tool-genresult(data-operation="map_tool_genresult") Save &amp; See Result
           else if page_status.model_op === "patch"
             span.btn.btn-default#map-tool-genresult(data-operation="map_tool_genresult") See Result
-      .row
-        .col-xs-12
-          span.btn.btn-default(data-operation="tutorial") Instructions
       .row
         .col-xs-12
           span.btn.btn-default#map-tool-cancel cancel
