@@ -9,8 +9,8 @@ block renderBody
       //- content
       -var targets = ["#instruction-signup", "#instruction-signin","#instruction-drawpolygon","#instruction-removearea","#instruction-editshape","#instruction-settreatmeent","#instruction-productresult"];
       -var steps = ["Sign Up", "Sign In", "Draw Polygon", "Remove Area", "Edit Shape", "Set Treatment", "Products Result"];
-      .col-xs-3
-        ul
+      nav.col-xs-3
+        ul.nav.nav-pills.nav-stacked(data-spy='affix', data-offset-top='10')
           each val, index in targets
             li
               a(href=val)=steps[index]
@@ -20,17 +20,17 @@ block renderBody
         h3 Instructions on How to Use Landscape Management
         p Here we will go through the process from creating one account to saving a polygon on map
 
-        p#instruction-signup If you have not created one account with FASIDS, first thing is a simple 
-          a(href="#{glblprefix}/users/signup" target="_blank") registration. 
+        p#instruction-signup If you have not created one account with FASIDS, first thing is a simple
+          a(href="#{glblprefix}/users/signup" target="_blank") registration.
         a(href="#{glblprefix}/users/signup" target="_blank")
           img.img-responsive(src="#{glblprefix}/img/procedures/01registration.jpg" , alt="registration")
         .divide50
-        p#instruction-signin  After you having an account. Please 
+        p#instruction-signin  After you having an account. Please
           a(href="#{glblprefix}/users/signin" target="_blank") sign yourself in.
         a(href="#{glblprefix}/users/signin" target="_blank")
           img.img-responsive(src="#{glblprefix}/img/procedures/02signin.jpg" , alt="signin")
         .divide50
-        p#instruction-drawpolygon  Go to landscape section, click "Draw Polygon" on map. 
+        p#instruction-drawpolygon  Go to landscape section, click "Draw Polygon" on map.
         img.img-responsive(src="#{glblprefix}/img/procedures/03drawpolygon.jpg"  alt="draw polygon")
         .divide50
         p#instruction-removearea  You can remove some area from the marked area by using "Remove Area"
@@ -39,7 +39,7 @@ block renderBody
         p#instruction-editshape  You can also adjust the area, by clicking "Edit Shape" button. For example, you might move some vertice or cancel entire subroute.
         img.img-responsive(src="#{glblprefix}/img/procedures/05editshape.jpg" ,  alt="edit shape")
         .divide50
-        p#instruction-settreatmeent  
+        p#instruction-settreatmeent
           | After you feel that shape of the polygon is good, you click "Set Treatment" on map. Set the land usage type, Treatment type and so on.
           | Then you click Finish Preparation
         img.img-responsive(src="#{glblprefix}/img/procedures/06settreatment.jpg" , alt="set Treatment")
@@ -59,7 +59,7 @@ block renderBody
 
 
 
-        
+
 
 
 
