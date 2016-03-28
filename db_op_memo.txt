@@ -22,8 +22,6 @@ qa href: /qa/question?qid=15101153335863
 
 OPENSHIFT_MONGODB_DB_URL=mongodb://admin:d7ZAK1AAiw-g@127.8.238.130:27017/
 
-
-
 weahter memo
 provider: http://openweathermap.org/api
 64bb5bb6fbdeb48105b321b7c6ddae37
@@ -118,19 +116,16 @@ mongoimport --db fasids --collection ant_distribution --file ant_distri.json --j
 
 remote mongoDB
 mongoimport -u <username> -p <password here> -h <ip here> --db fasids --collection fire_ant_product --file products.json --jsonArray
-
 local mongoDB
 mongoimport  --db fasids --collection fire_ant_product --file products.json --jsonArray
-Then I need to run ./data/productimages.mongoscript.js
+
+Then I need to run ./data/product_images.mongoscript.js
+
 本地情况：mongoimport --db fasids --collection post --file posts.json --jsonArray
 Find ./data/product_images.mongoscript.js, run this script at Mongo Console
 
-
 下载nodejslog
 rhc scp fasids download ./remotelogs/ /var/lib/openshift/5611efe689f5cf7c68000079/app-root/logs/nodejs.log
-
-
-
 
 /*routes
 get    "/" index page
