@@ -67,7 +67,7 @@ router.get('/', function (req, res, next) {
       next(err);
       return;
     }
-    res.end(html);
+    res.send(html);
   });
 });
 
@@ -355,8 +355,8 @@ router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, fu
       e.status = 401;
       return next(e);
     }
+    console.log(JSON.stringify(geojson, null, 2));
     _.each(_.keys(geojson), function (key_name, index, key_list){
-      // console.log(key_name);
       the_polygon[key_name] = geojson[key_name];
     });
     the_polygon.save( function(error){
