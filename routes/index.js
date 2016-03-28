@@ -62,6 +62,12 @@ router.get('/', function (req, res, next) {
     activePage:'Home',
     isAuthenticated: req.isAuthenticated(),
     user: processReqUser(req.user)
+  }, function (err, html) {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.end(html);
   });
 });
 
