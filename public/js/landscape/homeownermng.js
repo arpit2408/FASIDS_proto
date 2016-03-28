@@ -63,18 +63,6 @@ $(document).ready(function(){
       }
   });
 
-
-  // preparing modal
-  // The preparation modal is one ng app, I do not know why there is loading error when initing angularAPPs
-  // ( function (){
-  //   var preparationModal = angular.module("preparationModal",['ngRoute']);
-  //   preparationModal.controller("preparationModalCtrl", function ($scope){
-  //     $scope.title  = "test";
-  //   });
-
-  // })();
-
-
   $("#save-prepared-treatment").click(function savePreparedTreatment(){
     var target_polygon = window.target_polygon;
     var formdata = $("form#purpose").serializeArray();
