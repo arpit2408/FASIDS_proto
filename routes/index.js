@@ -74,17 +74,26 @@ router.get('/qa', function (req, res, next){
     // query is like Model.find({"role":1}).skip(condition.skip).limit(condition.limit).sort(sort_param) 
     query.populate('poster_id replies reply_to_mainpost').exec(function (err, posts){
       posts = _.filter(posts, function(post){  return  post.poster_id !== null;});
-      res.render('qa', {title:'Question and Answers | FASIDS',
-        breadcrumTitle:"Questions and Answers",
-        pathToHere:"qa",
-        activePage:'Questions',
-        isAuthenticated: req.isAuthenticated(),
-        user: processReqUser(req.user),
-        posts:posts,
-        momentlib:moment,
-        paging_condition: paging_condition
-      });
-   
+      res.render('qa', 
+        {
+          title:'Question and Answers | FASIDS',
+          breadcrumTitle:"Questions and Answers",
+          pathToHere:"qa",
+          activePage:'Questions',
+          isAuthenticated: req.isAuthenticated(),
+          user: processReqUser(req.user),          
+          posts:posts,
+          momentlib:moment,
+          paging_condition: paging_condition
+        },
+        function (err, html) {
+          if (err) {
+            // next(err);
+            return ;
+          }
+          res.send(html).end();
+        }
+      );
     });
   });
 });
