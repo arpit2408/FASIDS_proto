@@ -9,10 +9,10 @@ html
     title=title
     // Bootstrap, must
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css', rel='stylesheet')
-    
+
     // custom css, must
     link(href="#{glblprefix}/css/style.css", rel='stylesheet', type='text/css', media='screen')
-    
+
     // font awesome for icons, must
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
     // animated css
@@ -33,7 +33,7 @@ mixin properActive(text)
     when "Home"
       | active
 
-body
+body(data-spy='scroll', data-target='#myScrollspy')
   // navigation
   // Static navbar
   .navbar.navbar-default.navbar-static-top.yamm.sticky(role='navigation')
@@ -109,14 +109,14 @@ body
                     .clearfix
                     hr
                     p
-                      | Don't have an account! 
+                      | Don't have an account!
                       a(href='#{glblprefix}/users/signup') Register Now
-                    p 
-                      | Forgot your password? 
+                    p
+                      | Forgot your password?
                       a(href="#{glblprefix}/users/forgot_password") Reset Now
           else
             li.dropdown
-              a.dropdown-toggle(href="#", data-toggle='dropdown') 
+              a.dropdown-toggle(href="#", data-toggle='dropdown')
                 | #{user.display_name}
                 i.fa.fa-angle-down
               ul.dropdown-menu(role='menu')
@@ -143,13 +143,13 @@ body
             h3 About FASIDS
             p
               | FASIDS is one project of KEL lab of Department of Entomology of TAMU. The purpose of this project is to aim management of imported fire ant. The project is consisted of
-              | map or landscape tools, question and answer section, and reports and knowledge base. 
-              a(href = "http://entomology.tamu.edu/people/coulson-robert/") Prof. Coulson 
-              | oversees and 
-              a(href = "http://entomology.tamu.edu/people/tchakerian-dr-maria-d/") Dr. Maria Tchakerian 
-              | manages this project. 
-              a(href="https://www.linkedin.com/in/boweiliujs") Bowei Liu 
-              | is the software developer of this project.  
+              | map or landscape tools, question and answer section, and reports and knowledge base.
+              a(href = "http://entomology.tamu.edu/people/coulson-robert/") Prof. Coulson
+              | oversees and
+              a(href = "http://entomology.tamu.edu/people/tchakerian-dr-maria-d/") Dr. Maria Tchakerian
+              | manages this project.
+              a(href="https://www.linkedin.com/in/boweiliujs") Bowei Liu
+              | is the software developer of this project.
             ul.list-inline.social-1
               li
                 a(href='#')
@@ -176,7 +176,7 @@ body
                   strong
                     i.fa.fa-map-marker
                     |  Address:
-                  |  KEL Texas A&amp;M University, 
+                  |  KEL Texas A&amp;M University,
               li
                 p
                   strong
@@ -211,7 +211,7 @@ body
         .col-md-12.text-center
           .footer-btm
             span ©2015-2016. KEL@Texas A&amp;M
-            
+
   // default footer end here
   // scripts and plugins
   // must need plugin jquery
@@ -226,4 +226,3 @@ body
   // customizable plugin edit according to your needs, this custom.js is with ASSAN theme package
   script(src="#{glblprefix}/js/custom.js", type='text/javascript')
   block additionalJS
-
