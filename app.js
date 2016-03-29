@@ -15,7 +15,7 @@ var api_route = require('./routes/api')
 
 /*if this app is running on openshift, env var should have OPENSHIFT_MONGODB_DB_URL*/
 var db_literal = "fasids";
-var mongoose = require('mongoose'),  // newly added, regardin                                                                                                                                                                                                                                                                                                                                                                                                                                                                         g init express
+var mongoose = require('mongoose'),  // newly added, regarding init express
     db_models = require('./db_models/index.js'),
     db_url = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost:27017/',
     db = mongoose.connect(db_url+db_literal, {safe: true}),

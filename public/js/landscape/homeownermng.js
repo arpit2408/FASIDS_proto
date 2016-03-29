@@ -63,18 +63,6 @@ $(document).ready(function(){
       }
   });
 
-
-  // preparing modal
-  // The preparation modal is one ng app, I do not know why there is loading error when initing angularAPPs
-  // ( function (){
-  //   var preparationModal = angular.module("preparationModal",['ngRoute']);
-  //   preparationModal.controller("preparationModalCtrl", function ($scope){
-  //     $scope.title  = "test";
-  //   });
-
-  // })();
-
-
   $("#save-prepared-treatment").click(function savePreparedTreatment(){
     var target_polygon = window.target_polygon;
     var formdata = $("form#purpose").serializeArray();
@@ -86,16 +74,19 @@ $(document).ready(function(){
       data[value[0]] = value[1];
     });
     if (data['mound_number']) delete data['mound_number'];
-    console.log(data);
+    // console.log(data);
     if (target_polygon !== null ){
-      if ( data['mound_density'] )
+      if ( data['mound_density'] ) {
         data['mound_density'] = data['mound_density']  * 10.76391045;  // convert into metric
-
+      }
       _.extendOwn(target_polygon.properties, data);
       map_tool_register.renderPolygonProperly(target_polygon);
       target_polygon = null;
       window.target_polygon = null;
       $("#purpose-modal").modal("hide");
+      if (polygons.length === 1) {
+        map_tool_register.set("map_tool_setproperties", false);
+      } 
     } else{
       throw "target_polygon is null when savePreparedTreatment() is invoked";
     }
@@ -151,19 +142,25 @@ $(document).ready(function(){
         temp_startmarker.setMap(gmap);
       }
     } else if  ( map_tool_register.get("map_tool_editpolygon") === true) {
-      this_polygon.setEditable(true);
+      if (polygons.length > 1) { 
+        this_polygon.setEditable(true);
+      }
     } else if ( map_tool_register.get("map_tool_setproperties") === true){
       // target_polygon = this_polygon;
       // modal show, reset options 
-      map_tool_register.fillForm($('form#purpose'), target_polygon);
-      $("#purpose-modal").modal("show");
+      if (polygons.length > 1) {
+        map_tool_register.fillForm($('form#purpose'), target_polygon);
+        $("#purpose-modal").modal("show");
+      }
     } else if ( map_tool_register.get("map_tool_genresult") === true){
-      
-      map_tool_helper.saveAndGenResult(this_polygon);
-
+      if (polygons.length > 1) {
+        map_tool_helper.saveAndGenResult(this_polygon);
+      }
     } else if (map_tool_register.get("map_tool_save") === true){
-      map_tool_helper.saveOnly(this_polygon);
+      if (polygons.length > 1) {
+        map_tool_helper.saveOnly(this_polygon);
 
+      }
     }
     else {
     }
@@ -316,6 +313,10 @@ $(document).ready(function(){
       this.on("change:map_tool_editpolygon", function (){
         if (ClassRef.get("map_tool_editpolygon")  === true){
           $("#map-tool-editpolygon").addClass("active");
+          if (polygons.length === 1){
+            polygons[0].setEditable(true);
+            window.target_polygon = polygons[0];  // 
+          }
         } else {
           $("#map-tool-editpolygon").removeClass("active");
           polygons.forEach(function(el, index, ar){
@@ -327,6 +328,11 @@ $(document).ready(function(){
       this.on("change:map_tool_setproperties", function (){
         if (ClassRef.get("map_tool_setproperties")  === true){
           $("#map-tool-setproperties").addClass("active");
+          if (polygons.length === 1){
+            window.target_polygon = polygons[0];  // 
+            map_tool_register.fillForm($('form#purpose'), polygons[0]);
+            $("#purpose-modal").modal("show");
+          }
         } else {
           $("#map-tool-setproperties").removeClass("active");
         }    
@@ -339,7 +345,6 @@ $(document).ready(function(){
             map_tool_helper.saveAndGenResult(polygons[0]);
             ClassRef.set("map_tool_genresult", false);
           }
-
         } else {
           $("#map-tool-genresult").removeClass("active");
         }    
@@ -442,13 +447,15 @@ $(document).ready(function(){
       var paths = googleMapPolygon.getPaths();
       var i = 0;
       var sum = 0;
-      for( i =0; i < paths.getLength(); i++){
+      var pathslen = paths.getLength();
+      for( i =0; i < pathslen; i++){
         if (i ===0){
           sum = Math.abs(spherical.computeSignedArea(paths.getAt(i)) );
         }else {
           sum -= Math.abs(spherical.computeSignedArea(paths.getAt(i)) );
         }
       }
+      console.log(sum);
       return sum;
     },
     geoJsonize:function(googleMapShapeObject , type){
@@ -468,14 +475,14 @@ $(document).ready(function(){
             };
         tempGeoJPolygon.geometry.coordinates = ClassRef.convertPaths(googleMapShapeObject.getPaths(), []);
 
-        tempGeoJPolygon.properties.total_area =  ClassRef.getTotalAreaOf(googleMapShapeObject);
-
         var temp_bounds = googleMapShapeObject.my_getBounds();
+
+        _.extendOwn(tempGeoJPolygon.properties, googleMapShapeObject.properties);
         tempGeoJPolygon.properties.bounds ={  
           sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
           ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
         };
-        _.extendOwn(tempGeoJPolygon.properties, googleMapShapeObject.properties);
+        tempGeoJPolygon.properties.total_area =  ClassRef.getTotalAreaOf(googleMapShapeObject);
         tempGeoJPolygon.properties.environment_map = {};
         tempGeoJPolygon.properties.environment_map.tilt = gmap.getTilt();
         tempGeoJPolygon.properties.environment_map.MapTypeId = gmap.getMapTypeId();
