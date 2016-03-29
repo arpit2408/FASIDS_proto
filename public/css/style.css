@@ -543,6 +543,11 @@ p.sub-text {
   margin-bottom: 0; }
 
 /* end bootstrap tabs overrides*/
+/* override nav-pills */
+.nav-pills li.active a {
+  background-color: #500000; }
+
+/**/
 /*forms, decorating original bootstrap*/
 select,
 textarea,
@@ -2634,7 +2639,7 @@ label span {
   #clients-carousel .center-heading h2 {
     color: #fff; }
 
-/*cta-1 and cta-2 are adjacent to footer, see career.html and element.html, 绫讳技瀹ｈ█*/
+/*cta-1 and cta-2 are adjacent to footer, see career.html and element.html, 类似宣言*/
 #cta-1 {
   padding: 40px 0;
   background-color: #500000;
@@ -4226,3 +4231,5 @@ table.shopping-cart-table tr th, table.shopping-cart-table tr td {
 
 .btn-sweet-alert {
   margin: 5px; }
+
+/*# sourceMappingURL=style.css.map */

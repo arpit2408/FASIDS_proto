@@ -445,8 +445,6 @@ p.sub-text{
 /***********END bootstrap navigation default overrides --*/
 
 
-
-
 /* bootstrap tabs overrides*/
 .tabs .nav-tabs {
   border-bottom: none;
@@ -541,8 +539,20 @@ p.sub-text{
 /* end bootstrap tabs overrides*/
 
 
+/* override nav-pills */
+.nav-pills{
+  li{
+    a{
 
-
+    }
+    &.active{
+      a{
+        background-color: $skincolor;
+      }
+    }
+  }
+}
+/**/
 
 /*forms, decorating original bootstrap*/
 select,
