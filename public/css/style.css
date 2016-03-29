@@ -546,6 +546,8 @@ p.sub-text {
 /* override nav-pills */
 .nav-pills li.active a {
   background-color: #500000; }
+  .nav-pills li.active a:hover {
+    background-color: #830000; }
 
 /**/
 /*forms, decorating original bootstrap*/
