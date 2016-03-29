@@ -76,9 +76,9 @@ $(document).ready(function(){
     if (data['mound_number']) delete data['mound_number'];
     // console.log(data);
     if (target_polygon !== null ){
-      if ( data['mound_density'] )
+      if ( data['mound_density'] ) {
         data['mound_density'] = data['mound_density']  * 10.76391045;  // convert into metric
-
+      }
       _.extendOwn(target_polygon.properties, data);
       map_tool_register.renderPolygonProperly(target_polygon);
       target_polygon = null;
