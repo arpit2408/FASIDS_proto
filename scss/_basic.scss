@@ -542,12 +542,13 @@ p.sub-text{
 /* override nav-pills */
 .nav-pills{
   li{
-    a{
 
-    }
     &.active{
       a{
         background-color: $maroon;
+        &:hover{
+          background-color: lighten($maroon, 10%);
+        }
       }
     }
   }
