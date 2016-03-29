@@ -9,7 +9,7 @@ block renderBody
       td
         a(href=product.product_url, target="_blank")
           img.img-thumbnail( src=product.homedepot_img_small_url alt="product_img")
-      td= product.product_id
+      //- td= product.product_id
       td= product.product_name
       td= product.manufacturer
       td= product.usage
@@ -26,7 +26,6 @@ block renderBody
             td="unknown unit due to unknown usage"
       else
         td= "No Data"
-
   include ../snippets/breadcrum
   .divide30
   .container
@@ -36,7 +35,7 @@ block renderBody
           thead
             tr
               th Product Page
-              th Product ID
+              //- th Product ID
               th Product Name
               th Brand
               th Usage

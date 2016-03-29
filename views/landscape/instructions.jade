@@ -9,7 +9,7 @@ block renderBody
       //- content
       -var targets = ["#instruction-signup", "#instruction-signin","#instruction-drawpolygon","#instruction-removearea","#instruction-editshape","#instruction-settreatmeent","#instruction-productresult"];
       -var steps = ["Sign Up", "Sign In", "Draw Polygon", "Remove Area", "Edit Shape", "Set Treatment", "Products Result"];
-      nav.col-xs-3
+      nav#myScrollspy.col-sm-3
         ul.nav.nav-pills.nav-stacked(data-spy='affix', data-offset-top='10')
           each val, index in targets
             li
