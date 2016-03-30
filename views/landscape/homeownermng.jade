@@ -57,8 +57,9 @@ block renderBody
           span.btn.btn-default#map-tool-cancel cancel
   //- .modal-container(ng-app="preparationModal", ng-controller="preparationModalCtrl")
   .modal-container
-    #purpose-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
-      .modal-dialog(role='document')
+    #purpose-modal.modal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+      //- class "modal-xl" is introduced by Bowei, refer _basic.scss please
+      .modal-dialog.modal-xl(role='document')
         .modal-content
           .modal-header
             button.close(type='button', data-dismiss='modal', aria-label='Close')
