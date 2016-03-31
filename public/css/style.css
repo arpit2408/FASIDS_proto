@@ -546,8 +546,15 @@ p.sub-text {
 /* override nav-pills */
 .nav-pills li.active a {
   background-color: #500000; }
+  .nav-pills li.active a:hover {
+    background-color: #830000; }
 
-/**/
+.modal-container .modal .modal-dialog.modal-xl {
+  width: auto; }
+
+@media (min-width: 1200px) {
+  .modal-container .modal .modal-dialog.modal-xl {
+    width: 1200px; } }
 /*forms, decorating original bootstrap*/
 select,
 textarea,

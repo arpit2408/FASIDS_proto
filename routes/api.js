@@ -108,6 +108,18 @@ apirouter.get('/lookupuser', function(req, res, next){
 });
 
 
+apirouter.get("/fire_ant_products", function (req, res, next) {
+  var api_route = req.baseUrl +req.path;
+  req.db_models.FireAntProduct.find({},null,{}, function exec(err, products) {
+    if (err) {
+      return res.status(500).json({api_result:"error : " + err.message, api_route: api_route});
+    }
+    products = _.map(products, function (product) {
+      return product.toObject();
+    });
+    res.json(products);
+  });
+});
 
 
 module.exports = apirouter;
