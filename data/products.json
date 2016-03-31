@@ -13,10 +13,10 @@
     "usage":"broadcast",
     "coverage":464.5152,
     "homedeport_score":4,
-    "product_overview":"",
-    "product_url":"",
-    "img_small_url":"",
-    "img_url":""
+    "product_overview":"to be inputted",
+    "product_url":"http://www.homedepot.com/p/Over-n-Out-Advanced-11-5-lb-Fire-Ant-Killer-100515674/204599626",
+    "img_small_url":"http://www.homedepot.com/catalog/productImages/145/a5/a574aa0f-15d7-4fb1-9ab3-e431c393da2a_145.jpg",
+    "img_url":"http://www.homedepot.com/catalog/productImages/1000/a5/a574aa0f-15d7-4fb1-9ab3-e431c393da2a_1000.jpg"
   },
   {
     "product_id":100056182,
@@ -32,10 +32,10 @@
     "usage":"imt",
     "coverage":54,
     "homedeport_score":4.7,
-    "product_overview":"",
-    "product_url":"",
-    "img_small_url":"",
-    "img_url":""
+    "product_overview":"to be inputted",
+    "product_url":"http://www.homedepot.com/p/Ortho-Orthene-12-oz-Fire-Ant-Killer-0282210/100056182",
+    "img_small_url":"http://www.homedepot.com/catalog/productImages/145/11/11be8011-7087-4c3b-80e6-9ea8bb6c83f1_145.jpg",
+    "img_url":"http://www.homedepot.com/catalog/productImages/1000/11/11be8011-7087-4c3b-80e6-9ea8bb6c83f1_1000.jpg"
   },
   {
     "product_id":100464289,
@@ -51,10 +51,10 @@
     "usage":"imt",
     "coverage":12,
     "homedeport_score":4.3,
-    "product_overview":"",
-    "product_url":"",
-    "img_small_url":"",
-    "img_url":""
+    "product_overview":"to be inputted",
+    "product_url":"http://www.homedepot.com/p/Ortho-4-lb-Ready-to-Use-Fire-Ant-Killer-Mound-Treatment-0258310/100464289",
+    "img_small_url":"http://www.homedepot.com/catalog/productImages/145/bb/bb4bf35c-acf4-4498-a4ba-3b524266719a_145.jpg",
+    "img_url":"http://www.homedepot.com/catalog/productImages/1000/bb/bb4bf35c-acf4-4498-a4ba-3b524266719a_1000.jpg"
   },
   {
     "product_id":100017237,
@@ -70,10 +70,10 @@
     "usage":"broadcast",
     "coverage":5000,
     "homedeport_score":3.4,
-    "product_overview":"",
-    "product_url":"",
-    "img_small_url":"",
-    "img_url":""
+    "product_overview":"to be inputted",
+    "product_url":"http://www.homedepot.com/p/Ortho-Max-11-5-lb-Fire-Ant-Killer-0257549/100017237",
+    "img_small_url":"http://www.homedepot.com/catalog/productImages/145/e0/e082e4c4-273a-4341-bfff-bb84110a6cdd_145.jpg",
+    "img_url":"http://www.homedepot.com/catalog/productImages/1000/e0/e082e4c4-273a-4341-bfff-bb84110a6cdd_1000.jpg"
   },
   {
     "product_id":100662156,
@@ -89,10 +89,10 @@
     "usage":"imt",
     "coverage":8,
     "homedeport_score":4.5,
-    "product_overview":"",
-    "product_url":"",
-    "img_small_url":"",
-    "img_url":""
+    "product_overview":"to be inputted",
+    "product_url":"http://www.homedepot.com/p/AMDRO-2-lb-Fire-Ant-Bait-100099072/100662156",
+    "img_small_url":"http://www.homedepot.com/catalog/productImages/145/e5/e5144328-1609-4932-9141-c8328e2fed31_145.jpg",
+    "img_url":"http://www.homedepot.com/catalog/productImages/1000/e5/e5144328-1609-4932-9141-c8328e2fed31_1000.jpg"
   },
   {
     "product_id":100327315,
@@ -108,9 +108,9 @@
     "usage":"imt",
     "coverage":4,
     "homedeport_score":4.4,
-    "product_overview":"",
-    "product_url":"",
-    "img_small_url":"",
-    "img_url":""
+    "product_overview":"to be inputted",
+    "product_url":"http://www.homedepot.com/p/AMDRO-1-lb-Fire-Ant-Bait-100099070/100327315",
+    "img_small_url":"http://www.homedepot.com/catalog/productImages/145/e5/e5144328-1609-4932-9141-c8328e2fed31_145.jpg",
+    "img_url":"http://www.homedepot.com/catalog/productImages/1000/e5/e5144328-1609-4932-9141-c8328e2fed31_1000.jpg"
   }
 ]
