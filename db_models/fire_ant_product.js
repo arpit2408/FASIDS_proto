@@ -21,7 +21,7 @@ var fire_ant_product_schema = new mongoose.Schema({
     type: String, 
     enum: ["home", "agricultural", "professional"]
   }],
-  physical_form:{
+  physcial_form:{    //application_type
     type: String,
     enum: ["granular", "dust", "liquid"],  //  granular, dust, liquid
     required: [true, "physcial_form field not supplied"]
@@ -31,6 +31,7 @@ var fire_ant_product_schema = new mongoose.Schema({
     maxlength: [100, "element of pest_types field  has too long length"]
   }],                    
   is_outdoor: Boolean,
+  is_organic: Boolean,
   is_safe_for_pets: Boolean,
   control_method: {                     // 'bait', 'contact'
     type: String,
@@ -39,7 +40,7 @@ var fire_ant_product_schema = new mongoose.Schema({
   },                 
   usage: {                            // 'broadcast', 'imt'
     type: String,
-    enum: ["broadcast", "imt"],
+    enum: ["broadcast", "imt", "broadcastimt"],
     required: [true, "usage field not supplied"]
   },               
   // if its usage: 'broadcast', 'coverage' means coverage in square meter, if usage: 'imt', 'coverage' means number of mound it can treat 
@@ -52,8 +53,8 @@ var fire_ant_product_schema = new mongoose.Schema({
   product_url:{
     type:String
   },
-  homedepot_img_small_url:String,
-  homedepot_img_url: String
+  img_small_url:String,
+  img_url: String
 },{ collection:'fire_ant_product'});
 
 // define instance methods
