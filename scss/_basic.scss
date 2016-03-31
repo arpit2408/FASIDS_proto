@@ -542,17 +542,41 @@ p.sub-text{
 /* override nav-pills */
 .nav-pills{
   li{
-    a{
 
-    }
     &.active{
       a{
-        background-color: $skincolor;
+        background-color: $maroon;
+        &:hover{
+          background-color: lighten($maroon, 10%);
+        }
       }
     }
   }
 }
-/**/
+
+/* intoduce by Bowei 03/31/2016, for Set Treatment*/
+.modal-container {
+  .modal{
+    .modal-dialog{
+      &.modal-xl{
+        width:auto;
+      }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .modal-container {
+    .modal{
+      .modal-dialog{
+        &.modal-xl{
+          width:1200px;
+        }
+      }
+    }
+  }
+}
+
 
 /*forms, decorating original bootstrap*/
 select,
