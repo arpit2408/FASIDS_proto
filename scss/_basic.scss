@@ -808,6 +808,9 @@ input[type="color"]:focus,
   } 
 }
 
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: $maroon-tablestripe-odd;
+}
 
 /*** following is for all pagination*/
 .pagination>li>a, .pagination>li>span{
