@@ -54,6 +54,23 @@ get    "/landscape/antdistribution"    show counties map
 get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  api for antdistribution
 */
 
+// router.get('/test', function (req, res, next) {
+//   res.render('index2', {
+//     title: 'FASIDS',
+//     activePage:'Home'
+//     // isAuthenticated: req.isAuthenticated(),
+//     // user: processReqUser(req.user)
+//   }, function (err, html) {
+//     if (err) {
+//       next(err);
+//       return;
+//     }
+//     res.set("Connection","close")
+//     res.send(html);
+
+//   });
+// });
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
