@@ -66,6 +66,11 @@ a:focus {
     color:$skincolor;
 }
 
+a.productth {
+  color: $lightcolor;
+  text-decoration: underline;
+}
+
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
     color: #060606;
@@ -808,10 +813,14 @@ input[type="color"]:focus,
   } 
 }
 
-.table-striped>tbody>tr:nth-of-type(odd) {
+.table-striped>tbody>tr:nth-of-type(even) {
     background-color: $maroon-tablestripe-odd;
 }
 
+.table>thead:first-child>tr:first-child>th{
+  background-color: $maroon;
+  color: $lightcolor;
+}
 /*** following is for all pagination*/
 .pagination>li>a, .pagination>li>span{
   background-color: #ccc;

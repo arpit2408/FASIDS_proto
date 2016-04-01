@@ -89,6 +89,10 @@ a:focus {
 .colored-text {
   color: #500000; }
 
+a.productth {
+  color: #fff;
+  text-decoration: underline; }
+
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
   color: #060606;
@@ -827,8 +831,12 @@ input[type="color"]:focus,
   .img-icon:hover .img-icon-overlay {
     opacity: 1; }
 
-.table-striped > tbody > tr:nth-of-type(odd) {
-  background-color: rgba(80, 0, 0, 0.07); }
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: rgba(80, 0, 0, 0.1); }
+
+.table > thead:first-child > tr:first-child > th {
+  background-color: #500000;
+  color: #fff; }
 
 /*** following is for all pagination*/
 .pagination > li > a, .pagination > li > span {
