@@ -85,7 +85,9 @@ if (app.get('env') === 'development') {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
-      error: err
+      error: err,
+      isAuthenticated: req.isAuthenticated(),
+      user: processReqUser(req.user)
     });
   });
 }
@@ -123,7 +125,7 @@ if (glblprefix === ""){  // Linux server launch
     exports.server = server;
   }
 }
-else{  // IISNODE launch
+else{  // IISNODE launch, this applies to KEL IIS scenario
   windows_base.use(glblprefix, app);
   windows_base.listen(process.env.PORT);
 }
