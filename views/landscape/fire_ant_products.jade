@@ -9,7 +9,7 @@ block additionalCSS
     // get data
     sortFireAntProduct.run(function($http) {
       // this url needs to be changed
-      var globalPrefix = window.location.href.search("fasids.tamu.edu") >= 0 ?  "/node/fasids" : ""
+      var globalPrefix = window.location.href.search("fasids.tamu.edu") >= 0 ?  "/node/fasids" : "";
       $http.get(globalPrefix +"/api/fire_ant_products").success(function(data) {
         console.log("successfully get data in ajax way");
         model.items = data;
