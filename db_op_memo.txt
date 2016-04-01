@@ -61,7 +61,6 @@ GeoJson feature example
 }
 
 
-
 // for /landscape/treatment
 {"geometry":{"type":"Polygon","coordinates":[[[-96.32967,30.620187],[-96.328039,30.619411],[-96.330228,30.615829],[-96.331129,30.618211],[-96.330721,30.619633],[-96.32967,30.620187]]]},"properties":{"prop0":"value0","prop1":"value1","landusage":"lawnturf","treatment":"imt", "mound_density":0.25}}
 
@@ -76,6 +75,7 @@ db.fire_ant_product.update({usage:"IMT"}, {$set:{usage:"imt"}}, {multi:true})
 db.fire_ant_product.update({usage:"Broadcast"}, {$set:{usage:"broadcast"}}, {multi:true})
 db.fire_ant_product.update({usage:"Line"}, {$set:{usage:"line"}}, {multi:true})
 
+db.fire_ant_product.update({}, {$rename:{"homedeport_score": "homedepot_score"}});
 
 {
   "_id" : ObjectId("5611f401ce5001a4267c83d3"),
