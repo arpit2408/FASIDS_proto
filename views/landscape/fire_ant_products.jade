@@ -42,25 +42,26 @@ block additionalCSS
     });
 block renderBody
   .divide30
-  .container(ng-app='sortFireAntProduct')
+  .container(ng-app='sortFireAntProduct' ng-cloak)
     .row(ng-controller='FAPrdtSortCtrl')
       .col-xs-12
         table.table.table-striped.table-bordered
           thead
             tr
-              th Product Page
-              th
+              th.col-xs-3 Product Page
+              th.col-xs-2
                 a(href='#', ng-click="sortType='product_name'; sortReverse=!sortReverse")
                   | Product Name
                   span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
                   span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
-              th
+              th.col-xs-2
                 a(href='#', ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
                   | Brand
                   span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
                   span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
-              th Usage
-              th
+              th.col-xs-1 Usage
+              th.col-xs-2 Control Method
+              th.col-xs-2
                 a(href='#', ng-click="sortType='coverage'; sortReverse=!sortReverse")
                   | Coverage
                   span.fa.fa-caret-down(ng-show="sortType === 'coverage' && !sortReverse")
@@ -73,25 +74,27 @@ block renderBody
               td {{roll.product_name}}
               td {{roll.manufacturer}}
               td {{roll.usage}}
+              td {{roll.control_method}}
               td {{roll.coverage}}
     .row(ng-controller='FAPrdtSortCtrl')
       .col-xs-12
         table.table.table-striped.table-bordered
           thead
             tr
-              th Product Page
-              th
+              th.col-xs-3 Product Page
+              th.col-xs-2
                 a(href='', ng-click="sortType='product_name'; sortReverse=!sortReverse")
                   | Product Name
                   span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
                   span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
-              th
+              th.col-xs-2
                 a(href='', ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
                   | Brand
                   span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
                   span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
-              th Usage
-              th
+              th.col-xs-1 Usage
+              th.col-xs-2 Control Method
+              th.col-xs-2
                 a(href='', ng-click="sortType='coverage'; sortReverse=!sortReverse")
                   | Coverage
                   span.fa.fa-caret-down(ng-show="sortType === 'coverage' && !sortReverse")
@@ -104,6 +107,7 @@ block renderBody
               td {{roll.product_name}}
               td {{roll.manufacturer}}
               td {{roll.usage}}
+              td {{roll.control_method}}
               td
                 | {{roll.coverage}}
                 span
