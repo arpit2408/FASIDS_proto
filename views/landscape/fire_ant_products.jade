@@ -1,47 +1,113 @@
 extends ../layout
 
 block additionalCSS
-  
+  script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js')
+
+  script(type='text/javascript').
+    var model = {};
+    var sortFireAntProduct = angular.module("sortFireAntProduct", []);
+    // get data
+    sortFireAntProduct.run(function($http) {
+      // this url needs to be changed
+      var globalPrefix = window.location.href.search("fasids.tamu.edu") >= 0 ?  "/node/fasids" : ""
+      $http.get(globalPrefix +"/api/fire_ant_products").success(function(data) {
+        console.log("successfully get data in ajax way");
+        model.items = data;
+        model.items.forEach(function(oneItem, idx, arra) {
+          if (oneItem.coverage) {
+            switch (oneItem.usage) {
+              case "imt":
+                oneItem.coverage = oneItem.coverage + " mnds"
+                break;
+              case "line":
+                oneItem.coverage = oneItem.coverage + " m"
+                break;
+              case "broadcast":
+                oneItem.coverage = oneItem.coverage + " "
+                break;
+              default:
+                oneItem.coverage = "unknow unit due to unknow usage"
+            }
+          } else {
+            oneItem.coverage = "No Data"
+          }
+        });
+      });
+    });
+    sortFireAntProduct.controller("FAPrdtSortCtrl", function($scope) {
+      $scope.sortType = 'product_name'; // set the default sort type
+      $scope.sortReverse = false; // set the default sort order
+      // list of products
+      $scope.FireAntProduct = model;
+    });
 block renderBody
-  //- put mixins here
-  mixin tabledatarow(product)
-    tr
-      td
-        a(href=product.product_url, target="_blank")
-          img.img-thumbnail( src=product.img_small_url alt="product_img")
-      //- td= product.product_id
-      td= product.product_name
-      td= product.manufacturer
-      td= product.usage
-      if product.coverage
-        - product.usage = product.usage.toLowerCase();
-        case product.usage
-          when "imt"
-            td= product.coverage + " mnds"
-          when "broadcast"
-            td!= product.coverage + " m<sup>2</sup>"
-          when "line"
-            td= product.coverage + " m"
-          default
-            td="unknown unit due to unknown usage"
-      else
-        td= "No Data"
-  include ../snippets/breadcrum
   .divide30
-  .container
-    .row
+  .container(ng-app='sortFireAntProduct')
+    .row(ng-controller='FAPrdtSortCtrl')
       .col-xs-12
         table.table.table-striped.table-bordered
           thead
             tr
               th Product Page
-              //- th Product ID
-              th Product Name
-              th Brand
+              th
+                a(href='#', ng-click="sortType='product_name'; sortReverse=!sortReverse")
+                  | Product Name
+                  span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
+              th
+                a(href='#', ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
+                  | Brand
+                  span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
               th Usage
-              th Coverage
+              th
+                a(href='#', ng-click="sortType='coverage'; sortReverse=!sortReverse")
+                  | Coverage
+                  span.fa.fa-caret-down(ng-show="sortType === 'coverage' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'coverage' && sortReverse")
           tbody
-            each product, index in products
-              +tabledatarow(product)
+            tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse| filter:{usage:'imt'}:true")
+              td
+                a(href='{{roll.product_url}}', target='_blank')
+                  img.img-thumbnail(src='{{roll.img_small_url}}', alt='product_img')
+              td {{roll.product_name}}
+              td {{roll.manufacturer}}
+              td {{roll.usage}}
+              td {{roll.coverage}}
+    .row(ng-controller='FAPrdtSortCtrl')
+      .col-xs-12
+        table.table.table-striped.table-bordered
+          thead
+            tr
+              th Product Page
+              th
+                a(href='', ng-click="sortType='product_name'; sortReverse=!sortReverse")
+                  | Product Name
+                  span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
+              th
+                a(href='', ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
+                  | Brand
+                  span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
+              th Usage
+              th
+                a(href='', ng-click="sortType='coverage'; sortReverse=!sortReverse")
+                  | Coverage
+                  span.fa.fa-caret-down(ng-show="sortType === 'coverage' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'coverage' && sortReverse")
+          tbody
+            tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse| filter:{usage:'broadcast'}:true")
+              td
+                a(href='{{roll.product_url}}', target='_blank')
+                  img.img-thumbnail(src='{{roll.img_small_url}}', alt='product_img')
+              td {{roll.product_name}}
+              td {{roll.manufacturer}}
+              td {{roll.usage}}
+              td
+                | {{roll.coverage}}
+                span
+                  | m
+                  sup 2
 
 block additionalJS

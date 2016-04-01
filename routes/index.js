@@ -428,28 +428,12 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
     );
   });
 });
+
 /* this route is used to display products*/
 router.get('/landscape/fire_ant_products', function(req, res, next){
   req.db_models.FireAntProduct.find({},null,{}, function exec(error, products ){
     if (error) return next(error);
-    
     res.render("landscape/fire_ant_products.jade",{
-      breadcrumTitle:"FIRE ANT PRODUCTS",
-      pathToHere:"landscape / fire_ant_products",
-      activePage:'Landscape',
-      products: products,
-      isAuthenticated: req.isAuthenticated(),
-      user: processReqUser(req.user)
-    });
-  });
-});
-
-/* this route is used to display products*/
-router.get('/landscape/fire_ant_products2', function(req, res, next){
-  req.db_models.FireAntProduct.find({},null,{}, function exec(error, products ){
-    if (error) return next(error);
-    
-    res.render("landscape/fire_ant_products2.jade",{
       breadcrumTitle:"FIRE ANT PRODUCTS",
       pathToHere:"landscape / fire_ant_products2",
       activePage:'Landscape',
