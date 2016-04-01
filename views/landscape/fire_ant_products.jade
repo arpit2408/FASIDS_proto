@@ -68,8 +68,8 @@ block renderBody
           tbody
             tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse| filter:{usage:'imt'}:true")
               td
-                a(href='{{roll.product_url}}', target='_blank')
-                  img.img-thumbnail(src='{{roll.img_small_url}}', alt='product_img')
+                a(ng-href='{{roll.product_url}}', target='_blank')
+                  img.img-thumbnail(ng-src='{{roll.img_small_url}}', alt='product_img')
               td {{roll.product_name}}
               td {{roll.manufacturer}}
               td {{roll.usage}}
@@ -99,8 +99,8 @@ block renderBody
           tbody
             tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse| filter:{usage:'broadcast'}:true")
               td
-                a(href='{{roll.product_url}}', target='_blank')
-                  img.img-thumbnail(src='{{roll.img_small_url}}', alt='product_img')
+                a(ng-href='{{roll.product_url}}', target='_blank')
+                  img.img-thumbnail(ng-src='{{roll.img_small_url}}', alt='product_img')
               td {{roll.product_name}}
               td {{roll.manufacturer}}
               td {{roll.usage}}
