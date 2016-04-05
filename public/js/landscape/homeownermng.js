@@ -6,12 +6,12 @@ $(document).ready(function(){
   })();
 
   google.maps.Polygon.prototype.my_getBounds=function(){
-      var bounds = new google.maps.LatLngBounds();
-      this.getPath().forEach(function(element,index){
+    var bounds = new google.maps.LatLngBounds();
+    this.getPath().forEach(function(element,index){
         // console.log("DEBUGG:" + element.toString());
         bounds.extend(element);
       })
-      if (bounds.isEmpty()){alert("bounds should not be empty")}
+    if (bounds.isEmpty()){alert("bounds should not be empty")}
       return bounds;
   }
   var page_status = JSON.parse($("meta[name=\"page_status\"]").attr("content"));
@@ -166,16 +166,6 @@ $(document).ready(function(){
     }
   }
 
-  gmap.addListener('click', function mapClkCb (event){
-    // console.log("at least clicked");
-    if (map_tool_register.get("map_tool_area_drawing")){
-      drawingPath.getPath().push(event.latLng)
-      if (drawingPath.getPath().getLength() === 1){
-        temp_startmarker.setPosition(event.latLng);
-        temp_startmarker.setMap(gmap);
-      }
-    }
-  });
 
 
   var map_tool_register = new (Backbone.Model.extend({
@@ -199,20 +189,20 @@ $(document).ready(function(){
       if (to_be_rendered_polygon.properties.hasOwnProperty("landusage")){
         switch(to_be_rendered_polygon.properties["landusage"]){
           case "housebuilding":
-            to_be_rendered_polygon.setOptions({
-              fillColor:"#0000FF"
-            });
-            break;
+          to_be_rendered_polygon.setOptions({
+            fillColor:"#0000FF"
+          });
+          break;
           case "lawnturf":
-            to_be_rendered_polygon.setOptions({
-              fillColor:"#FFFF00"
-            });
-            break;
+          to_be_rendered_polygon.setOptions({
+            fillColor:"#FFFF00"
+          });
+          break;
           case "vegetablegarden":
-            to_be_rendered_polygon.setOptions({
-              fillColor:"#33CC33"
-            });
-            break;
+          to_be_rendered_polygon.setOptions({
+            fillColor:"#33CC33"
+          });
+          break;
           default:
 
         }
@@ -362,12 +352,12 @@ $(document).ready(function(){
     }
   } ) ) ();  // initialize a new 
 
-  var map_tool_helper = {
-    codeAddress :function ( address) {
-      geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          try{
-            gmap.fitBounds(results[0].geometry.viewport);
+var map_tool_helper = {
+  codeAddress :function ( address) {
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        try{
+          gmap.fitBounds(results[0].geometry.viewport);
 
           } catch(e){  // possibly there is not bounds
             console.error(e);
@@ -379,15 +369,15 @@ $(document).ready(function(){
           $(".errormessage-container").find(".alert-danger.alert").text("Failure in searching: \"" + address +"\", "+ status);
         }
       });
-    },
+  },
 
-    /*I want to write it in a more beautiful way*/
-    convertToMVCArray : function (array, index_at_parent, parent_array){
-      var ClassRef = this;
-      if ( !Array.isArray(array[0]) ){
-          parent_array[index_at_parent] = ClassRef.geoLatLngToGoogleLatLng(array);
-      }
-      else{
+  /*I want to write it in a more beautiful way*/
+  convertToMVCArray : function (array, index_at_parent, parent_array){
+    var ClassRef = this;
+    if ( !Array.isArray(array[0]) ){
+      parent_array[index_at_parent] = ClassRef.geoLatLngToGoogleLatLng(array);
+    }
+    else{
         // var len = array[0][0]
         array.forEach( function (element, index, ar){
           ClassRef.convertToMVCArray(element, index, ar);
@@ -413,7 +403,7 @@ $(document).ready(function(){
         return to_be_return;
       }
     },
-  
+
     convertPaths:function(MVCArray, tbr_a){
       var ClassRef = this;
       // console.log("asdf");
@@ -434,7 +424,7 @@ $(document).ready(function(){
       return tbr_a;
     },
     geoLatLngToGoogleLatLng: function (geoLatLngArray){
-     
+
       var tmpLatLng = new google.maps.LatLng( geoLatLngArray[1], geoLatLngArray[0] );
       // console.log(tmpLatLng.toString());
       return tmpLatLng;
@@ -464,33 +454,33 @@ $(document).ready(function(){
       if (type === "polygon")
       {
         var tempGeoJPolygon = 
-            {
-               "type":"Feature",
-               "geometry":{
-                  "type":"Polygon",
-                  "coordinates":[]
-               },
-               "properties":{
-               }
-            };
-        tempGeoJPolygon.geometry.coordinates = ClassRef.convertPaths(googleMapShapeObject.getPaths(), []);
+        {
+         "type":"Feature",
+         "geometry":{
+          "type":"Polygon",
+          "coordinates":[]
+        },
+        "properties":{
+        }
+      };
+      tempGeoJPolygon.geometry.coordinates = ClassRef.convertPaths(googleMapShapeObject.getPaths(), []);
 
-        var temp_bounds = googleMapShapeObject.my_getBounds();
+      var temp_bounds = googleMapShapeObject.my_getBounds();
 
-        _.extendOwn(tempGeoJPolygon.properties, googleMapShapeObject.properties);
-        tempGeoJPolygon.properties.bounds ={  
-          sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
-          ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
-        };
-        tempGeoJPolygon.properties.total_area =  ClassRef.getTotalAreaOf(googleMapShapeObject);
-        tempGeoJPolygon.properties.environment_map = {};
-        tempGeoJPolygon.properties.environment_map.tilt = gmap.getTilt();
-        tempGeoJPolygon.properties.environment_map.MapTypeId = gmap.getMapTypeId();
-        return tempGeoJPolygon;
-      }
-    },
-    deGeoJsonize:function( Geojson_string){
-      var temp_geojson = JSON.parse(Geojson_string);
+      _.extendOwn(tempGeoJPolygon.properties, googleMapShapeObject.properties);
+      tempGeoJPolygon.properties.bounds ={  
+        sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
+        ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
+      };
+      tempGeoJPolygon.properties.total_area =  ClassRef.getTotalAreaOf(googleMapShapeObject);
+      tempGeoJPolygon.properties.environment_map = {};
+      tempGeoJPolygon.properties.environment_map.tilt = gmap.getTilt();
+      tempGeoJPolygon.properties.environment_map.MapTypeId = gmap.getMapTypeId();
+      return tempGeoJPolygon;
+    }
+  },
+  deGeoJsonize:function( Geojson_string){
+    var temp_geojson = JSON.parse(Geojson_string);
 
       // Key step is covert JS Geojson latlng array into MVCArray instance
       var ClassRef = this; // map_tool_helper
