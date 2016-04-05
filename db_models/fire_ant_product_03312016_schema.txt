@@ -51,3 +51,19 @@ var fire_ant_product_schema = new mongoose.Schema({
   homedepot_img_small_url:String,
   homedepot_img_url: String
 },{ collection:'fire_ant_product'});
+
+
+
+// step 1: type_of_use : ["home", "agricultural", "professional"]
+
+// step 2: control_method: ["bait", "contact", "baitcontact"]
+
+// step 3: usage : [imt, broadcast, broadcastimt]  // when "imt" is presented on page, it is "individual mound treatment"
+
+// step 4a(imt)                                step 4b (broadcast)
+// only provide mound number estimation        // provide nothing
+// animation one input drop down 
+// step 5 checkboxes, there are options like: "safe for pets", "organic only", "not include indoor products(default checked)"
+// step 6 polygonName
+// step 7 call Google Map Geodecode API to get suggested address for user, user can keep or modify
+// step 8 Notes (not required)
