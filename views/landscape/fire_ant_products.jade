@@ -1,7 +1,7 @@
 extends ../layout
 
 block additionalCSS
-  script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js')
+  script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js')
 
   script(type='text/javascript').
     var model = {};
@@ -9,11 +9,14 @@ block additionalCSS
     // get data
     sortFireAntProduct.run(function($http) {
       // this url needs to be changed
-      var globalPrefix = window.location.href.search("fasids.tamu.edu") >= 0 ?  "/node/fasids" : ""
+      var globalPrefix = window.location.href.search("fasids.tamu.edu") >= 0 ?  "/node/fasids" : "";
       $http.get(globalPrefix +"/api/fire_ant_products").success(function(data) {
         console.log("successfully get data in ajax way");
         model.items = data;
         model.items.forEach(function(oneItem, idx, arra) {
+          if (oneItem.hasOwnProperty("coverage")) {
+            oneItem.coverageToBeSorted = new Number(oneItem.coverage);
+          }
           if (oneItem.coverage) {
             switch (oneItem.usage) {
               case "imt":
@@ -64,8 +67,8 @@ block renderBody
               th.col-xs-2
                 a.productth(href='#', ng-click="sortType='coverage'; sortReverse=!sortReverse")
                   | Coverage
-                  span.fa.fa-caret-down(ng-show="sortType === 'coverage' && !sortReverse")
-                  span.fa.fa-caret-up(ng-show="sortType === 'coverage' && sortReverse")
+                  span.fa.fa-caret-down(ng-show="sortType === 'coverageToBeSorted ' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'coverageToBeSorted ' && sortReverse")
           tbody
             tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse| filter:{usage:'imt'}:true")
               td
@@ -83,22 +86,22 @@ block renderBody
             tr
               th.col-xs-3 Product Page
               th.col-xs-2
-                a(href='', ng-click="sortType='product_name'; sortReverse=!sortReverse")
+                a.productth(href='', ng-click="sortType='product_name'; sortReverse=!sortReverse")
                   | Product Name
                   span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
                   span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
               th.col-xs-2
-                a(href='', ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
+                a.productth(href='', ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
                   | Brand
                   span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
                   span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
               th.col-xs-1 Usage
               th.col-xs-2 Control Method
               th.col-xs-2
-                a(href='', ng-click="sortType='coverage'; sortReverse=!sortReverse")
+                a.productth(href='', ng-click="sortType='coverageToBeSorted'; sortReverse=!sortReverse")
                   | Coverage
-                  span.fa.fa-caret-down(ng-show="sortType === 'coverage' && !sortReverse")
-                  span.fa.fa-caret-up(ng-show="sortType === 'coverage' && sortReverse")
+                  span.fa.fa-caret-down(ng-show="sortType === 'coverageToBeSorted' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'coverageToBeSorted' && sortReverse")
           tbody
             tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse| filter:{usage:'broadcast'}:true")
               td
