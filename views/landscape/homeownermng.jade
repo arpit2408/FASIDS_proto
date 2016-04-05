@@ -3,7 +3,12 @@ extends ../layout
 block additionalCSS
   link(href="#{glblprefix}/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
   link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')
-  script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js")
+
+  // This is used to indicate current page status, such as whether user logged in or not
+  meta(name="page_status", content="#{JSON.stringify(page_status)}")
+  // This is used to retrieve target polygon, when user click their polygon in their user profile
+  meta(name="target-polygon", content="#{JSON.stringify(geojson)}")
+
 block renderBody
   div(ng-app="polygonManagerApp" ng-controller="pmaDefaultCtrl")
     .mapcover#mapcover
@@ -23,121 +28,109 @@ block renderBody
               button.close(type='button', data-dismiss='alert') ×
               | Error Message.
 
-      .mc-static2mapcontainer.panel#map-tools-box
+      .mc-static2mapcontainer.panel#map-tools-box(ng-controller="pmaToolPanelCtrl")
         .row
           .col-xs-12
-            span.btn.btn-default(data-operation="tutorial") Instructions
+            span.btn.btn-default Instructions
         .row
           .col-xs-12 
-            if page_status.model_op === 'create'
-              span.btn.btn-default#map-tool-area-pointer(data-operation = "map_tool_area_drawing")
-                //- .fa.fa-mouse-pointer
-                | Draw Polygon
-            else if page_status.model_op === 'patch'
-              span.btn.btn-default.fa.fa-floppy-o.fa-lg#map-tool-save(data-operation = "map_tool_save")
-                //- | Save
+              span.btn.btn-default(tool-button target-status="polygondrawing") Draw Polygon
         .row
           .col-xs-12
-            span.btn.btn-default#map-tool-hole(data-operation = "map_tool_holing") Remove Area
+            span.btn.btn-default(tool-button target-status="shapeediting") Edit shape
         .row
           .col-xs-12
-            span.btn.btn-default#map-tool-editpolygon(data-operation="map_tool_editpolygon") Edit shape
+            span.btn.btn-default(tool-button target-status="treatmentsetting") Set Treatment
         .row
           .col-xs-12
-            span.btn.btn-default#map-tool-setproperties(data-operation="map_tool_setproperties") Set Treatment
+            span.btn.btn-default(tool-button target-status="productlisting") Product List
         .row
           .col-xs-12
-            if page_status.model_op === "create"
-              span.btn.btn-default#map-tool-genresult(data-operation="map_tool_genresult") Save &amp; See Result
-            else if page_status.model_op === "patch"
-              span.btn.btn-default#map-tool-genresult(data-operation="map_tool_genresult") See Result
-        .row
-          .col-xs-12
-            span.btn.btn-default#map-tool-cancel cancel
-    .modal-container
-      #purpose-modal.modal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
-        //- class "modal-xl" is introduced by Bowei, refer _basic.scss please
-        .modal-dialog.modal-xl(role='document')
-          .modal-content
-            .modal-header
-              button.close(type='button', data-dismiss='modal', aria-label='Close')
-                span(aria-hidden='true') ×
-              h4#myModalLabel.modal-title Edit treatment properties
-            .modal-body
-              form#purpose
-                div
-                  b Land Usage Type
-                div
-                  label.radio-inline
-                    input#housebuilding-radio(type='radio', name='landusage', value='housebuilding')
-                    |  House &amp; Building
-                  label.radio-inline
-                    input#lawnturf-radio(type='radio', name='landusage', value='lawnturf')
-                    |  Lawn &amp; Turf
-                  label.radio-inline
-                    input#vegetablegarden-radio(type='radio', name='landusage', value='vegetablegarden')
-                    |  Vegetable Garden
-                .divide15
-                div 
-                  b Treatment Type
-                div
-                  label.radio-inline
-                    input#imt-radio(type='radio', name='treatment', value='imt')
-                    |  Individual Mound Treatment
-                  label.radio-inline
-                    input#broadcast-radio(type='radio', name='treatment', value='broadcast')
-                    |  Broadcast Baits
-                .divide15
-                .row
-                  .col-xs-5
-                    .form-group
-                      label(for='mound-density-input') Mound Density
-                      .input-group
-                        input#mound-density-input.form-control(type='number', name='mound_density', placeholder='Put mound density here')
-                        .input-group-addon
-                          | ft
-                          sup 2
-                    .form-group
-                      label(for='mound-number-input') Mound Number
-                      .input-group
-                        input#mound-number-input.form-control(type='number', name='mound_number', placeholder='Put estimated mound number here')
-                        .input-group-addon
-                          | mds
-                    .form-group
-                      label(for='polygon-name') Polygon Name
-                      input#polygon-name.form-control(type='text', name='polygon_name', placeholder='The polygon name')
+            span.btn.btn-default(tool-button target-status="resetting") cancel
+    //- .modal-container
+    //-   #purpose-modal.modal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+    //-     //- class "modal-xl" is introduced by Bowei, refer _basic.scss please
+    //-     .modal-dialog.modal-xl(role='document')
+    //-       .modal-content
+    //-         .modal-header
+    //-           button.close(type='button', data-dismiss='modal', aria-label='Close')
+    //-             span(aria-hidden='true') ×
+    //-           h4#myModalLabel.modal-title Edit treatment properties
+    //-         .modal-body
+    //-           form#purpose
+    //-             div
+    //-               b Land Usage Type
+    //-             div
+    //-               label.radio-inline
+    //-                 input#housebuilding-radio(type='radio', name='landusage', value='housebuilding')
+    //-                 |  House &amp; Building
+    //-               label.radio-inline
+    //-                 input#lawnturf-radio(type='radio', name='landusage', value='lawnturf')
+    //-                 |  Lawn &amp; Turf
+    //-               label.radio-inline
+    //-                 input#vegetablegarden-radio(type='radio', name='landusage', value='vegetablegarden')
+    //-                 |  Vegetable Garden
+    //-             .divide15
+    //-             div 
+    //-               b Treatment Type
+    //-             div
+    //-               label.radio-inline
+    //-                 input#imt-radio(type='radio', name='treatment', value='imt')
+    //-                 |  Individual Mound Treatment
+    //-               label.radio-inline
+    //-                 input#broadcast-radio(type='radio', name='treatment', value='broadcast')
+    //-                 |  Broadcast Baits
+    //-             .divide15
+    //-             .row
+    //-               .col-xs-5
+    //-                 .form-group
+    //-                   label(for='mound-density-input') Mound Density
+    //-                   .input-group
+    //-                     input#mound-density-input.form-control(type='number', name='mound_density', placeholder='Put mound density here')
+    //-                     .input-group-addon
+    //-                       | ft
+    //-                       sup 2
+    //-                 .form-group
+    //-                   label(for='mound-number-input') Mound Number
+    //-                   .input-group
+    //-                     input#mound-number-input.form-control(type='number', name='mound_number', placeholder='Put estimated mound number here')
+    //-                     .input-group-addon
+    //-                       | mds
+    //-                 .form-group
+    //-                   label(for='polygon-name') Polygon Name
+    //-                   input#polygon-name.form-control(type='text', name='polygon_name', placeholder='The polygon name')
 
-                  .col-xs-7
-                    .form-group
-                      label(for='polygon-address') Polygon Address
-                      input#polygon-address.form-control(type='text', name='address', placeholder='The address where the polygon is located')
+    //-               .col-xs-7
+    //-                 .form-group
+    //-                   label(for='polygon-address') Polygon Address
+    //-                   input#polygon-address.form-control(type='text', name='address', placeholder='The address where the polygon is located')
 
-                    .form-group
-                      label(for='polygon-address') Notes
-                      textarea#polygon-address.form-control( name="notes", row="4" ,placeholder='Brief notes about this polygon')
-            .modal-footer
-              button.btn.btn-default(type='button', data-dismiss='modal') Close
-              button.btn.btn-primary#save-prepared-treatment(type='button') Finish Preparation
+    //-                 .form-group
+    //-                   label(for='polygon-address') Notes
+    //-                   textarea#polygon-address.form-control( name="notes", row="4" ,placeholder='Brief notes about this polygon')
+    //-         .modal-footer
+    //-           button.btn.btn-default(type='button', data-dismiss='modal') Close
+    //-           button.btn.btn-primary#save-prepared-treatment(type='button') Finish Preparation
 
 
-    .modal.fade(tabindex='-1', role='dialog', id='signin-required-modal')
-      .modal-dialog
-        .modal-content
-          .modal-header
-            button.close(type='button', data-dismiss='modal', aria-label='Close')
-              span(aria-hidden='true') ×
-            h4.modal-title Sign in needed 
-          .modal-body
-            p 
-              | Please 
-              a(href="#{glblprefix}/users/signin?referral_url=#{glblprefix}/landscape/homeownermng") 
-                b sign in&nbsp;
-              | at right-top corner before using landscape management. If you are first-time user, please check 
-              a(href="#{glblprefix}/landscape/instructions", target="_blank") 
-               b instructions 
-              | for help.
-          .modal-footer
-            button.btn.btn-default(type='button', data-dismiss='modal') Close
+    //- .modal.fade(tabindex='-1', role='dialog', id='signin-required-modal')
+    //-   .modal-dialog
+    //-     .modal-content
+    //-       .modal-header
+    //-         button.close(type='button', data-dismiss='modal', aria-label='Close')
+    //-           span(aria-hidden='true') ×
+    //-         h4.modal-title Sign in needed 
+    //-       .modal-body
+    //-         p 
+    //-           | Please 
+    //-           a(href="#{glblprefix}/users/signin?referral_url=#{glblprefix}/landscape/homeownermng") 
+    //-             b sign in&nbsp;
+    //-           | at right-top corner before using landscape management. If you are first-time user, please check 
+    //-           a(href="#{glblprefix}/landscape/instructions", target="_blank") 
+    //-            b instructions 
+    //-           | for help.
+    //-       .modal-footer
+    //-         button.btn.btn-default(type='button', data-dismiss='modal') Close
 
 
     .hidden
@@ -146,13 +139,6 @@ block renderBody
       //- patch_url is from index.js: router     route : GET /landscape/homeownermng/:geojson_id
       form#patch( action="#{patch_url}", method="post")
         input(type="text", name="geojson")
-      // This is used to
-      meta(name="page_status", content="#{JSON.stringify(page_status)}")
-      meta(name="target-polygon", content="#{JSON.stringify(geojson)}")
-
-
-
-
 block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
   script(src="#{glblprefix}/underscorejs/underscore-min.js")
@@ -161,6 +147,7 @@ block additionalJS
   script(src="#{glblprefix}/assets/mapcover/js/mapcover.js")
   script(src="#{glblprefix}/js/landscape/DeleteMenu.js")
   //- script(src="#{glblprefix}/js/landscape/homeownermng.js" , data-glblprefix=glblprefix, id="homeownermng-src")
+  script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js")
   script(src="#{glblprefix}/js/landscape/homeownermng2.js" , data-glblprefix=glblprefix)
 
 
