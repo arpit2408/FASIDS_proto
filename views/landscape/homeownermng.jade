@@ -3,10 +3,9 @@ extends ../layout
 block additionalCSS
   link(href="#{glblprefix}/assets/mapcover/css/mapcover.css" ,rel='stylesheet', type='text/css', media='screen')
   link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')
-  //- script(src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
-  //- script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js")
+  script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js")
 block renderBody
-  div
+  div(ng-app="polygonManagerApp" ng-controller="pmaDefaultCtrl")
     .mapcover#mapcover
       .mapcover-map#mapcover-map
       .mc-static2mapcontainer.panel#map-geosearch
@@ -55,7 +54,6 @@ block renderBody
         .row
           .col-xs-12
             span.btn.btn-default#map-tool-cancel cancel
-    //- .modal-container(ng-app="preparationModal", ng-controller="preparationModalCtrl")
     .modal-container
       #purpose-modal.modal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
         //- class "modal-xl" is introduced by Bowei, refer _basic.scss please
@@ -159,8 +157,10 @@ block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
   script(src="#{glblprefix}/underscorejs/underscore-min.js")
   script(src="#{glblprefix}/js/backbone-min.js")
-  // mapcover depends on backbone.js and underscore.js
+  //- mapcover depends on backbone.js and underscore.js
   script(src="#{glblprefix}/assets/mapcover/js/mapcover.js")
   script(src="#{glblprefix}/js/landscape/DeleteMenu.js")
-  script(src="#{glblprefix}/js/landscape/homeownermng.js" , data-glblprefix=glblprefix, id="homeownermng-src")
+  //- script(src="#{glblprefix}/js/landscape/homeownermng.js" , data-glblprefix=glblprefix, id="homeownermng-src")
+  script(src="#{glblprefix}/js/landscape/homeownermng2.js" , data-glblprefix=glblprefix)
+
 
