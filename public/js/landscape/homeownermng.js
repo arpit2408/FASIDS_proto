@@ -48,19 +48,19 @@ $(document).ready(function(){
   });  
 
   /*beginning of normal file */
-  var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,    { 
-      draggingCursor:"move",
-      draggableCursor:"auto",
-      center: {lat: 30.62060000, lng: -96.32621},
-      zoom: 14,
-      zoomControl:false,    //left side
-      panControl:false,     //left top corner: 
-      tilt:0,
-      // mapTypeControl:false  //right top corner: "map|satellite"
-      mapTypeControlOptions: {
-        // style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: google.maps.ControlPosition.TOP_RIGHT
-      }
+  var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,{ 
+    draggingCursor:"move",
+    draggableCursor:"auto",
+    center: {lat: 30.62060000, lng: -96.32621},
+    zoom: 14,
+    zoomControl:false,    //left side
+    panControl:false,     //left top corner: 
+    tilt:0,
+    // mapTypeControl:false  //right top corner: "map|satellite"
+    mapTypeControlOptions: {
+      // style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      position: google.maps.ControlPosition.TOP_RIGHT
+    }
   });
 
   $("#save-prepared-treatment").click(function savePreparedTreatment(){
