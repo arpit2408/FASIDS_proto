@@ -35,8 +35,8 @@ var fire_ant_product_schema = new mongoose.Schema({
   is_safe_for_pets: Boolean,
   control_method: {                     // 'bait', 'contact'
     type: String,
-    required: [true, "control_method field not supplied"],
-    enum: ["bait", "contact", "baitcontact"]
+    enum: ["bait", "contact", "baitcontact"],
+    required: [true, "control_method field not supplied"]
   },                 
   usage: {                            // 'broadcast', 'imt'
     type: String,
