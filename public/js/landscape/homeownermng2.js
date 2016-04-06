@@ -1,17 +1,16 @@
 // completely use angularJS to refactor this JS application
 var polygonManagerApp = angular.module("polygonManagerApp", ["pmaServices"]);
 
-polygonManagerApp.directive("toolButton", function factoryFn(){
+polygonManagerApp.directive("toolButton", function factoryFn(stateService){
   // the scope shoudl be scope of pmaDefaultCtrl
   return function linkFn(scope, element, attrs) {
     var targetStatus = attrs["targetStatus"];
     element.on("click", function (e) {
-
-      scope.setStatus(targetStatus !== scope.panelStatus ? targetStatus : null );
+      stateService.setStatus(targetStatus !== stateService.getStatus() ? targetStatus : null );
     });
     scope.$watch(
       function (scope){
-        return scope.panelStatus === targetStatus;
+        return stateService.getStatus() === targetStatus;
       }, 
       function (isActive, oldValue){
         if (isActive) {
@@ -20,7 +19,7 @@ polygonManagerApp.directive("toolButton", function factoryFn(){
           element.removeClass("active");
         }
       }
-      );
+    );
   }
 });
 
@@ -30,32 +29,39 @@ polygonManagerApp.controller("pmaDefaultCtrl", function ($scope) {
   console.log("running block of default controller.");
 
 });
-
-polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, mapRelatedService, mapRelatedFunctionsService) {
-  console.log("loading pmaToolPanelCtrl.");
-  // can only set current status of panel at following state
+polygonManagerApp.service("stateService", function($rootScope) {
+  var ss = this;
   var panelStatusOptions = ["polygondrawing", "arearemoving", "shapeediting", "treatmentsetting", "productlisting", "resetting"];
-  $scope.panelStatus = null;
-  // boolean function, will return true if successfully set panel status, otherwise, return false
-  $scope.setStatus = function(toBeSetStatus) {
+  var panelStatus = null;
+  ss.setStatus =  function(toBeSetStatus) {
     if (toBeSetStatus === null) {
-      $scope.panelStatus = toBeSetStatus;
-      $scope.$digest();
-      console.log("cancel panelStatus");
-      return true;
+      panelStatus = null;
+      $rootScope.$apply();
+      return;
     }
     toBeSetStatus = toBeSetStatus.toLowerCase();
     if (panelStatusOptions.indexOf(toBeSetStatus) <0 ) {
-      console.log("cannot set panel into status other statuses mentioned in panelStatusOptions array.");
-      return false;
+      console.error("cannot set panel into status other statuses mentioned in panelStatusOptions array.");
+      return ;
     }
-    $scope.panelStatus = toBeSetStatus;
-    $scope.$digest();  // I have to this function myself
-    console.log("$scope.panelStatus:" + $scope.panelStatus);
-    return true;
+    panelStatus = toBeSetStatus;
+    $rootScope.$apply();
+    console.log("stateService._panelStatus: " + panelStatus);
+    return;  
   };
+  ss.getStatus = function() {
+    console.log("getStatus(): " + panelStatus);
+    return panelStatus;
+  };
+});
 
-  $scope.$watch("panelStatus", function (newStatus, oldStatus) {
+polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, stateService,mapRelatedService, mapRelatedFunctionsService) {
+  console.log("loading pmaToolPanelCtrl.");
+  $scope.$watch(
+    function() {
+      return stateService.getStatus();
+    }, 
+    function (newStatus, oldStatus) {
     switch (oldStatus){
     case "polygondrawing":
       // status changed from polygondrawing to something else
@@ -71,7 +77,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, mapRelatedServ
         });
         temp_polygon.setMap(mapRelatedService.gmap);
         temp_polygon.addListener("click",  function ( event ){
-          mapRelatedFunctionsService.polygonLeftClickedCB.call(this,event, mapRelatedService, $scope); // 
+          mapRelatedFunctionsService.polygonLeftClickedCB.call(this,event, mapRelatedService, stateService); // 
         });
         temp_polygon.addListener("rightclick", function () { 
           alert("right clicked");
@@ -101,35 +107,19 @@ polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, mapRelatedServ
       // reseting
       drawingPath.setPath([]);
       mapRelatedService.temp_startmarker.setMap(null);
-
       break;
     }
-
-    if (oldStatus === "polygondrawing") {}
-
   });  // end of $watch();
 
-  // handling polygon drawing
-  mapRelatedService.gmap.addListener('click', function mapClkCb (event){
-    if ($scope.panelStatus === "polygondrawing"){
-      mapRelatedService.drawingPath.getPath().push(event.latLng)
-      if (mapRelatedService.drawingPath.getPath().getLength() === 1){
-        mapRelatedService.temp_startmarker.setPosition(event.latLng);
-        mapRelatedService.temp_startmarker.setMap(mapRelatedService.gmap);
-      }
-    }
-  });
+
 });
 
-polygonManagerApp.run(function ( mapRelatedService){
-  console.log("polygonManagerApp run callback");
-});
 
 
 //////////////////////SERVICE MODULE///////////////////////////////////////////////////////////////////////
 
 // pmaServices module
-var pmaServices = angular.module("pmaServices", []).factory("mapRelatedService", function pmaServiceFactoryFn(){
+var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("mapRelatedService", function pmaServiceFactoryFn(stateService){
   /*beginning of normal file */
   var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,{
     draggingCursor:"move",
@@ -153,6 +143,7 @@ var pmaServices = angular.module("pmaServices", []).factory("mapRelatedService",
     }
   });
   var gmap = mapcover.model.get("map");
+
   var drawingPath = new google.maps.Polyline({
     path: [],
     geodesic: false,
@@ -160,6 +151,16 @@ var pmaServices = angular.module("pmaServices", []).factory("mapRelatedService",
     strokeOpacity: 1.0,
     strokeWeight: 2,
     map: gmap
+  });
+  // handling polygon drawing
+  gmap.addListener('click', function mapClkCb (event){
+    if (stateService.getStatus() === "polygondrawing"){
+      drawingPath.getPath().push(event.latLng)
+      if (drawingPath.getPath().getLength() === 1){
+        temp_startmarker.setPosition(event.latLng);
+        temp_startmarker.setMap(gmap);
+      }
+    }
   });
   return {
     mapcover: mapcover,
@@ -174,12 +175,12 @@ var pmaServices = angular.module("pmaServices", []).factory("mapRelatedService",
   };
 })
 .factory("mapRelatedFunctionsService", function (){
-  function polygonLeftClickedCB (event, mapRelatedService, pmaToolPanelCtrlScope) {
+  function polygonLeftClickedCB (event, mapRelatedService, stateService) {
     var this_polygon = this;  // save this reference
-    mapRelatedService['activePolygon'] = this;
+    mapRelatedService.activePolygon = this;
     // console.log("polygon is left clicked");
     // console.log(this_polygon);
-    if (pmaToolPanelCtrlScope.panelStatus === "arearemoving") {
+    if ( stateService.getStatus() === "arearemoving") {
       mapRelatedService.drawingPath.getPath().push(event.latLng);
       if ( mapRelatedService.drawingPath.getPath().getLength() === 1){
         mapRelatedService.temp_startmarker.setPosition(event.latLng);
