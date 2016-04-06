@@ -116,6 +116,38 @@ polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, stateService,m
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //////////////////////SERVICE MODULE///////////////////////////////////////////////////////////////////////
 
 // pmaServices module
@@ -125,7 +157,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     draggingCursor:"move",
     draggableCursor:"auto",
     center: {lat: 30.62060000, lng: -96.32621},
-    zoom: 14,
+    zoom: 16,
     zoomControl:false,    //left side
     panControl:false,     //left top corner: 
     tilt:0,
@@ -160,6 +192,12 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
         temp_startmarker.setPosition(event.latLng);
         temp_startmarker.setMap(gmap);
       }
+    }
+  });
+
+  temp_startmarker.addListener('click',function onTempStartMarkerClicked(){
+    if ( stateService.getStatus() === 'polygondrawing' || stateService.getStatus() === 'arearemoving') {
+      stateService.setStatus(null);
     }
   });
   return {
