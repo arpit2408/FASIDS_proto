@@ -1,9 +1,6 @@
-
-
 //////////////////////SERVICE MODULE///////////////////////////////////////////////////////////////////////
-
 // pmaServices module
-var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("mapRelatedService", function pmaServiceFactoryFn(stateService){
+var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("mapRelatedService", function pmaServiceFactoryFn(stateService, $rootScope){
   /*beginning of normal file */
   var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,{
     draggingCursor:"move",
@@ -49,9 +46,8 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
 
   temp_startmarker.addListener('click',function onTempStartMarkerClicked(){
     if ( stateService.getStatus() === 'polygondrawing' || stateService.getStatus() === 'arearemoving') {
-      var statusReserved = stateService.getStatus();
-      stateService.setStatus(null);
-      stateService.setStatus(statusReserved);
+      // following event is listened at pmaToolPanelCtrl, because pmaToolPanelCtrl has context of mapRelatedService and mapRelatedFunctionsService
+      $rootScope.$broadcast('polylineFinishing');
     }
   });
   return {
@@ -69,7 +65,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     }
   };
 })
-.factory("mapRelatedFunctionsService", function (){
+.factory("mapRelatedFunctionsService", function ($rootScope){
   function setActive(toBeActivatedPolygon, mapRelatedService, stateService) {
     mapRelatedService.activePolygon = toBeActivatedPolygon;
     var currentStatus = stateService.getStatus();
@@ -83,7 +79,9 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
         }
         break;
       case "treatmentsetting":
-        // modal can only be popped out for one polygon
+        $rootScope.$broadcast('shouldOpenTreatment', {
+          content: "hehe"
+        });
         break;
       default:
 

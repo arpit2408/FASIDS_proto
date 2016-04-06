@@ -40,7 +40,7 @@ polygonManagerApp.service("stateService", function($rootScope) {
   ss.setStatus =  function(toBeSetStatus) {
     if (toBeSetStatus === null) {
       panelStatus = null;
-      $rootScope.$apply();
+      $rootScope.$applyAsync();  // changed from $apply() to $applyAsync()
       return;
     }
     toBeSetStatus = toBeSetStatus.toLowerCase();
@@ -59,7 +59,7 @@ polygonManagerApp.service("stateService", function($rootScope) {
   };
 });
 
-polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, stateService,mapRelatedService, mapRelatedFunctionsService) {
+polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, $rootScope, stateService,mapRelatedService, mapRelatedFunctionsService) {
   console.log("loading pmaToolPanelCtrl.");
   $scope.$watch(
     function() {
@@ -67,34 +67,83 @@ polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, stateService,m
     }, 
     function (newStatus, oldStatus) {
     switch (oldStatus){
-    case "polygondrawing":
-      // status changed from polygondrawing to something else
-      mapRelatedFunctionsService.transformPolylineIntoPolygon(mapRelatedService, stateService);
-      break;
-    case "arearemoving":
-      mapRelatedFunctionsService.transformPolylineIntoRemovedArea(mapRelatedService, stateService);
-      break;
+      case "polygondrawing":
+        // status changed from polygondrawing to something else
+        mapRelatedFunctionsService.transformPolylineIntoPolygon(mapRelatedService, stateService);
+        break;
+      case "arearemoving":
+        mapRelatedFunctionsService.transformPolylineIntoRemovedArea(mapRelatedService, stateService);
+        break;
 
-    case "shapeediting":
-      if (mapRelatedService.activePolygon) {
-        mapRelatedService.activePolygon.setEditable(false);
-      }
-      break;
-    }  // switch (oldStatus)
+      case "shapeediting":
+        if (mapRelatedService.activePolygon) {
+          mapRelatedService.activePolygon.setEditable(false);
+        }
+        break;
+      case "treatmentsetting":
+        break;
+    }  // close switch (oldStatus)
 
     switch(newStatus) {
-    case "shapeediting":
-      if (mapRelatedService.isOnlyOnePolygon()) {
-        mapRelatedService.activePolygon = mapRelatedService.polygons[0];
-      }
-      if (mapRelatedService.activePolygon) {
-        mapRelatedService.activePolygon.setEditable(true);
-      } 
-      break;
-    default:
+      case "shapeediting":
+        if (mapRelatedService.isOnlyOnePolygon()) {
+          mapRelatedService.activePolygon = mapRelatedService.polygons[0];
+        }
+        if (mapRelatedService.activePolygon) {
+          mapRelatedService.activePolygon.setEditable(true);
+        } 
+        break;
+      case "treatmentsetting":
+        if (mapRelatedService.isOnlyOnePolygon()) {
+          mapRelatedService.activePolygon = mapRelatedService.polygons[0];
+        }
+        if (mapRelatedService.activePolygon) {
+          $rootScope.$broadcast('shouldOpenTreatment', {
+            content: "hehe"
+          });
+        }
+        break;
+      default:
     }
-
   });  // end of $watch();
 
+  // polylineFinishing event is triggerred at handlerFn of temp_startmarker.addListener('click', handlerFn)
+  $scope.$on('polylineFinishing', function(event) {
+    switch(stateService.getStatus()){
+      case "polygondrawing":
+        mapRelatedFunctionsService.transformPolylineIntoPolygon(mapRelatedService, stateService);
+        break;
+      case "arearemoving":
+        mapRelatedFunctionsService.transformPolylineIntoRemovedArea(mapRelatedService, stateService);
+        break;
+    }
+  });
+});
+
+polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, mapRelatedService){
+  var $treatmentModal = $("#treatment-modal");
+
+  $scope.openTreatmentModal = function() {
+    $treatmentModal.modal('show');
+  };
+
+  // user clicked 'x' of Treatment modal
+  $scope.saveTreatmentAndPolygonLocally = function () {
+    // no need to hide modal, since 'x' has data-dismiss attribute
+    console.log("save treatment and polygon locally");
+  }
+
+  // user clicked 
+  $scope.saveTreatmentAndPolygonToServer = function() {
+    console.log( "save treatment to server.");
+    $treatmentModal.modal('hide');
+    if (mapRelatedService.isOnlyOnePolygon()) {
+      stateService.setStatus(null);
+    }
+  };
+
+  $scope.$on('shouldOpenTreatment', function(event, args) {
+    $scope.openTreatmentModal();
+  });
 });
 

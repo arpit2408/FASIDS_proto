@@ -50,70 +50,20 @@ block renderBody
         .row
           .col-xs-12
             span.btn.btn-default(tool-button target-status="resetting") cancel
-    //- .modal-container
-    //-   #purpose-modal.modal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
-    //-     //- class "modal-xl" is introduced by Bowei, refer _basic.scss please
-    //-     .modal-dialog.modal-xl(role='document')
-    //-       .modal-content
-    //-         .modal-header
-    //-           button.close(type='button', data-dismiss='modal', aria-label='Close')
-    //-             span(aria-hidden='true') ×
-    //-           h4#myModalLabel.modal-title Edit treatment properties
-    //-         .modal-body
-    //-           form#purpose
-    //-             div
-    //-               b Land Usage Type
-    //-             div
-    //-               label.radio-inline
-    //-                 input#housebuilding-radio(type='radio', name='landusage', value='housebuilding')
-    //-                 |  House &amp; Building
-    //-               label.radio-inline
-    //-                 input#lawnturf-radio(type='radio', name='landusage', value='lawnturf')
-    //-                 |  Lawn &amp; Turf
-    //-               label.radio-inline
-    //-                 input#vegetablegarden-radio(type='radio', name='landusage', value='vegetablegarden')
-    //-                 |  Vegetable Garden
-    //-             .divide15
-    //-             div 
-    //-               b Treatment Type
-    //-             div
-    //-               label.radio-inline
-    //-                 input#imt-radio(type='radio', name='treatment', value='imt')
-    //-                 |  Individual Mound Treatment
-    //-               label.radio-inline
-    //-                 input#broadcast-radio(type='radio', name='treatment', value='broadcast')
-    //-                 |  Broadcast Baits
-    //-             .divide15
-    //-             .row
-    //-               .col-xs-5
-    //-                 .form-group
-    //-                   label(for='mound-density-input') Mound Density
-    //-                   .input-group
-    //-                     input#mound-density-input.form-control(type='number', name='mound_density', placeholder='Put mound density here')
-    //-                     .input-group-addon
-    //-                       | ft
-    //-                       sup 2
-    //-                 .form-group
-    //-                   label(for='mound-number-input') Mound Number
-    //-                   .input-group
-    //-                     input#mound-number-input.form-control(type='number', name='mound_number', placeholder='Put estimated mound number here')
-    //-                     .input-group-addon
-    //-                       | mds
-    //-                 .form-group
-    //-                   label(for='polygon-name') Polygon Name
-    //-                   input#polygon-name.form-control(type='text', name='polygon_name', placeholder='The polygon name')
-
-    //-               .col-xs-7
-    //-                 .form-group
-    //-                   label(for='polygon-address') Polygon Address
-    //-                   input#polygon-address.form-control(type='text', name='address', placeholder='The address where the polygon is located')
-
-    //-                 .form-group
-    //-                   label(for='polygon-address') Notes
-    //-                   textarea#polygon-address.form-control( name="notes", row="4" ,placeholder='Brief notes about this polygon')
-    //-         .modal-footer
-    //-           button.btn.btn-default(type='button', data-dismiss='modal') Close
-    //-           button.btn.btn-primary#save-prepared-treatment(type='button') Finish Preparation
+    .modal-container(ng-controller="pmaModalsCtrl")
+      #treatment-modal.modal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+        //- class "modal-xl" is introduced by Bowei, refer _basic.scss please
+        .modal-dialog.modal-xl(role='document')
+          .modal-content
+            .modal-header
+              button.close(type='button', data-dismiss='modal', aria-label='Close',ng-click="saveTreatmentAndPolygonLocally()")
+                span(aria-hidden='true') ×
+              h4.modal-title Edit treatment properties
+            .modal-body
+              p This is where treatment form should be put
+            .modal-footer
+              button.btn.btn-default(type='button', data-dismiss='modal') Close
+              button.btn.btn-primary(type='button', ng-click="saveTreatmentAndPolygonToServer()" ) Save Treatment to Server
 
 
     //- .modal.fade(tabindex='-1', role='dialog', id='signin-required-modal')
