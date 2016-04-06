@@ -86,10 +86,10 @@ polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, stateService,m
     case "shapeediting":
       if (mapRelatedService.isOnlyOnePolygon()) {
         mapRelatedService.activePolygon = mapRelatedService.polygons[0];
-      } else {
-        // Possibly I need to promise
       }
-      mapRelatedService.activePolygon.setEditable(true);
+      if (mapRelatedService.activePolygon) {
+        mapRelatedService.activePolygon.setEditable(true);
+      } 
       break;
     default:
     }

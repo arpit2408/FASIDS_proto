@@ -71,12 +71,28 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
 })
 .factory("mapRelatedFunctionsService", function (){
   function setActive(toBeActivatedPolygon, mapRelatedService, stateService) {
-    // shapeEditing and treatmentSetting need this 
+    mapRelatedService.activePolygon = toBeActivatedPolygon;
+    var currentStatus = stateService.getStatus();
+    switch(currentStatus) {
+      case "shapeediting":
+        if (!toBeActivatedPolygon.getEditable()) {
+          angular.forEach(mapRelatedService.polygons, function(polygon) {
+            polygon.setEditable(false);
+          });
+          mapRelatedService.activePolygon.setEditable(true);
+        }
+        break;
+      case "treatmentsetting":
+        // modal can only be popped out for one polygon
+        break;
+      default:
+
+    } 
   }
 
   function polygonLeftClickedCB (event, mapRelatedService, stateService) {
     var this_polygon = this;  // save this reference
-    mapRelatedService.activePolygon = this;
+    setActive(this_polygon, mapRelatedService, stateService);  // gurantee current polygon is active and in correct mode
     // console.log("polygon is left clicked");
     // console.log(this_polygon);
     if ( stateService.getStatus() === "arearemoving") {
@@ -85,7 +101,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
         mapRelatedService.temp_startmarker.setPosition(event.latLng);
         mapRelatedService.temp_startmarker.setMap(mapRelatedService.gmap);
       }
-    }
+    } 
   }
 
   function transformPolylineIntoPolygon (mapRelatedService, stateService){
@@ -112,6 +128,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     // reset polyline
     mapRelatedService.drawingPath.setPath([]);
     mapRelatedService.temp_startmarker.setMap(null);
+    mapRelatedService.activePolygon = temp_polygon; // byDefault the newest generated polygon is the active polygon
     mapRelatedService.polygons.push(temp_polygon);
   }
 
