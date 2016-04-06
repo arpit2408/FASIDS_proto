@@ -65,9 +65,11 @@ router.get('/test', function (req, res, next) {
       next(err);
       return;
     }
-    res.set("Connection","close")
+    res.removeHeader("Date");
+    res.removeHeader("ETag");
+    // res.set("Connection","close")
+    // res.unset("Date");
     res.send(html);
-
   });
 });
 
