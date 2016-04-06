@@ -12,7 +12,7 @@ block additionalCSS
 block renderBody
   div(ng-app="polygonManagerApp" ng-controller="pmaDefaultCtrl")
     .mapcover#mapcover
-      .mapcover-map#mapcover-map
+      .mapcover-map#mapcover-map(ng-non-bindable)
       .mc-static2mapcontainer.panel#map-geosearch
         .row.search-row
           .col-xs-12
