@@ -31,7 +31,8 @@ polygonManagerApp.controller("pmaDefaultCtrl", function ($scope) {
 });
 polygonManagerApp.service("stateService", function($rootScope) {
   var ss = this;
-  var panelStatusOptions = ["polygondrawing", "arearemoving", "shapeediting", "treatmentsetting", "productlisting", "resetting"];
+  var panelStatusOptions = ["polygondrawing", "arearemoving", "shapeediting", 
+  "treatmentsetting", "productlisting", "resetting"];
   var panelStatus = null;
   ss.setStatus =  function(toBeSetStatus) {
     if (toBeSetStatus === null) {
@@ -65,52 +66,32 @@ polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, stateService,m
     switch (oldStatus){
     case "polygondrawing":
       // status changed from polygondrawing to something else
-      // turn current area into polygon
-      if (mapRelatedService.drawingPath.getPath().getLength() > 2){
-        var temp_polygon = new google.maps.Polygon({
-          path: mapRelatedService.drawingPath.getPath(),
-          geodesic: false,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: 2,
-          editable: false
-        });
-        temp_polygon.setMap(mapRelatedService.gmap);
-        temp_polygon.addListener("click",  function ( event ){
-          mapRelatedFunctionsService.polygonLeftClickedCB.call(this,event, mapRelatedService, stateService); // 
-        });
-        temp_polygon.addListener("rightclick", function () { 
-          alert("right clicked");
-        });
-        temp_polygon.properties = {};
-        mapRelatedService.polygons.push(temp_polygon);
-      }
-      // reseting
-      mapRelatedService.drawingPath.setPath([]);
-      mapRelatedService.temp_startmarker.setMap(null);
+      mapRelatedFunctionsService.transformPolylineIntoPolygon(mapRelatedService, stateService);
       break;
     case "arearemoving":
-      var drawingPath = mapRelatedService.drawingPath;
-      if (drawingPath.getPath().getLength() > 2){
-        var paths = mapRelatedService.activePolygon.getPaths();
-        var direction0  =  mapRelatedService.spherical.computeSignedArea(paths.getAt(0));
-        var direction1 = mapRelatedService.spherical.computeSignedArea( drawingPath.getPath() );
-        if (direction1 * direction0 > 0) {
-          var temp_latlngs2 = []
-          while (drawingPath.getPath().getLength() >0){
-            temp_latlngs2.push(drawingPath.getPath().pop());
-          }
-          drawingPath.setPath(temp_latlngs2);
-        }
-        paths.push( drawingPath.getPath());
-      }
-      // reseting
-      drawingPath.setPath([]);
-      mapRelatedService.temp_startmarker.setMap(null);
+      mapRelatedFunctionsService.transformPolylineIntoRemovedArea(mapRelatedService, stateService);
       break;
-    }
-  });  // end of $watch();
 
+    case "shapeediting":
+      if (mapRelatedService.activePolygon) {
+        mapRelatedService.activePolygon.setEditable(false);
+      }
+      break;
+    }  // switch (oldStatus)
+
+    switch(newStatus) {
+    case "shapeediting":
+      if (mapRelatedService.isOnlyOnePolygon()) {
+        mapRelatedService.activePolygon = mapRelatedService.polygons[0];
+      } else {
+        // Possibly I need to promise
+      }
+      mapRelatedService.activePolygon.setEditable(true);
+      break;
+    default:
+    }
+
+  });  // end of $watch();
 
 });
 
@@ -197,7 +178,9 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
 
   temp_startmarker.addListener('click',function onTempStartMarkerClicked(){
     if ( stateService.getStatus() === 'polygondrawing' || stateService.getStatus() === 'arearemoving') {
+      var statusReserved = stateService.getStatus();
       stateService.setStatus(null);
+      stateService.setStatus(statusReserved);
     }
   });
   return {
@@ -209,7 +192,10 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     spherical: google.maps.geometry.spherical,
     activePolygon: null,
     saved_polygons: [],
-    polygons:[]
+    polygons:[],
+    isOnlyOnePolygon: function() {
+      return this.polygons.length === 1;
+    }
   };
 })
 .factory("mapRelatedFunctionsService", function (){
@@ -226,14 +212,64 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
       }
     }
   }
+
+  function transformPolylineIntoPolygon (mapRelatedService, stateService){
+    if (mapRelatedService.drawingPath.getPath().getLength() < 3){
+      console.log("to be transformed drawingPath has less than 3 vertice, cannot transform.");
+      return;
+    }
+    var temp_polygon = new google.maps.Polygon({
+      path: mapRelatedService.drawingPath.getPath(),
+      geodesic: false,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
+      editable: false
+    });
+    temp_polygon.setMap(mapRelatedService.gmap);
+    temp_polygon.addListener("click",  function ( event ){
+      polygonLeftClickedCB.call(this, event, mapRelatedService, stateService); // 
+    });
+    temp_polygon.addListener("rightclick", function () { 
+      alert("right clicked");
+    });
+    temp_polygon.properties = {};
+    // reset polyline
+    mapRelatedService.drawingPath.setPath([]);
+    mapRelatedService.temp_startmarker.setMap(null);
+    mapRelatedService.polygons.push(temp_polygon);
+  }
+
+  function transformPolylineIntoRemovedArea(mapRelatedService, stateService){
+    var drawingPath = mapRelatedService.drawingPath;
+    if (drawingPath.getPath().getLength() < 3){
+      console.log("to be transformed drawingPath has less than 3 vertice, cannot transform.");
+    }
+    var paths = mapRelatedService.activePolygon.getPaths();
+    var direction0  =  mapRelatedService.spherical.computeSignedArea(paths.getAt(0));
+    var direction1 = mapRelatedService.spherical.computeSignedArea( drawingPath.getPath() );
+    if (direction1 * direction0 > 0) {
+      var temp_latlngs2 = []
+      while (drawingPath.getPath().getLength() >0){
+        temp_latlngs2.push(drawingPath.getPath().pop());
+      }
+      drawingPath.setPath(temp_latlngs2);
+    }
+    paths.push( drawingPath.getPath());
+    // reseting
+    drawingPath.setPath([]);
+    mapRelatedService.temp_startmarker.setMap(null);
+  }
   return {
-    polygonLeftClickedCB: polygonLeftClickedCB
+    polygonLeftClickedCB: polygonLeftClickedCB,
+    transformPolylineIntoPolygon: transformPolylineIntoPolygon,
+    transformPolylineIntoRemovedArea: transformPolylineIntoRemovedArea
   };
 });
 
 
 pmaServices.run(function (mapRelatedService){
-  console.log("pmaServices run callback, just make sure mapRelatedService run first");
+  console.log("pmaServices run callback, just make sure mapRelatedService run first, so I declred dependency on mapRelatedService");
   (function settingMapContainerHeight(){
     // The reason might because the nav bar gives padding 70,
     $("#mapcover").height($(window).height() - 1 * $(".navbar").height());
