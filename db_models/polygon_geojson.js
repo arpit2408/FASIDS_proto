@@ -6,17 +6,37 @@ var _ = require('underscore');
 var polygon_geojson_schema = new mongoose.Schema({
   type: {type:String, enum:['Feature']},
   geometry:{
-    type:{type:String, enum:['Polygon', 'polygon']},
+    type:{type:String, enum:['Polygon']},
     coordinates:Array
   },
   properties:{
-    landusage:String,
-    total_area:Number,
-    mound_density:Number,  // input is imperial units ft^2
     polygon_name:String,
     address:String,
     notes:String, // used by user to input their notes about this polygon
-    treatment:String,
+
+    total_area:Number,
+    mound_density:Number,
+    mound_number: Number,
+
+    type_of_use:{
+      type:String,
+      enum: ["home", "agricultural", "professional"],
+      required:[true, "type of use of polygonGeojson not supplied"]
+    },
+    control_method: {                     // 'bait', 'contact'
+      type: String,
+      enum: ["bait", "contact", "baitcontact"],
+      required: [true, "control_method field not supplied"]
+    },
+    usage: {                            // 'broadcast', 'imt'
+      type: String,
+      enum: ["broadcast", "imt", "broadcastimt"],
+      required: [true, "usage field not supplied"]
+    },
+    is_outdoor_land: Boolean,
+    need_organic: Boolean,
+    need_safe_for_pets: Boolean,
+
     environment_map:{
       MapTypeId:{type:String, enum:['hybrid','roadmap', 'satellite', 'terrain']},
       tilt:{type:Number,enum:[0,45]}

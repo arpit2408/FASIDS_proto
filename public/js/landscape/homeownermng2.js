@@ -1,1 +1,0 @@
-// completely use angularJS to refactor this JS application
