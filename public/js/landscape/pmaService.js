@@ -88,7 +88,9 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
 
     } 
   }
-
+  function polygonRightClickedCB(event, mapRelatedService, stateService) {
+    console.log("polygon right click placeholder");
+  } 
   function polygonLeftClickedCB (event, mapRelatedService, stateService) {
     var this_polygon = this;  // save this reference
     setActive(this_polygon, mapRelatedService, stateService);  // gurantee current polygon is active and in correct mode
@@ -260,7 +262,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     return tempGeoJPolygon;
   }
 
-  function deGeoJsonize( Geojson_string, mapRelatedService) {
+  function deGeoJsonize( Geojson_string, mapRelatedService, stateService) {
     var gmap = mapRelatedService.gmap;
     var temp_geojson = JSON.parse(Geojson_string);
     // Key step is covert JS Geojson latlng array into MVCArray instance
@@ -276,8 +278,12 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     temp_polygon.properties = {};
     angular.extend(temp_polygon.properties, temp_geojson.properties);
     temp_polygon.setMap(gmap);
-    // temp_polygon.addListener("click",  polygonClicked);  // TODO
-    // temp_polygon.addListener("rightclick", polygonRightClicked); //TODO
+    temp_polygon.addListener("click",  function(event){
+      polygonLeftClickedCB.call(this, event, mapRelatedService, stateService); // 
+    });
+    temp_polygon.addListener("rightclick", function(event) {
+      polygonRightClickedCB.call(this, event, mapRelatedService, stateService);
+    });
     temp_polygon._id = temp_geojson._id;
     mapRelatedService.polygons.push(temp_polygon);
     var bounds = new google.maps.LatLngBounds(temp_polygon.properties.bounds.sw, temp_polygon.properties.bounds.ne);
@@ -354,7 +360,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
 });
 
 
-pmaServices.run(function (mapRelatedService, mapRelatedFunctionsService){
+pmaServices.run(function ($rootScope, stateService, mapRelatedService, mapRelatedFunctionsService, $timeout){
   console.log("pmaServices run callback, just make sure mapRelatedService run first, so I declred dependency on mapRelatedService");
   (function settingMapContainerHeight(){
     // The reason might because the nav bar gives padding 70,
@@ -374,10 +380,18 @@ pmaServices.run(function (mapRelatedService, mapRelatedFunctionsService){
 
   var initialGeoJsonStr = $("meta[name=target-polygon]").attr("content");
   if (initialGeoJsonStr && initialGeoJsonStr.search("Feature") >= 0 ) {
+    var googleMapPolygon = mapRelatedFunctionsService.deGeoJsonize(initialGeoJsonStr, mapRelatedService, stateService);
     mapRelatedFunctionsService.renderPolygonProperly(
-      mapRelatedFunctionsService.deGeoJsonize(initialGeoJsonStr, mapRelatedService), 
+      googleMapPolygon, 
       mapRelatedService
     );
+    // Then listener is located at pmaModalsCtrl
+    $timeout(function (){
+      $rootScope.$broadcast("fillTreatmentForm", {
+        targetPolygon: googleMapPolygon
+      });
+    }, 1000);
+
   }
   // google.maps.Polygon.prototype
 });
