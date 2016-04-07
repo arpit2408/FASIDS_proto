@@ -430,6 +430,7 @@ var map_tool_helper = {
       return tmpLatLng;
     },
     convertGoogleLatLngToGeoJLonLat: function ( googleLatLng){
+      
       return [Number(googleLatLng.lng().toFixed(6)), Number(googleLatLng.lat().toFixed(6))];
     },
 

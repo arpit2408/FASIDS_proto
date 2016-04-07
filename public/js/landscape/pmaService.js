@@ -79,6 +79,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
         }
         break;
       case "treatmentsetting":
+        // pmaModalsCtrl is listening to this method
         $rootScope.$broadcast('shouldOpenTreatment', {
           content: "hehe"
         });
@@ -150,12 +151,116 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     drawingPath.setPath([]);
     mapRelatedService.temp_startmarker.setMap(null);
   }
+  // dependency fufilled
+  function getTotalAreaOf(googleMapPolygon, mapRelatedService) {
+    var paths = googleMapPolygon.getPaths();
+    var i = 0;
+    var sum = 0;
+    var pathslen = paths.getLength();
+    for( i = 0; i < pathslen; i++){
+      if (i === 0){
+        sum = Math.abs(mapRelatedService.spherical.computeSignedArea(paths.getAt(i)) );
+      }else {
+        sum -= Math.abs(mapRelatedService.spherical.computeSignedArea(paths.getAt(i)) );
+      }
+    }
+    // console.log(sum);
+    return sum;
+  }
+  // dependency fufilled
+  function convertGoogleLatLngToGeoJLonLat( googleLatLng) {
+    return [Number(googleLatLng.lng().toFixed(6)), Number(googleLatLng.lat().toFixed(6))];
+  }
+  // dependency fufilled
+  function geoLatLngToGoogleLatLng(geoLatLngArray) {
+    var tmpLatLng = new google.maps.LatLng( geoLatLngArray[1], geoLatLngArray[0] );
+    return tmpLatLng;
+  }
+  // dependency fufilled
+  function convertPaths(MVCArray, tbr_a) {
+    if ( MVCArray.getAt(0).hasOwnProperty("lat")  ){
+      // arrived deepest Array level
+      MVCArray.forEach(function (element, index){
+        tbr_a.push( convertGoogleLatLngToGeoJLonLat(MVCArray.getAt(index)));
+      });
+      // assuming above forEach is blocking
+      tbr_a.push( convertGoogleLatLngToGeoJLonLat(MVCArray.getAt(0))  );
+    }
+    else{
+      MVCArray.forEach( function (element, index){
+        tbr_a[index] = [];
+        convertPaths(element, tbr_a[index]);
+      });
+    }
+    return tbr_a;
+  }
+
+  function geoJsonize(googleMapShapeObject, type, mapRelatedService) {
+    // type can only "Polygon"
+    if (type.toLowerCase() === "polygon") {
+      var tempGeoJPolygon =  
+      {
+        "type":"Feature",
+        "geometry":{
+        "type":"Polygon",
+        "coordinates":[]
+        },
+        "properties":{
+        }
+      };
+      tempGeoJPolygon.geometry.coordinates = convertPaths(googleMapShapeObject.getPaths(), []);
+
+      var temp_bounds = googleMapShapeObject.my_getBounds();
+
+      angular.extend(tempGeoJPolygon.properties, googleMapShapeObject.properties);
+      tempGeoJPolygon.properties.bounds ={  
+        sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
+        ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
+      };
+      tempGeoJPolygon.properties.total_area =  getTotalAreaOf(googleMapShapeObject, mapRelatedService);
+      tempGeoJPolygon.properties.environment_map = {};
+      tempGeoJPolygon.properties.environment_map.tilt = mapRelatedService.gmap.getTilt();
+      tempGeoJPolygon.properties.environment_map.MapTypeId = mapRelatedService.gmap.getMapTypeId();
+      return tempGeoJPolygon;
+    } else {
+      console.error("cannot convert non polygon typed MVCObject");
+    }
+  }
+
+  function saveAndGenResult(this_polygon, mapRelatedService) {
+    var geoJsonPolygon = geoJsonize(this_polygon,"polygon", mapRelatedService);
+    $('input#geojson').val(JSON.stringify(geoJsonPolygon));
+    if (this_polygon.saved === true){
+      return alert("This polygon has already been saved, please go to your user dashboard to check");
+    }
+    console.log(JSON.stringify(geoJsonPolygon, null, "  "));
+    // this_polygon.saved = true;
+    // var $tempForm = $('form#treatment');
+    // $.ajax({
+    //   type: "POST",
+    //   url: $tempForm.attr('action'),
+    //   data: $tempForm.serialize(),
+    //   success: function(creationApiResult){
+    //     // location.href = creationApiResult.treatmentUrl;
+    //   },
+    //   error: function(jqXHR, textStatus, errorThrown){
+    //     alert(errorThrown);
+    //   }
+    // });
+  }
+
   return {
     polygonLeftClickedCB: polygonLeftClickedCB,
     transformPolylineIntoPolygon: transformPolylineIntoPolygon,
-    transformPolylineIntoRemovedArea: transformPolylineIntoRemovedArea
+    transformPolylineIntoRemovedArea: transformPolylineIntoRemovedArea,
+    getTotalAreaOf: getTotalAreaOf,
+    convertGoogleLatLngToGeoJLonLat: convertGoogleLatLngToGeoJLonLat,
+    geoLatLngToGoogleLatLng: geoLatLngToGoogleLatLng,
+    convertPaths: convertPaths,
+    geoJsonize: geoJsonize, 
+    saveAndGenResult: saveAndGenResult
   };
-});
+} );
 
 
 pmaServices.run(function (mapRelatedService){
@@ -175,4 +280,5 @@ pmaServices.run(function (mapRelatedService){
     }
     return bounds;
   }
+  // google.maps.Polygon.prototype
 });

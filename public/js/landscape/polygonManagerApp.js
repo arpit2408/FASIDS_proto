@@ -120,7 +120,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, $rootScope, st
   });
 });
 
-polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, mapRelatedService){
+polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, mapRelatedService, mapRelatedFunctionsService){
   var $treatmentModal = $("#treatment-modal");
 
   $scope.openTreatmentModal = function() {
@@ -136,6 +136,8 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
   // user clicked 
   $scope.saveTreatmentAndPolygonToServer = function() {
     console.log( "save treatment to server.");
+
+    mapRelatedFunctionsService.saveAndGenResult( mapRelatedService.activePolygon, mapRelatedService);
     $treatmentModal.modal('hide');
     if (mapRelatedService.isOnlyOnePolygon()) {
       stateService.setStatus(null);
