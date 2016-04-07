@@ -383,7 +383,7 @@ router.get('/landscape/treatment/:geojson_id', ensureAuthenticated, function (re
       e.status = 404
       return next(e);
     }
-    if(the_polygon.properties.owner.toString() !== req.user._id.toString()){
+    if( typeof the_polygon.properties.owner === "undefined" || the_polygon.properties.owner.toString() !== req.user._id.toString()){
       return res.status(401).send("you are not authorized to view other's polygon");
     }
     req.db_models.FireAntProduct.find( { "usage": the_polygon.properties.treatment}, null, {}, function exec(error, products){

@@ -24,6 +24,7 @@ var mongoose = require('mongoose'),  // newly added, regarding init express
 var app = express();
 var windows_base = express();  // adding common prefix router
 var glblprefix = process.env.GLOBALPREFIX ||"";
+var routesHelpers = require('./routes/routesHelpers.js');
 // view engine setup
 app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 3000)
 app.set('views', path.join(__dirname, 'views'));
@@ -87,7 +88,7 @@ if (app.get('env') === 'development') {
       message: err.message,
       error: err,
       isAuthenticated: req.isAuthenticated(),
-      user: processReqUser(req.user)
+      user: routesHelpers.processReqUser(req.user)
     });
   });
 }
@@ -100,7 +101,7 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {},
     isAuthenticated: req.isAuthenticated(),
-    user: processReqUser(req.user)
+    user: routesHelpers.processReqUser(req.user)
   });
 });
 
