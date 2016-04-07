@@ -367,7 +367,7 @@ router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, fu
 });
 
 
-
+// This url shows proper products
 router.get('/landscape/treatment/:geojson_id', ensureAuthenticated, function (req, res, next){
   req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
     if (error) {
@@ -386,10 +386,12 @@ router.get('/landscape/treatment/:geojson_id', ensureAuthenticated, function (re
     if( typeof the_polygon.properties.owner === "undefined" || the_polygon.properties.owner.toString() !== req.user._id.toString()){
       return res.status(401).send("you are not authorized to view other's polygon");
     }
-    req.db_models.FireAntProduct.find( { "usage": the_polygon.properties.treatment}, null, {}, function exec(error, products){
+    console.log( the_polygon.properties.treatment);
+    req.db_models.FireAntProduct.find( { "usage": the_polygon.properties.usage}, null, {}, function exec(error, products){
       if (error) return next(error);
       products.forEach(function iteratee (product, index, al){
-        products[index].amount= product.getAmount(the_polygon.properties.total_area, the_polygon.properties.mound_density);
+        // products[index].amount= product.getAmount(the_polygon.properties.total_area, the_polygon.properties.mound_density);
+        products[index].amount= 0;
       });
 
       res.render('landscape/treatment.jade',{
