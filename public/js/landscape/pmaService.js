@@ -176,6 +176,35 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     var tmpLatLng = new google.maps.LatLng( geoLatLngArray[1], geoLatLngArray[0] );
     return tmpLatLng;
   }
+
+  function convertToMVCArray(array, index_at_parent, parent_array) {
+    var ClassRef = this;
+    if ( !Array.isArray(array[0]) ) {
+      parent_array[index_at_parent] = geoLatLngToGoogleLatLng(array);
+    } else { // var len = array[0][0]
+      array.forEach( function (element, index, ar){
+        convertToMVCArray(element, index, ar);
+        if (typeof ar[0].lat === 'function') {
+          if (typeof index_at_parent !== 'undefined' && index === array.length - 1){
+            parent_array[index_at_parent] = new google.maps.MVCArray(ar.slice(0,index));
+          }
+        } else {
+          if (typeof index_at_parent !== 'undefined' && index === array.length - 1){
+            parent_array[index_at_parent] = new google.maps.MVCArray(ar);
+          }
+        }
+      });
+    }
+    if (typeof index_at_parent !== 'undefined')
+      return array;
+    else{
+      var to_be_return = new google.maps.MVCArray();
+      array.forEach( function(el, index, ar){
+        to_be_return.push(el);
+      });
+      return to_be_return;
+    }
+  }
   // dependency fufilled
   function convertPaths(MVCArray, tbr_a) {
     if ( MVCArray.getAt(0).hasOwnProperty("lat")  ){
@@ -194,39 +223,67 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     }
     return tbr_a;
   }
-
+  // dependency fufilled
   function geoJsonize(googleMapShapeObject, type, mapRelatedService) {
-    // type can only "Polygon"
-    if (type.toLowerCase() === "polygon") {
-      var tempGeoJPolygon =  
-      {
-        "type":"Feature",
-        "geometry":{
-        "type":"Polygon",
-        "coordinates":[]
-        },
-        "properties":{
-        }
-      };
-      tempGeoJPolygon.geometry.coordinates = convertPaths(googleMapShapeObject.getPaths(), []);
-
-      var temp_bounds = googleMapShapeObject.my_getBounds();
-
-      angular.extend(tempGeoJPolygon.properties, googleMapShapeObject.properties);
-      tempGeoJPolygon.properties.bounds ={  
-        sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
-        ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
-      };
-      tempGeoJPolygon.properties.total_area =  getTotalAreaOf(googleMapShapeObject, mapRelatedService);
-      tempGeoJPolygon.properties.environment_map = {};
-      tempGeoJPolygon.properties.environment_map.tilt = mapRelatedService.gmap.getTilt();
-      tempGeoJPolygon.properties.environment_map.MapTypeId = mapRelatedService.gmap.getMapTypeId();
-      return tempGeoJPolygon;
-    } else {
-      console.error("cannot convert non polygon typed MVCObject");
+    if (type && typeof type !== "string") {
+      throw "type should be supplied as string";
+      return null;
     }
+    if ( !mapRelatedService) {
+      throw "mapRelatedService should be supplied";
+      return null;
+    }
+    if (type.toLowerCase() != "polygon") {
+      console.error("cannot convert non polygon typed MVCObject");
+      return null;
+    }
+    var tempGeoJPolygon =  {
+      "type":"Feature",
+      "geometry":{
+      "type":"Polygon",
+      "coordinates":[]
+      },
+      "properties":{
+      }
+    };
+    tempGeoJPolygon.geometry.coordinates = convertPaths(googleMapShapeObject.getPaths(), []);
+    var temp_bounds = googleMapShapeObject.my_getBounds();
+    angular.extend(tempGeoJPolygon.properties, googleMapShapeObject.properties);
+    tempGeoJPolygon.properties.bounds ={  
+      sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
+      ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
+    };
+    tempGeoJPolygon.properties.total_area =  getTotalAreaOf(googleMapShapeObject, mapRelatedService);
+    tempGeoJPolygon.properties.environment_map = {};
+    tempGeoJPolygon.properties.environment_map.tilt = mapRelatedService.gmap.getTilt();
+    tempGeoJPolygon.properties.environment_map.MapTypeId = mapRelatedService.gmap.getMapTypeId();
+    return tempGeoJPolygon;
   }
 
+  function deGeoJsonize( Geojson_string, mapRelatedService) {
+    var gmap = mapRelatedService.gmap;
+    var temp_geojson = JSON.parse(Geojson_string);
+    // Key step is covert JS Geojson latlng array into MVCArray instance
+    var temp_MVCArray = convertToMVCArray(temp_geojson.geometry.coordinates);
+    var temp_polygon = new google.maps.Polygon({
+      paths:temp_MVCArray,
+      geodesic: false,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
+      editable: false
+    });
+    temp_polygon.properties = {};
+    angular.extend(temp_polygon.properties, temp_geojson.properties);
+    temp_polygon.setMap(gmap);
+    // temp_polygon.addListener("click",  polygonClicked);  // TODO
+    // temp_polygon.addListener("rightclick", polygonRightClicked); //TODO
+    temp_polygon._id = temp_geojson._id;
+    mapRelatedService.polygons.push(temp_polygon);
+    var bounds = new google.maps.LatLngBounds(temp_polygon.properties.bounds.sw, temp_polygon.properties.bounds.ne);
+    gmap.fitBounds(bounds);
+    return temp_polygon;
+  }
   function saveAndGenResult(this_polygon, mapRelatedService) {
     var geoJsonPolygon = geoJsonize(this_polygon,"polygon", mapRelatedService);
     $('input#geojson').val(JSON.stringify(geoJsonPolygon));
@@ -249,6 +306,38 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     // });
   }
 
+  function renderPolygonProperly(to_be_rendered_polygon, mapRelatedService) {
+    console.log("render properly");
+    var gmap = mapRelatedService.gmap;
+    if (to_be_rendered_polygon.properties.hasOwnProperty("type_of_use")){
+      switch(to_be_rendered_polygon.properties["type_of_use"]){
+        case "agricultural":
+        to_be_rendered_polygon.setOptions({
+          fillColor:"#0000FF"
+        });
+        break;
+        case "home":
+        to_be_rendered_polygon.setOptions({
+          fillColor:"#FFFF00"
+        });
+        break;
+        case "professional":
+        to_be_rendered_polygon.setOptions({
+          fillColor:"#33CC33"
+        });
+        break;
+        default:
+
+      }
+    }
+    // console.log(to_be_rendered_polygon.properties);
+    if (to_be_rendered_polygon.properties.environment_map) {
+      var environment_map = to_be_rendered_polygon.properties.environment_map;
+      gmap.setTilt(environment_map.tilt);
+      gmap.setMapTypeId(environment_map.MapTypeId);
+    }
+  }
+
   return {
     polygonLeftClickedCB: polygonLeftClickedCB,
     transformPolylineIntoPolygon: transformPolylineIntoPolygon,
@@ -258,12 +347,14 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     geoLatLngToGoogleLatLng: geoLatLngToGoogleLatLng,
     convertPaths: convertPaths,
     geoJsonize: geoJsonize, 
-    saveAndGenResult: saveAndGenResult
+    saveAndGenResult: saveAndGenResult,
+    deGeoJsonize: deGeoJsonize,
+    renderPolygonProperly: renderPolygonProperly
   };
-} );
+});
 
 
-pmaServices.run(function (mapRelatedService){
+pmaServices.run(function (mapRelatedService, mapRelatedFunctionsService){
   console.log("pmaServices run callback, just make sure mapRelatedService run first, so I declred dependency on mapRelatedService");
   (function settingMapContainerHeight(){
     // The reason might because the nav bar gives padding 70,
@@ -279,6 +370,14 @@ pmaServices.run(function (mapRelatedService){
       alert("bounds should not be empty")
     }
     return bounds;
+  }
+
+  var initialGeoJsonStr = $("meta[name=target-polygon]").attr("content");
+  if (initialGeoJsonStr && initialGeoJsonStr.search("Feature") >= 0 ) {
+    mapRelatedFunctionsService.renderPolygonProperly(
+      mapRelatedFunctionsService.deGeoJsonize(initialGeoJsonStr, mapRelatedService), 
+      mapRelatedService
+    );
   }
   // google.maps.Polygon.prototype
 });
