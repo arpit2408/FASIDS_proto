@@ -86,7 +86,7 @@ block renderBody
     //-         button.btn.btn-default(type='button', data-dismiss='modal') Close
 
 
-    .hidden
+    .hidden(ng-non-bindable)
       form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
         input#geojson(type='text', name="geojson")
       //- patch_url is from index.js: router     route : GET /landscape/homeownermng/:geojson_id
