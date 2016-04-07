@@ -121,8 +121,8 @@ polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, $rootScope, st
 });
 
 polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, mapRelatedService, mapRelatedFunctionsService){
+  console.log("pmaModalsCtrl init()");
   var $treatmentModal = $("#treatment-modal");
-
   $scope.treatment = {
     polygon_name: null,
     address: null,
@@ -159,7 +159,8 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
 
     var geoJsonPolygon = mapRelatedFunctionsService.saveAndGenResult( 
       mapRelatedService.activePolygon, 
-      mapRelatedService);
+      mapRelatedService
+    );
 
     angular.extend(geoJsonPolygon.properties, $scope.treatment);
     console.log(JSON.stringify(geoJsonPolygon));
@@ -167,15 +168,24 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
     if (mapRelatedService.isOnlyOnePolygon()) {
       stateService.setStatus(null);
     }
-    mapRelatedFunctionsService.renderPolygonProperly(temp_polygon, mapRelatedService);
+    mapRelatedFunctionsService.renderPolygonProperly(mapRelatedService.activePolygon, mapRelatedService);
   };
 
   $scope.fillTreatmentForm = function(googleMVCObjectPolygon) {  //TODO
-
+    console.log("I am going to fill the form");
+    console.log(googleMVCObjectPolygon.properties);
   };
 
+  // shouldOpenTreatment event is broadcasted at two places:
+  // (1) TODO: to write comment here
+  // (2) TODO: to wirte comment here
   $scope.$on('shouldOpenTreatment', function(event, args) {
     $scope.openTreatmentModal();
+  });
+
+  //fillTreatmentForm event will be broadcasted at pmaServices.run callback
+  $scope.$on('fillTreatmentForm', function(event, args) {
+    $scope.fillTreatmentForm(args.targetPolygon);
   });
 });
 
