@@ -288,6 +288,7 @@ router.get('/landscape/homeownermng', function (req, res, next) {
     isAuthenticated: req.isAuthenticated(),
     user: processReqUser(req.user),
     activePage:"Landscape",
+    geojson:{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-96.331601,30.620445],[-96.329026,30.620464],[-96.327932,30.617361],[-96.330378,30.616992],[-96.3307,30.617952],[-96.331601,30.620445]]]},"properties":{"bounds":{"sw":{"lat":30.616991994047623,"lng":-96.3316011428833},"ne":{"lat":30.620463592449177,"lng":-96.32793188095093}},"total_area":89814.46632613993,"environment_map":{"tilt":0,"MapTypeId":"roadmap"},"polygon_name":null,"address":null,"notes":null,"mound_density":null,"mound_number":null,"type_of_use":"home","control_method":null,"usage":null,"is_outdoor_land":null,"need_organic":null,"need_safe_for_pets":null}},
     page_status:{model_op:"create",isAuthenticated: req.isAuthenticated()}
   });
 });

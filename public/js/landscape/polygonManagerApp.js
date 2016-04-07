@@ -132,13 +132,13 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
     mound_density: null,
     mound_number: null,
 
-    type_of_use: null,
+    type_of_use: "home",
     control_method: null,
     usage: null,  // the usage here means the desired usage of fire ant product
     is_outdoor_land: null,
     need_organic: null,
-    need_safe_for_pets: null,
-    
+    need_safe_for_pets: null
+
     // environment_map: null,
     // bounds,
     // owner,         // this field will be generated when posted to server
@@ -162,11 +162,16 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
       mapRelatedService);
 
     angular.extend(geoJsonPolygon.properties, $scope.treatment);
-    console.log(JSON.stringify(geoJsonPolygon, null, "  "));
+    console.log(JSON.stringify(geoJsonPolygon));
     $treatmentModal.modal('hide');
     if (mapRelatedService.isOnlyOnePolygon()) {
       stateService.setStatus(null);
     }
+    mapRelatedFunctionsService.renderPolygonProperly(temp_polygon, mapRelatedService);
+  };
+
+  $scope.fillTreatmentForm = function(googleMVCObjectPolygon) {  //TODO
+
   };
 
   $scope.$on('shouldOpenTreatment', function(event, args) {
