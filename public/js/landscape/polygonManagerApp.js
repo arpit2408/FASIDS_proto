@@ -123,6 +123,26 @@ polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, $rootScope, st
 polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, mapRelatedService, mapRelatedFunctionsService){
   var $treatmentModal = $("#treatment-modal");
 
+  $scope.treatment = {
+    polygon_name: null,
+    address: null,
+    notes: null,
+    
+    // total_area, // will be filled at saveAndGenResult()
+    mound_density: null,
+    mound_number: null,
+
+    type_of_use: null,
+    control_method: null,
+    usage: null,  // the usage here means the desired usage of fire ant product
+    is_outdoor_land: null,
+    need_organic: null,
+    need_safe_for_pets: null,
+    
+    // environment_map: null,
+    // bounds,
+    // owner,         // this field will be generated when posted to server
+  };
   $scope.openTreatmentModal = function() {
     $treatmentModal.modal('show');
   };
@@ -137,7 +157,12 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
   $scope.saveTreatmentAndPolygonToServer = function() {
     console.log( "save treatment to server.");
 
-    mapRelatedFunctionsService.saveAndGenResult( mapRelatedService.activePolygon, mapRelatedService);
+    var geoJsonPolygon = mapRelatedFunctionsService.saveAndGenResult( 
+      mapRelatedService.activePolygon, 
+      mapRelatedService);
+
+    angular.extend(geoJsonPolygon.properties, $scope.treatment);
+    console.log(JSON.stringify(geoJsonPolygon, null, "  "));
     $treatmentModal.modal('hide');
     if (mapRelatedService.isOnlyOnePolygon()) {
       stateService.setStatus(null);

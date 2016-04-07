@@ -233,7 +233,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     if (this_polygon.saved === true){
       return alert("This polygon has already been saved, please go to your user dashboard to check");
     }
-    console.log(JSON.stringify(geoJsonPolygon, null, "  "));
+    return geoJsonPolygon;
     // this_polygon.saved = true;
     // var $tempForm = $('form#treatment');
     // $.ajax({
