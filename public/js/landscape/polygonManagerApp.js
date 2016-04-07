@@ -123,7 +123,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
   });
 });
 
-polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, mapRelatedService, mapRelatedFunctionsService){
+polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, mapRelatedService, mapRelatedFunctionsService) {
   console.log("pmaModalsCtrl init()");
   var $treatmentModal = $("#treatment-modal");
   $scope.treatment = {
@@ -135,12 +135,12 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
     mound_density: null,
     mound_number: null,
 
-    type_of_use: "home",
-    control_method: null,
-    usage: null,  // the usage here means the desired usage of fire ant product
-    is_outdoor_land: null,
-    need_organic: null,
-    need_safe_for_pets: null
+    type_of_use: "home",         // required
+    control_method: "contact",   // required
+    usage: "imt",                // required
+    is_outdoor_land: true,       // 
+    need_organic: false,
+    need_safe_for_pets: false
 
     // environment_map: null,
     // bounds,
@@ -151,7 +151,7 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
   };
 
   // user clicked 'x' of Treatment modal
-  $scope.saveTreatmentAndPolygonLocally = function () {
+  $scope.saveTreatmentAndPolygonLocally = function() {
     // no need to hide modal, since 'x' has data-dismiss attribute
     console.log("save treatment and polygon locally");
   }
@@ -159,20 +159,31 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
   // user clicked 
   $scope.saveTreatmentAndPolygonToServer = function() {
     console.log( "save treatment to server.");
-
     var geoJsonPolygon = mapRelatedFunctionsService.saveAndGenResult( 
       mapRelatedService.activePolygon, 
       mapRelatedService
     );
-
     angular.extend(geoJsonPolygon.properties, $scope.treatment);
     console.log(JSON.stringify(geoJsonPolygon));
-    $treatmentModal.modal('hide');
-    if (mapRelatedService.isOnlyOnePolygon()) {
-      stateService.setStatus(null);
-    }
-    // TODO: Ajax post
-    mapRelatedFunctionsService.renderPolygonProperly(mapRelatedService.activePolygon, mapRelatedService);
+
+    $("input#geojson").val(JSON.stringify(geoJsonPolygon));    
+    var $tempForm = $('form#treatment');
+    $.ajax({
+      type: "POST",
+      url: $tempForm.attr('action'),
+      data: $tempForm.serialize(),
+      success: function(creationApiResult) {
+        location.href = creationApiResult.treatmentUrl;
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert(errorThrown);
+      }
+    });
+    // $treatmentModal.modal('hide');
+    // if (mapRelatedService.isOnlyOnePolygon()) {
+    //   stateService.setStatus(null);
+    // }
+    // mapRelatedFunctionsService.renderPolygonProperly(mapRelatedService.activePolygon, mapRelatedService);
   };
 
   $scope.fillTreatmentForm = function(googleMVCObjectPolygon) {  //TODO
