@@ -27,7 +27,6 @@ polygonManagerApp.directive("toolButton", function factoryFn(stateService){
 polygonManagerApp.controller("pmaDefaultCtrl", function ($scope) {
   // some default javascript I put them here
   console.log("running block of default controller.");
-
 });
 
 // This one will be run first
@@ -59,7 +58,11 @@ polygonManagerApp.service("stateService", function($rootScope) {
   };
 });
 
-polygonManagerApp.controller("pmaToolPanelCtrl", function($scope, $rootScope, stateService,mapRelatedService, mapRelatedFunctionsService) {
+polygonManagerApp.controller("pmaToolPanelCtrl", 
+  function(
+    $scope, $rootScope, 
+    stateService,mapRelatedService, 
+    mapRelatedFunctionsService) {
   console.log("loading pmaToolPanelCtrl.");
   $scope.$watch(
     function() {
@@ -168,6 +171,7 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
     if (mapRelatedService.isOnlyOnePolygon()) {
       stateService.setStatus(null);
     }
+    // TODO: Ajax post
     mapRelatedFunctionsService.renderPolygonProperly(mapRelatedService.activePolygon, mapRelatedService);
   };
 
