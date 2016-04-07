@@ -126,26 +126,49 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
 polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, mapRelatedService, mapRelatedFunctionsService) {
   console.log("pmaModalsCtrl init()");
   var $treatmentModal = $("#treatment-modal");
+  $scope.optionsForTypeOfUse = ["home", "professional", "agricultural"];
+  $scope.optionsForControlMethod = [
+    {value: "bait", optionText: "Bait and Sterilize Queen", explaination: "worker ants send product to queen. Queen eats and then unable to give birth to new ants"}, 
+    {value: "contact", optionText: "Kill by Direct Contact", explaination: "When fire ants have been in contact with the ingredients of products, they are killed"}, 
+    {value: "baitcontact", optionText: "Product that Can Do Both", explaination: "Product can do both 'bait' and 'contact'"}
+  ];
+  $scope.optionsForUsage = [
+    {value: "broadcast", optionText: "Broadcast", explaination: "You want to focus on several fire ant mounds"}, 
+    {value: "imt", optionText: "Individual Mound Treatment", explaination: "It is done mainly for preventive purpose"}, 
+    {value: "broadcastimt", optionText: "Product that Can Do Both", explaination: "Product that can do both."}
+  ];
   $scope.treatment = {
-    polygon_name: null,
+    polygon_name: null,  // required
     address: null,
     notes: null,
     
     // total_area, // will be filled at saveAndGenResult()
-    mound_density: null,
+    mound_density: null,  
     mound_number: null,
 
-    type_of_use: "home",         // required
-    control_method: "contact",   // required
-    usage: "imt",                // required
-    is_outdoor_land: true,       // 
-    need_organic: false,
-    need_safe_for_pets: false
+    type_of_use: null,         // required
+    control_method: null,   // required
+    usage: null,                // required
+    is_outdoor_land: null,       // 
+    need_organic: null,
+    need_safe_for_pets: null
 
-    // environment_map: null,
-    // bounds,
+    // environment_map: null,  // this field will be filled by underlying JS logic
+    // bounds,         // this field will be filled by underlying JS logic
     // owner,         // this field will be generated when posted to server
   };
+
+  $scope.$watch(
+    function($scope) {
+      return $scope.treatment.usage;
+    },
+    function(newValue, oldValue) {
+      if (oldValue === "imt") {
+        $scope.treatment.mound_number = null;
+      }
+    }
+  );
+
   $scope.openTreatmentModal = function() {
     $treatmentModal.modal('show');
   };

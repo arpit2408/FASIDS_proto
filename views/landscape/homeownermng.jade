@@ -60,10 +60,63 @@ block renderBody
                 span(aria-hidden='true') ×
               h4.modal-title Edit treatment properties
             .modal-body
-              p This is where treatment form should be put
+              form.form-horizontal(novalidate, name="treatmentForm")
+                .form-group.row
+                  label.col-sm-3.control-label.text-right Type of Use of the land
+                  .col-sm-4
+                    select.form-control(ng-model="treatment.type_of_use", ng-options="typeOfUseOption for typeOfUseOption in optionsForTypeOfUse", required)
+                      option(value="") (Pick One Type of Use)
+                .form-group.row
+                  label.col-sm-3.control-label.text-right Control Strategy
+                  .col-sm-4
+                    select.form-control(ng-model="treatment.control_method", 
+                    ng-options="optionOfControl.value as optionOfControl.optionText for optionOfControl in optionsForControlMethod", required)
+                      option(value="") (Pick One Control Strategy)
+                .form-group.row
+                  label.col-sm-3.control-label.text-right 
+                    | Product Usage
+                    br 
+                    | (Treatment strategy)
+                  .col-sm-4
+                    select.form-control(ng-model="treatment.usage", 
+                    ng-options="optionOfUsage.value as optionOfUsage.optionText for optionOfUsage in optionsForUsage", required)
+                      option(value="") (Pick One Product Usagge)
+                .form-group.row(ng-if="treatment.usage === 'imt'")
+                  label.col-sm-3.control-label.text-right(for='moundNumber') Mound Number
+                  .col-sm-9
+                    input#moundNumber.form-control(type="number", placeholder='Mound Number', ng-model="treatment.mound_number")
+                .form-group.row
+                  label.col-sm-3.control-label.text-right Additional Things
+                  .col-sm-9
+                    .checkbox
+                      label
+                        input(type='checkbox', ng-model="treatment.is_outdoor_land")
+                        | Outdoor-use only product (might be unsafe for indoor use)
+                    .checkbox
+                      label
+                        input(type='checkbox', ng-model="treatment.need_organic")
+                        | Organic product
+                    .checkbox
+                      label
+                        input(type='checkbox', ng-model="treatment.need_safe_for_pets")
+                        | Safe-for-pet product
+
+                .form-group.row
+                  label.col-sm-3.control-label.text-right(for='polygonName') Name your polygon
+                  .col-sm-9
+                    input#polygonName.form-control(type='text', placeholder='Name of this polygon', ng-model="treatment.polygon_name", required)
+                .form-group.row
+                  label.col-sm-3.control-label.text-right(for='polygonAddress') Address
+                  .col-sm-9
+                    input#polygonAddress.form-control(type='text', placeholder='Address of this polygon', ng-model="treatment.address")
+                .form-group.row
+                  label.col-sm-3.control-label.text-right(for='polygonNotes') Notes
+                  .col-sm-9
+                    textarea#polygonNotes.form-control(rows="5", ng-model="treatment.notes")
+
             .modal-footer
               button.btn.btn-default(type='button', data-dismiss='modal') Close
-              button.btn.btn-primary(type='button', ng-click="saveTreatmentAndPolygonToServer()" ) Save Treatment to Server
+              button.btn.btn-primary(type='button', ng-click="saveTreatmentAndPolygonToServer()", ng-disabled="!treatmentForm.$valid" ) Save Treatment to Server
 
 
     //- .modal.fade(tabindex='-1', role='dialog', id='signin-required-modal')

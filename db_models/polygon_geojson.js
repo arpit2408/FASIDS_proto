@@ -10,7 +10,10 @@ var polygon_geojson_schema = new mongoose.Schema({
     coordinates:Array
   },
   properties:{
-    polygon_name:String,
+    polygon_name: {
+      type: String,
+      required: [true, "polygon_name must be supplied"]
+    },
     address:String,
     notes:String, // used by user to input their notes about this polygon
 
