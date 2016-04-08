@@ -67,6 +67,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
     stateService,mapRelatedService, 
     mapRelatedFunctionsService, pmaConstants) {
   console.log("loading pmaToolPanelCtrl.");
+  $scope.pmaConstants = pmaConstants;
   $scope.$watch(
     function() {
       return stateService.getStatus();
@@ -205,7 +206,7 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, pmaConstants, sta
     angular.extend(geoJsonPolygon.properties, $scope.treatment);
     console.log(JSON.stringify(geoJsonPolygon));
 
-
+    // return;
     $("input#geojson").val(JSON.stringify(geoJsonPolygon));    
     var $tempForm = $('form#treatment');
     $.ajax({
@@ -213,7 +214,7 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, pmaConstants, sta
       url: $tempForm.attr('action'),
       data: $tempForm.serialize(),
       success: function(creationApiResult) {
-        location.href = creationApiResult.treatmentUrl;
+        location.href = creationApiResult.jumpUrl;
       },
       error: function(jqXHR, textStatus, errorThrown) {
         alert(errorThrown);
@@ -249,4 +250,3 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, pmaConstants, sta
     $scope.fillTreatmentForm(args.targetPolygon);
   });
 });
-

@@ -363,7 +363,7 @@ router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, fu
       res.json({
         api_result:"success : PolygonGeojson Patched", 
         api_route:api_route, 
-        treatmentUrl:glblprefix + '/landscape/treatment/'+the_polygon._id.toString()
+        jumpUrl:glblprefix + '/landscape/homeownermng/'+the_polygon._id.toString()
       });
     });
   });
@@ -430,7 +430,7 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
       return res.status(500).json(error);  // TODO: the failure response is not json
     }
     res.json(
-      {api_result:"success : PolygonGeojson created", api_route:api_route, treatmentUrl:glblprefix + '/landscape/treatment/'+db_geojson._id.toString()}
+      {api_result:"success : PolygonGeojson created", api_route:api_route, jumpUrl:glblprefix + '/landscape/homeownermng/'+db_geojson._id.toString()}
     );
   });
 });
