@@ -7,6 +7,7 @@ function DeleteMenu() {
   this.div_ = document.createElement('div');
   this.div_.className = 'delete-menu';
   this.div_.innerHTML = '<ul class="list-unstyled"><li id="li-delete-vertex">Delete Vertex</li><li id="li-delete-sub-route">Delete Sub Route</li></ul>';
+  this.target_polygon_ = null;
   this.jQuery_div_ = $(this.div_);  // create one jQuery_div_
 
   this.delete_vertex_li_ = this.jQuery_div_.find("#li-delete-vertex").get(0);
@@ -25,6 +26,14 @@ function DeleteMenu() {
     // alert("delete subroute");
   });
 }
+DeleteMenu.prototype.setTargetPolygon = function(googleMapMVCPolygon) {
+  if (!googleMapMVCPolygon) {
+    throw "googleMapMVCPolygon cannot be falsy value";
+    return;
+  }
+
+}
+
 DeleteMenu.prototype = new google.maps.OverlayView();
 
 DeleteMenu.prototype.onAdd = function() {
@@ -70,8 +79,9 @@ DeleteMenu.prototype.draw = function() {
 /**
  * Opens the menu at a vertex of a given path.
  */
-DeleteMenu.prototype.open = function(map, path, vertex) {
+DeleteMenu.prototype.open = function(map, path, vertex, activePolygon) {
   // console.log( "path lenght : " + path.getLength());
+  this.target_polygon_  = activePolygon;
   this.set('position', path.getAt(vertex));
   this.set('path', path);
   this.set('vertex', vertex);
@@ -102,15 +112,16 @@ DeleteMenu.prototype.removeVertex = function() {
 * Delete this path from Polygon
 */
 DeleteMenu.prototype.removePath = function () {
-  var target_path = this.get('path');
-  var target_polygon = window.target_polygon;
+  var target_path = this.get('path');  // inherited method of overlayView
+  var target_polygon = this.target_polygon_;
   if (!target_polygon){
+    console.error("did not find target_polygon_");
     this.close();
     return;
   }
   var polygon_paths = target_polygon.getPaths();
   if (polygon_paths.getLength() < 2){
-    alert("This polygon does not contain holes, and cannot use this method to remove exterior path.");
+    alert("This polygon does not contain subroute(s), and cannot use this method to remove exterior path.");
     this.close();
     return;
   }

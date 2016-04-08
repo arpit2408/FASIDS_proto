@@ -1,6 +1,7 @@
 //////////////////////SERVICE MODULE///////////////////////////////////////////////////////////////////////
 // pmaServices module
-var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("mapRelatedService", function pmaServiceFactoryFn(stateService, $rootScope){
+var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
+.factory("mapRelatedService", function pmaServiceFactoryFn(stateService, $rootScope){
   /*beginning of normal file */
   var mapcover = initMapCover( 'mapcover', 'mapcover-map' ,{
     draggingCursor:"move",
@@ -50,6 +51,9 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
       $rootScope.$broadcast('polylineFinishing');
     }
   });
+
+  var deleteMenu = new DeleteMenu();  // DeleteMenu is defined in DeleteMenu.js
+
   return {
     mapcover: mapcover,
     gmap: gmap,
@@ -60,13 +64,15 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     activePolygon: null,
     saved_polygons: [],
     polygons:[],
+    deleteMenu: deleteMenu,
     isOnlyOnePolygon: function() {
       return this.polygons.length === 1;
     }
   };
 })
 .factory("mapRelatedFunctionsService", function ($rootScope){
-  function setActive(toBeActivatedPolygon, mapRelatedService, stateService) {
+  // inner Functions
+  function _setActive(toBeActivatedPolygon, mapRelatedService, stateService) {
     mapRelatedService.activePolygon = toBeActivatedPolygon;
     var currentStatus = stateService.getStatus();
     switch(currentStatus) {
@@ -88,12 +94,23 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
 
     } 
   }
-  function polygonRightClickedCB(event, mapRelatedService, stateService) {
+  function _polygonRightClickedCB(event, mapRelatedService, stateService) {
     console.log("polygon right click placeholder");
+    var this_polygon = this;
+    _setActive(this_polygon, mapRelatedService, stateService);
+    var deleteMenu = mapRelatedService.deleteMenu;
+    var gmap = mapRelatedService.gmap;
+    if (event.vertex == undefined || event.path == undefined){
+      console.log("_polygonRightClickedCB returned");
+      return;
+    }
+    deleteMenu.open(gmap, this_polygon.getPaths().getAt(event.path) ,event.vertex, mapRelatedService.activePolygon);
   } 
-  function polygonLeftClickedCB (event, mapRelatedService, stateService) {
+  function _polygonLeftClickedCB (event, mapRelatedService, stateService) {
     var this_polygon = this;  // save this reference
-    setActive(this_polygon, mapRelatedService, stateService);  // gurantee current polygon is active and in correct mode
+    if (mapRelatedService.activePolygon !== this_polygon) {
+      _setActive(this_polygon, mapRelatedService, stateService);  // gurantee current polygon is active and in correct mode
+    }
     // console.log("polygon is left clicked");
     // console.log(this_polygon);
     if ( stateService.getStatus() === "arearemoving") {
@@ -103,6 +120,23 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
         mapRelatedService.temp_startmarker.setMap(mapRelatedService.gmap);
       }
     } 
+  }
+
+  function codeAddress( address, mapRelatedService) {
+    mapRelatedService.geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        try{
+          mapRelatedService.gmap.fitBounds(results[0].geometry.viewport);
+        } catch(e){  // possibly there is not bounds
+          console.error(e);
+          mapRelatedService.gmap.setCenter(results[0].geometry.location);
+        }
+      } else {
+        // alert("Geocode was not successful for the following reason: " + status);
+        $(".errormessage-container").removeClass("hidden");
+        $(".errormessage-container").find(".alert-danger.alert").text("Failure in searching: \"" + address +"\", "+ status);
+      }
+    });
   }
 
   function transformPolylineIntoPolygon (mapRelatedService, stateService){
@@ -119,11 +153,11 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
       editable: false
     });
     temp_polygon.setMap(mapRelatedService.gmap);
-    temp_polygon.addListener("click",  function ( event ){
-      polygonLeftClickedCB.call(this, event, mapRelatedService, stateService); // 
+    temp_polygon.addListener("click",  function (event){
+      _polygonLeftClickedCB.call(this, event, mapRelatedService, stateService); // 
     });
-    temp_polygon.addListener("rightclick", function () { 
-      alert("right clicked");
+    temp_polygon.addListener("rightclick", function (event) {
+      _polygonRightClickedCB.call(this, event, mapRelatedService, stateService);
     });
     temp_polygon.properties = {};
     // reset polyline
@@ -137,6 +171,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     var drawingPath = mapRelatedService.drawingPath;
     if (drawingPath.getPath().getLength() < 3){
       console.log("to be transformed drawingPath has less than 3 vertice, cannot transform.");
+      return;
     }
     var paths = mapRelatedService.activePolygon.getPaths();
     var direction0  =  mapRelatedService.spherical.computeSignedArea(paths.getAt(0));
@@ -153,8 +188,8 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     drawingPath.setPath([]);
     mapRelatedService.temp_startmarker.setMap(null);
   }
-  // dependency fufilled
-  function getTotalAreaOf(googleMapPolygon, mapRelatedService) {
+  // inner function
+  function _getTotalAreaOf(googleMapPolygon, mapRelatedService) {
     var paths = googleMapPolygon.getPaths();
     var i = 0;
     var sum = 0;
@@ -179,13 +214,13 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     return tmpLatLng;
   }
 
-  function convertToMVCArray(array, index_at_parent, parent_array) {
+  function _convertToMVCArray(array, index_at_parent, parent_array) {
     var ClassRef = this;
     if ( !Array.isArray(array[0]) ) {
       parent_array[index_at_parent] = geoLatLngToGoogleLatLng(array);
     } else { // var len = array[0][0]
       array.forEach( function (element, index, ar){
-        convertToMVCArray(element, index, ar);
+        _convertToMVCArray(element, index, ar);
         if (typeof ar[0].lat === 'function') {
           if (typeof index_at_parent !== 'undefined' && index === array.length - 1){
             parent_array[index_at_parent] = new google.maps.MVCArray(ar.slice(0,index));
@@ -209,18 +244,19 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
   }
   // dependency fufilled
   function convertPaths(MVCArray, tbr_a) {
-    if ( MVCArray.getAt(0).hasOwnProperty("lat")  ){
+    console.log(MVCArray.getArray());
+    if ( MVCArray.getAt(0).hasOwnProperty("lat")){
       // arrived deepest Array level
-      MVCArray.forEach(function (element, index){
+      MVCArray.forEach(function (latLng, index){
         tbr_a.push( convertGoogleLatLngToGeoJLonLat(MVCArray.getAt(index)));
       });
-      // assuming above forEach is blocking
       tbr_a.push( convertGoogleLatLngToGeoJLonLat(MVCArray.getAt(0))  );
-    }
-    else{
-      MVCArray.forEach( function (element, index){
-        tbr_a[index] = [];
-        convertPaths(element, tbr_a[index]);
+    } else {
+      MVCArray.forEach( function (oneMVCArray, index){
+        if (oneMVCArray.getLength() > 0) {
+          tbr_a[index] = [];
+          convertPaths(oneMVCArray, tbr_a[index]);
+        }
       });
     }
     return tbr_a;
@@ -255,7 +291,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
       sw:{ lat:temp_bounds.getSouthWest().lat(), lng: temp_bounds.getSouthWest().lng()},
       ne:{ lat:temp_bounds.getNorthEast().lat(), lng: temp_bounds.getNorthEast().lng()}
     };
-    tempGeoJPolygon.properties.total_area =  getTotalAreaOf(googleMapShapeObject, mapRelatedService);
+    tempGeoJPolygon.properties.total_area =  _getTotalAreaOf(googleMapShapeObject, mapRelatedService);
     tempGeoJPolygon.properties.environment_map = {};
     tempGeoJPolygon.properties.environment_map.tilt = mapRelatedService.gmap.getTilt();
     tempGeoJPolygon.properties.environment_map.MapTypeId = mapRelatedService.gmap.getMapTypeId();
@@ -266,7 +302,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     var gmap = mapRelatedService.gmap;
     var temp_geojson = JSON.parse(Geojson_string);
     // Key step is covert JS Geojson latlng array into MVCArray instance
-    var temp_MVCArray = convertToMVCArray(temp_geojson.geometry.coordinates);
+    var temp_MVCArray = _convertToMVCArray(temp_geojson.geometry.coordinates);
     var temp_polygon = new google.maps.Polygon({
       paths:temp_MVCArray,
       geodesic: false,
@@ -279,10 +315,10 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     angular.extend(temp_polygon.properties, temp_geojson.properties);
     temp_polygon.setMap(gmap);
     temp_polygon.addListener("click",  function(event){
-      polygonLeftClickedCB.call(this, event, mapRelatedService, stateService); // 
+      _polygonLeftClickedCB.call(this, event, mapRelatedService, stateService); // 
     });
     temp_polygon.addListener("rightclick", function(event) {
-      polygonRightClickedCB.call(this, event, mapRelatedService, stateService);
+      _polygonRightClickedCB.call(this, event, mapRelatedService, stateService);
     });
     temp_polygon._id = temp_geojson._id;
     mapRelatedService.polygons.push(temp_polygon);
@@ -345,16 +381,15 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
   }
 
   return {
-    polygonLeftClickedCB: polygonLeftClickedCB,
+    codeAddress: codeAddress,
     transformPolylineIntoPolygon: transformPolylineIntoPolygon,
     transformPolylineIntoRemovedArea: transformPolylineIntoRemovedArea,
-    getTotalAreaOf: getTotalAreaOf,
     convertGoogleLatLngToGeoJLonLat: convertGoogleLatLngToGeoJLonLat,
     geoLatLngToGoogleLatLng: geoLatLngToGoogleLatLng,
     convertPaths: convertPaths,
     geoJsonize: geoJsonize, 
-    saveAndGenResult: saveAndGenResult,
     deGeoJsonize: deGeoJsonize,
+    saveAndGenResult: saveAndGenResult,
     renderPolygonProperly: renderPolygonProperly
   };
 });
@@ -377,6 +412,26 @@ pmaServices.run(function ($rootScope, stateService, mapRelatedService, mapRelate
     }
     return bounds;
   }
+  var $errormessageContainer = $(".errormessage-container");
+  /*geosearch processing*/
+  $("#map-input-geosearch").keyup(function(e){
+    var code = e.which; // recommended to use e.which, it's normalized across browsers
+    $errormessageContainer.addClass("hidden");
+    if(code===13)e.preventDefault();
+    if(code===13){
+      console.log("enter");
+      $("#map-input-geosearch-btn").click();
+    } 
+  });
+  $("#map-input-geosearch-btn").click(function (){
+
+    var input = $("#map-input-geosearch").val();
+    if (!input){
+      return;
+    }
+    mapRelatedFunctionsService.codeAddress(input, mapRelatedService);
+  });
+
 
   var initialGeoJsonStr = $("meta[name=target-polygon]").attr("content");
   if (initialGeoJsonStr && initialGeoJsonStr.search("Feature") >= 0 ) {
@@ -391,7 +446,6 @@ pmaServices.run(function ($rootScope, stateService, mapRelatedService, mapRelate
         targetPolygon: googleMapPolygon
       });
     }, 1000);
-
   }
   // google.maps.Polygon.prototype
 });

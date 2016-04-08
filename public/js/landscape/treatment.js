@@ -3,16 +3,17 @@
 $(document).ready(function onDocReady(){
 
   var glblprefix = location.href.search('fasids.tamu.edu') >= 0 ? "/node/fasids" : "";
-  function colorOf ( usage){
+  function colorOf (type_of_use ){
+    console.log(type_of_use);
     var fillColor = "#000000";
-    switch(usage){
-      case "housebuilding":
+    switch(type_of_use){
+      case "agricultural":
         fillColor ="#0000FF";
         break;
-      case "lawnturf":
+      case "home":
         fillColor="#FFFF00";
         break;
-      case "vegetablegarden":
+      case "professional":
         fillColor="#33CC33";
         break;
       default:
@@ -51,7 +52,7 @@ $(document).ready(function onDocReady(){
 
   gmap.data.setStyle(function featureStyleFor(feature){
     return ({
-      fillColor: colorOf (feature.getProperty("landusage") ),
+      fillColor: colorOf(feature.getProperty("type_of_use") ),
       strokeColor: "#FF0000",
       strokeWeight:2
     });

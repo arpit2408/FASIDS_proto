@@ -8,7 +8,7 @@ block additionalCSS
   meta(name="page_status", content="#{JSON.stringify(page_status)}")
   // This is used to retrieve target polygon, when user click their polygon in their user profile
   meta(name="target-polygon", content="#{JSON.stringify(geojson)}")
-
+  meta(name="glblprefix", content="#{glblprefix}")
 block renderBody
   div(ng-app="polygonManagerApp" ng-controller="pmaDefaultCtrl")
     .mapcover#mapcover
@@ -18,7 +18,7 @@ block renderBody
           .col-xs-12
             .input-group
               //- span.input-group-addon Search
-              input.form-control#map-input-geosearch(type='text', placeholder='Search FASIDS using address, zipcode...')
+              input.form-control#map-input-geosearch(type='text', placeholder='Search using address, zipcode...')
               span.input-group-btn
                 //- button.btn#map-input-geosearch-btn(data-toggle="tooltip", data-placement="bottom" ,title="Search")
                 button.btn#map-input-geosearch-btn()
@@ -28,11 +28,12 @@ block renderBody
               button.close(type='button', data-dismiss='alert') ×
               | Error Message.
 
-      .mc-static2mapcontainer.panel#map-tools-box(ng-controller="pmaToolPanelCtrl")
+      .mc-static2mapcontainer.panel.ng-cloak#map-tools-box(ng-controller="pmaToolPanelCtrl")
         .row
           .col-xs-12
-            span.btn.btn-default Instructions
-        .row
+            span.btn.btn-default 
+              a(ng-href='#{glblprefix}/landscape/instructions') Instructions
+        .row(ng-if="pmaConstants.page_status.model_op === 'create'")
           .col-xs-12 
               span.btn.btn-default(tool-button target-status="polygondrawing") Draw Polygon
         .row
@@ -44,7 +45,7 @@ block renderBody
         .row
           .col-xs-12
             span.btn.btn-default(tool-button target-status="treatmentsetting") Set Treatment
-        .row
+        .row(ng-if="pmaConstants.page_status.model_op === 'patch'")
           .col-xs-12
             span.btn.btn-default(tool-button target-status="productlisting") Product List
         .row
@@ -60,38 +61,98 @@ block renderBody
                 span(aria-hidden='true') ×
               h4.modal-title Edit treatment properties
             .modal-body
-              p This is where treatment form should be put
+              form.form-horizontal(novalidate, name="treatmentForm")
+                .form-group.row
+                  label.col-sm-3.control-label.text-right 
+                    | Type of Use of the land
+                    span *
+                  .col-sm-4
+                    select.form-control(ng-model="treatment.type_of_use", ng-options="typeOfUseOption for typeOfUseOption in optionsForTypeOfUse", required)
+                      option(value="") (Pick One Type of Use)
+                .form-group.row
+                  label.col-sm-3.control-label.text-right
+                    | Control Strategy
+                    span *
+                  .col-sm-4
+                    select.form-control(ng-model="treatment.control_method", 
+                    ng-options="optionOfControl.value as optionOfControl.optionText for optionOfControl in optionsForControlMethod", required)
+                      option(value="") (Pick One Control Strategy)
+                .form-group.row
+                  label.col-sm-3.control-label.text-right 
+                    | Treatment strategy
+                    span *
+                  .col-sm-4
+                    select.form-control(ng-model="treatment.usage", 
+                    ng-options="optionOfUsage.value as optionOfUsage.optionText for optionOfUsage in optionsForUsage", required)
+                      option(value="") (Pick One Product Usagge)
+                .form-group.row(ng-if="treatment.usage === 'imt'")
+                  label.col-sm-3.control-label.text-right(for='moundNumber') Mound Number
+                  .col-sm-9
+                    input#moundNumber.form-control(type="number", placeholder='Mound Number', ng-model="treatment.mound_number")
+                .form-group.row
+                  label.col-sm-3.control-label.text-right Additional Things
+                  .col-sm-9
+                    .checkbox
+                      label
+                        input(type='checkbox', ng-model="treatment.is_outdoor_land")
+                        | Outdoor-use only product (might be unsafe for indoor use)
+                    .checkbox
+                      label
+                        input(type='checkbox', ng-model="treatment.need_organic")
+                        | Organic product
+                    .checkbox
+                      label
+                        input(type='checkbox', ng-model="treatment.need_safe_for_pets")
+                        | Safe-for-pet product
+
+                .form-group.row
+                  label.col-sm-3.control-label.text-right(for='polygonName') 
+                    | Name your polygon
+                    span *
+                  .col-sm-9
+                    input#polygonName.form-control(type='text', placeholder='Name of this polygon', ng-model="treatment.polygon_name", required)
+                .form-group.row
+                  label.col-sm-3.control-label.text-right(for='polygonAddress') Address
+                  .col-sm-9
+                    input#polygonAddress.form-control(type='text', placeholder='Address of this polygon', ng-model="treatment.address")
+                .form-group.row
+                  label.col-sm-3.control-label.text-right(for='polygonNotes') Notes
+                  .col-sm-9
+                    textarea#polygonNotes.form-control(rows="5", ng-model="treatment.notes")
+
             .modal-footer
               button.btn.btn-default(type='button', data-dismiss='modal') Close
-              button.btn.btn-primary(type='button', ng-click="saveTreatmentAndPolygonToServer()" ) Save Treatment to Server
+              button.btn.btn-primary(type='button', ng-click="saveTreatmentAndPolygonToServer($event)", ng-disabled="!treatmentForm.$valid" ) Save Treatment to Server
 
 
-    //- .modal.fade(tabindex='-1', role='dialog', id='signin-required-modal')
-    //-   .modal-dialog
-    //-     .modal-content
-    //-       .modal-header
-    //-         button.close(type='button', data-dismiss='modal', aria-label='Close')
-    //-           span(aria-hidden='true') ×
-    //-         h4.modal-title Sign in needed 
-    //-       .modal-body
-    //-         p 
-    //-           | Please 
-    //-           a(href="#{glblprefix}/users/signin?referral_url=#{glblprefix}/landscape/homeownermng") 
-    //-             b sign in&nbsp;
-    //-           | at right-top corner before using landscape management. If you are first-time user, please check 
-    //-           a(href="#{glblprefix}/landscape/instructions", target="_blank") 
-    //-            b instructions 
-    //-           | for help.
-    //-       .modal-footer
-    //-         button.btn.btn-default(type='button', data-dismiss='modal') Close
+      #signin-required-modal.modal.fade(tabindex='-1', role='dialog')
+        .modal-dialog
+          .modal-content
+            .modal-header
+              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                span(aria-hidden='true') ×
+              h4.modal-title Sign in needed 
+            .modal-body
+              p 
+                | Please 
+                a(href="#{glblprefix}/users/signin?referral_url=#{glblprefix}/landscape/homeownermng") 
+                  b sign in&nbsp;
+                | at right-top corner before using landscape management. If you are first-time user, please check 
+                a(href="#{glblprefix}/landscape/instructions", target="_blank") 
+                 b instructions 
+                | for help.
+            .modal-footer
+              button.btn.btn-default(type='button', data-dismiss='modal') Close
 
 
     .hidden(ng-non-bindable)
-      form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
-        input#geojson(type='text', name="geojson")
-      //- patch_url is from index.js: router     route : GET /landscape/homeownermng/:geojson_id
-      form#patch( action="#{patch_url}", method="post")
-        input(type="text", name="geojson")
+      case page_status.model_op
+        when "create"
+          form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
+            input#geojson(type='text', name="geojson")
+        when "patch"
+          form#treatment(target="_blank",action="#{patch_url}", method="post")
+            input#geojson(type='text', name="geojson")
 block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
   script(src="#{glblprefix}/underscorejs/underscore-min.js")
@@ -101,7 +162,7 @@ block additionalJS
   script(src="#{glblprefix}/js/landscape/DeleteMenu.js")
   //- script(src="#{glblprefix}/js/landscape/homeownermng.js" , data-glblprefix=glblprefix, id="homeownermng-src")
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js")
-  script(src="#{glblprefix}/js/landscape/polygonManagerApp.js" , data-glblprefix=glblprefix)
-  script(src="#{glblprefix}/js/landscape/pmaService.js" , data-glblprefix=glblprefix)
+  script(src="#{glblprefix}/js/landscape/polygonManagerApp.js", data-glblprefix=glblprefix)
+  script(src="#{glblprefix}/js/landscape/pmaService.js", data-glblprefix=glblprefix)  
 
 
