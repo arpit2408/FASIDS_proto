@@ -1,0 +1,462 @@
+db.polygon_geojson.update(
+  {'properties.landusage': 'lawnturf'},
+  {
+    $set:{
+      'properties.landusage': "home"
+    }
+  },
+  {multi: true}
+);
+
+db.polygon_geojson.update(
+  {},
+  {
+    $rename:{ 
+    'properties.landusage':'properties.type_of_use', 
+    'properties.treatment':'properties.usage'
+    },
+    $set: {
+      'properties.control_method': "bait"
+    }
+  },
+  {multi: true}
+)
+
+db.polygon_geojson.update(
+  {'properties.polygon_name': {$exists: false}},
+  {
+    $set:{
+      'properties.polygon_name':'mongoShellAssignedDefaultName'
+    }
+  },
+  {multi: true}
+);
+db.polygon_geojson.update(
+  {'properties.type_of_use': {$exists: false}},
+  {
+    $set:{
+      'properties.type_of_use':'home'
+    }
+  },
+  {multi: true}
+);
+db.polygon_geojson.update(
+  {'properties.usage': {$exists: false}},
+  {
+    $set:{
+      'properties.usage':'broadcast'
+    }
+  },
+  {multi: true}
+);
+
+
+db.polygon_geojson.update(
+  {"properties."}
+);
+[
+  {
+    "__v" : 0,
+    "_id" : ObjectId("563bf0dd54ad06555c91a492"),
+    "geometry" : {
+      "type" : "Polygon",
+      "coordinates" : [
+        [
+          [
+            -96.327385,
+            30.619351
+          ],
+          [
+            -96.327364,
+            30.618045
+          ],
+          [
+            -96.329316,
+            30.618229
+          ],
+          [
+            -96.329171,
+            30.619471
+          ],
+          [
+            -96.327385,
+            30.619351
+          ]
+        ]
+      ]
+    },
+    "properties" : {
+      "total_area" : 45644.58316609845,
+      "bounds" : {
+        "ne" : {
+          "lat" : 30.619798827924228,
+          "lng" : -96.32694482803345
+        },
+        "sw" : {
+          "lat" : 30.617767574702544,
+          "lng" : -96.32977724075317
+        }
+      },
+      "address" : "address string",
+      "landusage" : "lawnturf",
+      "mound_density" : 0.01158617681756192,
+      "notes" : "notes stringasdfasdf",
+      "owner" : ObjectId("5611fadb8c061a37ea4c0087"),
+      "polygon_name" : "polygon_2",
+      "treatment" : "broadcast",
+      "environment_map" : {
+        "tilt" : 0,
+        "MapTypeId" : "satellite"
+      }
+    },
+    "type" : "Feature"
+  },
+  {
+    "type" : "Feature",
+    "_id" : ObjectId("564a392158c825282372d1d9"),
+    "properties" : {
+      "total_area" : 1052.41765391931,
+      "landusage" : "lawnturf",   // need to rename to 'type_of_use'
+      "treatment" : "imt",        // need to rename to 'usage'
+      "mound_density" : 1,
+      "polygon_name" : "Test1",
+      "address" : "",
+      "notes" : "",
+      "bounds" : {
+        "ne" : {
+          "lat" : 30.58997667549306,
+          "lng" : -96.27473160624504
+        },
+        "sw" : {
+          "lat" : 30.589539132489456,
+          "lng" : -96.2752117216587
+        }
+      },
+      "owner" : ObjectId("5612a04a9aa00410e0e98874")
+    },
+    "geometry" : {
+      "type" : "Polygon",
+      "coordinates" : [
+        [
+          [
+            -96.275212,
+            30.589807
+          ],
+          [
+            -96.275028,
+            30.589977
+          ],
+          [
+            -96.274732,
+            30.589688
+          ],
+          [
+            -96.274921,
+            30.589539
+          ],
+          [
+            -96.275212,
+            30.589807
+          ]
+        ]
+      ]
+    },
+    "__v" : 0
+  },
+  {
+    "__v" : 0,
+    "_id" : ObjectId("567039e52496e06180ed1f6c"),
+    "geometry" : {
+      "type" : "Polygon",
+      "coordinates" : [
+        [
+          [
+            -96.275206,
+            30.589784
+          ],
+          [
+            -96.274879,
+            30.589556
+          ],
+          [
+            -96.274734,
+            30.589692
+          ],
+          [
+            -96.275049,
+            30.589939
+          ],
+          [
+            -96.275206,
+            30.589784
+          ],
+          [
+            -96.275206,
+            30.589784
+          ],
+          [
+            -96.275206,
+            30.589784
+          ]
+        ],
+        [
+          [
+            -96.27497,
+            30.589857
+          ],
+          [
+            -96.27483,
+            30.589753
+          ],
+          [
+            -96.274857,
+            30.589725
+          ],
+          [
+            -96.274879,
+            30.589738
+          ],
+          [
+            -96.274984,
+            30.589643
+          ],
+          [
+            -96.275092,
+            30.589735
+          ],
+          [
+            -96.275054,
+            30.589771
+          ],
+          [
+            -96.275059,
+            30.589786
+          ],
+          [
+            -96.275031,
+            30.589812
+          ],
+          [
+            -96.275016,
+            30.589805
+          ],
+          [
+            -96.27497,
+            30.589857
+          ],
+          [
+            -96.27497,
+            30.589857
+          ],
+          [
+            -96.27497,
+            30.589857
+          ]
+        ]
+      ]
+    },
+    "properties" : {
+      "total_area" : 583.0715837858343,
+      "bounds" : {
+        "ne" : {
+          "lat" : 30.589938578159668,
+          "lng" : -96.27473428845406
+        },
+        "sw" : {
+          "lat" : 30.589556449532427,
+          "lng" : -96.27520635724068
+        }
+      },
+      "landusage" : "lawnturf",
+      "treatment" : "imt",
+      "mound_density" : 0.02,
+      "polygon_name" : "Maria's house changed",
+      "address" : "",
+      "notes" : "Testing changed",
+      "owner" : ObjectId("5611fadb8c061a37ea4c0087"),
+      "environment_map" : {
+        "tilt" : 0,
+        "MapTypeId" : "satellite"
+      }
+    },
+    "type" : "Feature"
+  },
+  {
+    "type" : "Feature",
+    "_id" : ObjectId("5681cdf4be7e450251a0f6e0"),
+    "properties" : {
+      "total_area" : 96751.25618845769,
+      "landusage" : "lawnturf",
+      "treatment" : "imt",
+      "mound_density" : 0.2,
+      "polygon_name" : "test1",
+      "address" : "",
+      "notes" : "",
+      "owner" : ObjectId("5611fadb8c061a37ea4c0087"),
+      "bounds" : {
+        "ne" : {
+          "lat" : 30.61981729366712,
+          "lng" : -96.32572174072266
+        },
+        "sw" : {
+          "lat" : 30.61649340320284,
+          "lng" : -96.33138656616211
+        }
+      },
+      "environment_map" : {
+        "tilt" : 0,
+        "MapTypeId" : "roadmap"
+      }
+    },
+    "geometry" : {
+      "type" : "Polygon",
+      "coordinates" : [
+        [
+          [
+            -96.330271,
+            30.619817
+          ],
+          [
+            -96.325722,
+            30.616789
+          ],
+          [
+            -96.329498,
+            30.616493
+          ],
+          [
+            -96.331387,
+            30.617675
+          ],
+          [
+            -96.330271,
+            30.619817
+          ]
+        ]
+      ]
+    },
+    "__v" : 0
+  },
+  {
+    "type" : "Feature",
+    "_id" : ObjectId("568c409a84dbbff7292781ed"),
+    "properties" : {
+      "total_area" : 22137.842013524,
+      "landusage" : "lawnturf",
+      "treatment" : "imt",
+      "mound_density" : 0.02,
+      "polygon_name" : "Area01 at Golf field",
+      "address" : "",
+      "notes" : "Need treatment",
+      "owner" : ObjectId("5611fadb8c061a37ea4c0087"),
+      "bounds" : {
+        "ne" : {
+          "lat" : 30.619217155220163,
+          "lng" : -96.33083939552307
+        },
+        "sw" : {
+          "lat" : 30.617342852732538,
+          "lng" : -96.33268475532532
+        }
+      },
+      "environment_map" : {
+        "tilt" : 0,
+        "MapTypeId" : "roadmap"
+      }
+    },
+    "geometry" : {
+      "type" : "Polygon",
+      "coordinates" : [
+        [
+          [
+            -96.331832,
+            30.619088
+          ],
+          [
+            -96.331301,
+            30.619217
+          ],
+          [
+            -96.330839,
+            30.618792
+          ],
+          [
+            -96.331081,
+            30.617994
+          ],
+          [
+            -96.331387,
+            30.617343
+          ],
+          [
+            -96.332685,
+            30.617781
+          ],
+          [
+            -96.332229,
+            30.618608
+          ],
+          [
+            -96.331832,
+            30.619088
+          ]
+        ]
+      ]
+    },
+    "__v" : 0
+  },
+  {
+    "type" : "Feature",
+    "_id" : ObjectId("569fdeb714a47a4cc7b37339"),
+    "properties" : {
+      "total_area" : 97802.10570113818,
+      "owner" : ObjectId("5611fadb8c061a37ea4c0087"),
+      "bounds" : {
+        "ne" : {
+          "lat" : 30.61959570451994,
+          "lng" : -96.32750272750854
+        },
+        "sw" : {
+          "lat" : 30.61649340320284,
+          "lng" : -96.33175134658813
+        }
+      },
+      "environment_map" : {
+        "tilt" : 0,
+        "MapTypeId" : "roadmap"
+      }
+    },
+    "geometry" : {
+      "type" : "Polygon",
+      "coordinates" : [
+        [
+          [
+            -96.329563,
+            30.619596
+          ],
+          [
+            -96.327503,
+            30.619097
+          ],
+          [
+            -96.327717,
+            30.617214
+          ],
+          [
+            -96.331408,
+            30.616493
+          ],
+          [
+            -96.331751,
+            30.618211
+          ],
+          [
+            -96.329563,
+            30.619596
+          ]
+        ]
+      ]
+    },
+    "__v" : 0
+  }
+]
