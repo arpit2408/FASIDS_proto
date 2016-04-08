@@ -337,31 +337,34 @@ router.delete('/landscape/homeownermng/:geojson_id' , ensureAuthenticated,functi
 });
 
 router.post('/landscape/homeownermng/:geojson_id/patch' ,ensureAuthenticated, function (req, res, next){
+  var api_route = req.baseUrl +req.path;
   var geojson = req.body.geojson;
   if (typeof req.body.geojson == "string"){
     geojson = JSON.parse(geojson);
   }
-  // if(geojson.properties.mound_density) 
-  //   geojson.properties.mound_density = req.db_models.PolygonGeojson.convertMoundDensityIntoMetric(geojson.properties.mound_density);
-  
   req.db_models.PolygonGeojson.findById(req.params.geojson_id, null,{}, function exec(error, the_polygon ){
     if (error) return next(error);
     if (!the_polygon){
       var e = new Error("requested geojson could not be found");
       e.status = 404
-      return next(e);
+      return res.json(error);
     }
     if (the_polygon.properties.owner.toString() !== req.user._id.toString()){
       var e = new Error("is not authorized for requested resource: " +  the_polygon.properties.owner.toString() + "," +req.user._id );
       e.status = 401;
-      return next(e);
+      return res.json(e);
     }
     _.each(_.keys(geojson), function (key_name, index, key_list){
       the_polygon[key_name] = geojson[key_name];
     });
     the_polygon.save( function(error){
-      if (error) return next(error);
-      res.redirect(glblprefix + "/landscape/homeownermng/" + req.params.geojson_id);
+      if (error) return res.status(500).json(error);
+      // res.redirect(glblprefix + "/landscape/homeownermng/" + req.params.geojson_id);
+      res.json({
+        api_result:"success : PolygonGeojson Patched", 
+        api_route:api_route, 
+        treatmentUrl:glblprefix + '/landscape/treatment/'+the_polygon._id.toString()
+      });
     });
   });
 });
