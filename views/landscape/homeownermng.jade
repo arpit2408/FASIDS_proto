@@ -31,7 +31,8 @@ block renderBody
       .mc-static2mapcontainer.panel#map-tools-box(ng-controller="pmaToolPanelCtrl")
         .row
           .col-xs-12
-            span.btn.btn-default Instructions
+            span.btn.btn-default 
+              a(ng-href='#{glblprefix}/landscape/instructions') Instructions
         .row
           .col-xs-12 
               span.btn.btn-default(tool-button target-status="polygondrawing") Draw Polygon
@@ -124,24 +125,24 @@ block renderBody
               button.btn.btn-primary(type='button', ng-click="saveTreatmentAndPolygonToServer($event)", ng-disabled="!treatmentForm.$valid" ) Save Treatment to Server
 
 
-    //- .modal.fade(tabindex='-1', role='dialog', id='signin-required-modal')
-    //-   .modal-dialog
-    //-     .modal-content
-    //-       .modal-header
-    //-         button.close(type='button', data-dismiss='modal', aria-label='Close')
-    //-           span(aria-hidden='true') ×
-    //-         h4.modal-title Sign in needed 
-    //-       .modal-body
-    //-         p 
-    //-           | Please 
-    //-           a(href="#{glblprefix}/users/signin?referral_url=#{glblprefix}/landscape/homeownermng") 
-    //-             b sign in&nbsp;
-    //-           | at right-top corner before using landscape management. If you are first-time user, please check 
-    //-           a(href="#{glblprefix}/landscape/instructions", target="_blank") 
-    //-            b instructions 
-    //-           | for help.
-    //-       .modal-footer
-    //-         button.btn.btn-default(type='button', data-dismiss='modal') Close
+      #signin-required-modal.modal.fade(tabindex='-1', role='dialog')
+        .modal-dialog
+          .modal-content
+            .modal-header
+              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                span(aria-hidden='true') ×
+              h4.modal-title Sign in needed 
+            .modal-body
+              p 
+                | Please 
+                a(href="#{glblprefix}/users/signin?referral_url=#{glblprefix}/landscape/homeownermng") 
+                  b sign in&nbsp;
+                | at right-top corner before using landscape management. If you are first-time user, please check 
+                a(href="#{glblprefix}/landscape/instructions", target="_blank") 
+                 b instructions 
+                | for help.
+            .modal-footer
+              button.btn.btn-default(type='button', data-dismiss='modal') Close
 
 
     .hidden(ng-non-bindable)

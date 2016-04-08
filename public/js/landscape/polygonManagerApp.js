@@ -73,62 +73,69 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
       return stateService.getStatus();
     }, 
     function (newStatus, oldStatus) {
-    switch (oldStatus){
-      case "polygondrawing":
-        // status changed from polygondrawing to something else
-        mapRelatedFunctionsService.transformPolylineIntoPolygon(mapRelatedService, stateService);
-        break;
-      case "arearemoving":
-        mapRelatedFunctionsService.transformPolylineIntoRemovedArea(mapRelatedService, stateService);
-        break;
-
-      case "shapeediting":
-        if (mapRelatedService.activePolygon) {
-          mapRelatedService.activePolygon.setEditable(false);
-        }
-        break;
-      case "treatmentsetting":
-        break;
-    }  // close switch (oldStatus)
-
-    switch(newStatus) {
-      case "shapeediting":
-        if (mapRelatedService.isOnlyOnePolygon()) {
-          mapRelatedService.activePolygon = mapRelatedService.polygons[0];
-        }
-        if (mapRelatedService.activePolygon) {
-          mapRelatedService.activePolygon.setEditable(true);
-        } 
-        break;
-      case "treatmentsetting":
-        if (mapRelatedService.isOnlyOnePolygon()) {
-          mapRelatedService.activePolygon = mapRelatedService.polygons[0];
-        }
-        if (mapRelatedService.activePolygon) {
-          $rootScope.$broadcast('shouldOpenTreatment', {
-            content: "hehe"
-          });
-        }
-        break;
-      case "productlisting":
-        if (mapRelatedService.isOnlyOnePolygon()) {
-          mapRelatedService.activePolygon = mapRelatedService.polygons[0];
-        }
-        if (mapRelatedService.activePolygon) {
-          location.href= pmaConstants.GLOBALPREFIX +"/landscape/treatment/" + mapRelatedService.activePolygon._id ; // TODO: add glblprefix to config of this application
-        }
-        break;
-      case "resetting":
-        mapRelatedService.drawingPath.setPath([]);
-        for (var i = 0, len = mapRelatedService.polygons.length; i < len; i++){
-          mapRelatedService.polygons[i].setMap(null);
-        }
-        mapRelatedService.polygons = [];
+      if (newStatus !== null && pmaConstants.page_status.isAuthenticated === false) {
+        console.log("######");
+        $('#signin-required-modal').modal("show"); // if user has not signed, he cannot use these function
         stateService.setStatus(null);
-        break;
-      default:
+        return;
+      }
+      switch (oldStatus){
+        case "polygondrawing":
+          // status changed from polygondrawing to something else
+          mapRelatedFunctionsService.transformPolylineIntoPolygon(mapRelatedService, stateService);
+          break;
+        case "arearemoving":
+          mapRelatedFunctionsService.transformPolylineIntoRemovedArea(mapRelatedService, stateService);
+          break;
+
+        case "shapeediting":
+          if (mapRelatedService.activePolygon) {
+            mapRelatedService.activePolygon.setEditable(false);
+          }
+          break;
+        case "treatmentsetting":
+          break;
+      }  // close switch (oldStatus)
+
+      switch(newStatus) {
+        case "shapeediting":
+          if (mapRelatedService.isOnlyOnePolygon()) {
+            mapRelatedService.activePolygon = mapRelatedService.polygons[0];
+          }
+          if (mapRelatedService.activePolygon) {
+            mapRelatedService.activePolygon.setEditable(true);
+          } 
+          break;
+        case "treatmentsetting":
+          if (mapRelatedService.isOnlyOnePolygon()) {
+            mapRelatedService.activePolygon = mapRelatedService.polygons[0];
+          }
+          if (mapRelatedService.activePolygon) {
+            $rootScope.$broadcast('shouldOpenTreatment', {
+              content: "hehe"
+            });
+          }
+          break;
+        case "productlisting":
+          if (mapRelatedService.isOnlyOnePolygon()) {
+            mapRelatedService.activePolygon = mapRelatedService.polygons[0];
+          }
+          if (mapRelatedService.activePolygon) {
+            location.href= pmaConstants.GLOBALPREFIX +"/landscape/treatment/" + mapRelatedService.activePolygon._id ; // TODO: add glblprefix to config of this application
+          }
+          break;
+        case "resetting":
+          mapRelatedService.drawingPath.setPath([]);
+          for (var i = 0, len = mapRelatedService.polygons.length; i < len; i++){
+            mapRelatedService.polygons[i].setMap(null);
+          }
+          mapRelatedService.polygons = [];
+          stateService.setStatus(null);
+          break;
+        default:
+      }
     }
-  });  // end of $watch();
+  );  // end of $watch();
 
   // polylineFinishing event is triggerred at handlerFn of temp_startmarker.addListener('click', handlerFn)
   $scope.$on('polylineFinishing', function(event) {
