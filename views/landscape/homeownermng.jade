@@ -9,6 +9,11 @@ block additionalCSS
   // This is used to retrieve target polygon, when user click their polygon in their user profile
   meta(name="target-polygon", content="#{JSON.stringify(geojson)}")
   meta(name="glblprefix", content="#{glblprefix}")
+  style(type='text/css').
+      .form-horizontal input.ng-invalid.ng-touched{
+      border-color: red;
+      outline-color: red;
+      }
 block renderBody
   div(ng-app="polygonManagerApp" ng-controller="pmaDefaultCtrl")
     .mapcover#mapcover
@@ -83,11 +88,12 @@ block renderBody
                     span *
                   .col-sm-4
                     select.form-control(ng-model="treatment.usage", 
-                    ng-options="optionOfUsage.value as optionOfUsage.optionText for optionOfUsage in optionsForUsage", required)
+                    ng-options="optionOfUsage.value as optionOfUsage.optionText for optionOfUsage in optionsForUsage", required name="treatmentStrategy")
                       option(value="") (Pick One Product Usagge)
+                  span.error(ng-show='treatmentForm.treatmentStrategy.$dirty && treatmentForm.treatmentStrategy.$invalid') Please Treatment Stratege
                 .form-group.row(ng-if="treatment.usage === 'imt'")
                   label.col-sm-3.control-label.text-right(for='moundNumber') Mound Number
-                  .col-sm-9
+                  .col-sm-4
                     input#moundNumber.form-control(type="number", placeholder='Mound Number', ng-model="treatment.mound_number")
                 .form-group.row
                   label.col-sm-3.control-label.text-right Additional Things
@@ -104,13 +110,14 @@ block renderBody
                       label
                         input(type='checkbox', ng-model="treatment.need_safe_for_pets")
                         | Safe-for-pet product
-
+                .row(ng-show='treatmentForm.$submitted || treatmentForm.polygonName.$touched')
+                  .col-sm-9.col-sm-offset-3(ng-show='treatmentForm.polygonName.$error.required') Please Name your polygon
                 .form-group.row
                   label.col-sm-3.control-label.text-right(for='polygonName') 
                     | Name your polygon
                     span *
                   .col-sm-9
-                    input#polygonName.form-control(type='text', placeholder='Name of this polygon', ng-model="treatment.polygon_name", required)
+                    input#polygonName.form-control(type='text', placeholder='Name of this polygon', ng-model="treatment.polygon_name" name="polygonName", required)
                 .form-group.row
                   label.col-sm-3.control-label.text-right(for='polygonAddress') Address
                   .col-sm-9

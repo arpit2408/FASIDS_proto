@@ -29,7 +29,7 @@
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
 
-        
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         
 
         <script>
@@ -42,6 +42,13 @@
                 document.getElementById(box).style.display = "none";
         }
         </script>
+
+        <style type="text/css">
+        .form-horizontal input.ng-invalid.ng-touched{
+            border-color: red;
+            outline-color: red;
+        }
+        </style>
 
     </head>
 
@@ -72,77 +79,108 @@
         </div>
 
         <!-- MODAL -->
-        <div class="modal fade" id="modal-settreatment" tabindex="-1" role="dialog" aria-labelledby="modal-settreatment-label" aria-hidden="true">
-        	<div class="modal-dialog">
-        		<div class="modal-content">
-        			<div class="modal-header">
-        				<button type="button" class="close" data-dismiss="modal">
-        					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-        				</button>
-        				<h3 class="modal-title" id="modal-register-label">Edit Treatment Properties</h3>
-        				<p>Fill in the form below to set your treatment</p>
-        			</div>
-        			
-        			<div class="modal-body">
-	                    <form role="form" action="" method="post" class="registration-form">
-	                    	<div class="form-group">
-	                    		<label for="typeOfUse">Type of Use: </label>
-                                <label class="radio-inline">
-                                 <input type="radio" name="typeOfUse" id="typeOfUse" value="home">Home</label>
-	                        	<label class="radio-inline">
-                                 <input type="radio" name="typeOfUse" id="typeOfUse" value="agricultural">Agricultural</label>
-                                <label class="radio-inline">
-                                 <input type="radio" name="typeOfUse" id="typeOfUse" value="professional">Professional</label>
-	                        </div>
-	                        <div class="form-group">
-                                <label for="controlMethod">Control Method: </label>
-                                <label class="checkbox-inline">
-                                <input type="checkbox" name="controlMethod" id="controlMethod" value="bait">Bait</label>
-                                <label class="checkbox-inline">
-                                <input type="checkbox" name="controlMethod" id="controlMethod" value="contact">Contact</label>
-                            </div>
-	                        <div class="form-group">
-	                        	<label for="usage">Usage: </label>
-                                <div>
-                                <div class="checkbox">
-                                <label><input type="checkbox" name="usage" id="usage1" value="imt" onclick="showAdditionalInput('addInput')">Individual Mount Treatment</label>
-                                </div>
-                                <div id="addInput" style="display: none">
-                                <label for="mountNum">Please enter estimated mount number: </label>
-                                <input type="text" id="mountNum" name="mountNum">
-                                </div>
-                                </div>
-                                <div class="checkbox">
-                                <label><input type="checkbox" name="usage" id="usage2" value="broadcast">Broadcast</label>
-                                </div>
-	                        </div>
-	                        <div class="form-group">
-	                        	<label for="specialRequirements">Special Requirements: </label>
-                                <label class="checkbox-inline"><input type="checkbox" name="specialRequirements" id="specialRequirements" value="is_safe_for_pets">Safe for Pets</label>
-                                <label class="checkbox-inline"><input type="checkbox" name="specialRequirements" id="specialRequirements" value="is_organic">Organic</label>
-                                <label class="checkbox-inline"><input type="checkbox" name="specialRequirements" id="specialRequirements" value="is_outdoor">Outdoor Use</label>
-	                        </div>
-                            <div class="form-group">
-                                <label for="polygonName">Polygon Name: </label>
-                                <input type="text" id="polygonName" name="polygonName">
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Address: </label>
-                                <input type="text" id="address" name="address">
-                            </div>
-                            <div class="form-group">
-                                <label for="note">Note: </label>
-                                <textarea class="form-control" rows="5" id="note"></textarea>
-                            </div>
-	                        <button type="submit" class="btn">Finish Preparation</button>
-	                    </form>
-	                    
-        			</div>
-        			
-        		</div>
-        	</div>
+        <div ng-controller="pmaModalsCtrl" class="modal-container">
+      <div id="treatment-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal">
+        <div role="document" class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-label="Close" ng-click="saveTreatmentAndPolygonLocally()" class="close"><span aria-hidden="true">×</span></button>
+              <h4 class="modal-title">Edit treatment properties</h4>
+            </div>
+            <div class="modal-body">
+              <form novalidate name="treatmentForm" class="form-horizontal">
+                <div class="form-group row">
+                  <label class="col-sm-3 control-label text-right">
+                     
+                    Type of Use of the land<span>*</span>
+                  </label>
+                  <div class="col-sm-4">
+                    <select ng-model="treatment.type_of_use" ng-options="typeOfUseOption for typeOfUseOption in optionsForTypeOfUse" required class="form-control">
+                      <option value="">(Pick One Type of Use)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 control-label text-right">Control Strategy<span>*</span></label>
+                  <div class="col-sm-4">
+                    <select ng-model="treatment.control_method" ng-options="optionOfControl.value as optionOfControl.optionText for optionOfControl in optionsForControlMethod" required class="form-control" name="controlMethod">
+                      <option value="">(Pick One Control Strategy)</option>
+                    </select>
+                    <span class="error" ng-show="treatmentForm.controlMethod.$dirty && treatmentForm.controlMethod.$invalid">Select service</span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 control-label text-right">
+                     
+                    Treatment strategy<span>*</span>
+                  </label>
+                  <div class="col-sm-4">
+                    <select ng-model="treatment.usage" ng-options="optionOfUsage.value as optionOfUsage.optionText for optionOfUsage in optionsForUsage" required class="form-control" name="treatmentStrategy">
+                      <option value="">(Pick One Product Usagge)</option>
+                    </select>
+                    <span class="error" ng-show="treatmentForm.treatmentStrategy.$dirty && treatmentForm.treatmentStrategy.$invalid">Please Treatment Stratege</span>
+                  </div>
+                </div>
+                <div ng-if="treatment.usage === 'imt'" class="form-group row">
+                  <label for="moundNumber" class="col-sm-3 control-label text-right">Mound Number</label>
+                  <div class="col-sm-4">
+                    <input id="moundNumber" type="number" placeholder="Mound Number" ng-model="treatment.mound_number" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 control-label text-right">Additional Things</label>
+                  <div class="col-sm-9">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" ng-model="treatment.is_outdoor_land">Outdoor-use only product (might be unsafe for indoor use)
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" ng-model="treatment.need_organic">Organic product
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" ng-model="treatment.need_safe_for_pets">Safe-for-pet product
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="polygonName" class="col-sm-3 control-label text-right">
+                     
+                    Name your polygon<span>*</span>
+                  </label>
+                  <div class="col-sm-9">
+                    <input id="polygonName" type="text" placeholder="Name of this polygon" ng-model="treatment.polygon_name" required class="form-control" name="polygonName">
+                  </div>
+                  <div ng-show="form.$submitted || form.polygonName.$touched" class="row">
+                  <div class="col-sm-9 col-sm-offset-3" ng-show="form.polygonName.$error.required">Please Name your polygon</div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="polygonAddress" class="col-sm-3 control-label text-right">Address</label>
+                  <div class="col-sm-9">
+                    <input id="polygonAddress" type="text" placeholder="Address of this polygon" ng-model="treatment.address" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="polygonNotes" class="col-sm-3 control-label text-right">Notes</label>
+                  <div class="col-sm-9">
+                    <textarea id="polygonNotes" rows="5" ng-model="treatment.notes" class="form-control"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+              <button type="button" ng-click="saveTreatmentAndPolygonToServer($event)" ng-disabled="!treatmentForm.$valid" class="btn btn-primary">Save Treatment to Server</button>
+            </div>
+          </div>
         </div>
-
+      </div>
+    </div>
 
         <!-- Javascript -->
         <script src="assets/js/jquery-1.11.1.min.js"></script>
