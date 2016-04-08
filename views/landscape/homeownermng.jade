@@ -8,7 +8,7 @@ block additionalCSS
   meta(name="page_status", content="#{JSON.stringify(page_status)}")
   // This is used to retrieve target polygon, when user click their polygon in their user profile
   meta(name="target-polygon", content="#{JSON.stringify(geojson)}")
-
+  meta(name="glblprefix", content="#{glblprefix}")
 block renderBody
   div(ng-app="polygonManagerApp" ng-controller="pmaDefaultCtrl")
     .mapcover#mapcover
@@ -62,21 +62,24 @@ block renderBody
             .modal-body
               form.form-horizontal(novalidate, name="treatmentForm")
                 .form-group.row
-                  label.col-sm-3.control-label.text-right Type of Use of the land
+                  label.col-sm-3.control-label.text-right 
+                    | Type of Use of the land
+                    span *
                   .col-sm-4
                     select.form-control(ng-model="treatment.type_of_use", ng-options="typeOfUseOption for typeOfUseOption in optionsForTypeOfUse", required)
                       option(value="") (Pick One Type of Use)
                 .form-group.row
-                  label.col-sm-3.control-label.text-right Control Strategy
+                  label.col-sm-3.control-label.text-right
+                    | Control Strategy
+                    span *
                   .col-sm-4
                     select.form-control(ng-model="treatment.control_method", 
                     ng-options="optionOfControl.value as optionOfControl.optionText for optionOfControl in optionsForControlMethod", required)
                       option(value="") (Pick One Control Strategy)
                 .form-group.row
                   label.col-sm-3.control-label.text-right 
-                    | Product Usage
-                    br 
-                    | (Treatment strategy)
+                    | Treatment strategy
+                    span *
                   .col-sm-4
                     select.form-control(ng-model="treatment.usage", 
                     ng-options="optionOfUsage.value as optionOfUsage.optionText for optionOfUsage in optionsForUsage", required)
@@ -102,7 +105,9 @@ block renderBody
                         | Safe-for-pet product
 
                 .form-group.row
-                  label.col-sm-3.control-label.text-right(for='polygonName') Name your polygon
+                  label.col-sm-3.control-label.text-right(for='polygonName') 
+                    | Name your polygon
+                    span *
                   .col-sm-9
                     input#polygonName.form-control(type='text', placeholder='Name of this polygon', ng-model="treatment.polygon_name", required)
                 .form-group.row
@@ -116,7 +121,7 @@ block renderBody
 
             .modal-footer
               button.btn.btn-default(type='button', data-dismiss='modal') Close
-              button.btn.btn-primary(type='button', ng-click="saveTreatmentAndPolygonToServer()", ng-disabled="!treatmentForm.$valid" ) Save Treatment to Server
+              button.btn.btn-primary(type='button', ng-click="saveTreatmentAndPolygonToServer($event)", ng-disabled="!treatmentForm.$valid" ) Save Treatment to Server
 
 
     //- .modal.fade(tabindex='-1', role='dialog', id='signin-required-modal')
@@ -140,11 +145,13 @@ block renderBody
 
 
     .hidden(ng-non-bindable)
-      form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
-        input#geojson(type='text', name="geojson")
-      //- patch_url is from index.js: router     route : GET /landscape/homeownermng/:geojson_id
-      form#patch( action="#{patch_url}", method="post")
-        input(type="text", name="geojson")
+      case page_status.model_op
+        when "create"
+          form#treatment(target="_blank",action="#{glblprefix}/landscape/treatment", method="post")
+            input#geojson(type='text', name="geojson")
+        when "patch"
+          form#treatment(target="_blank",action="#{patch_url}", method="post")
+            input#geojson(type='text', name="geojson")
 block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
   script(src="#{glblprefix}/underscorejs/underscore-min.js")
