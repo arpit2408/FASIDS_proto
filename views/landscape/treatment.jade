@@ -99,6 +99,7 @@ block renderBody
             | Mound density is #{geojson.convertMoundDensityIntoFt()} / ft
             sup 2
           p Estimated there are #{geojson.getMoundsNum()} mounds.
+
     hr
     .comparison-table-container(ng-app="sortFireAntProduct", ng-cloak)
       .row(ng-controller='FAPrdtSortCtrl')
@@ -139,6 +140,7 @@ block renderBody
                 td {{roll.usage}}
                 td {{roll.control_method}}
                 td {{roll.coverage}}
+
 
 block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')
