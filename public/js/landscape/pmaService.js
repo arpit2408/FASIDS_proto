@@ -122,7 +122,9 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
   } 
   function polygonLeftClickedCB (event, mapRelatedService, stateService) {
     var this_polygon = this;  // save this reference
-    setActive(this_polygon, mapRelatedService, stateService);  // gurantee current polygon is active and in correct mode
+    if (mapRelatedService.activePolygon !== this_polygon) {
+      setActive(this_polygon, mapRelatedService, stateService);  // gurantee current polygon is active and in correct mode
+    }
     // console.log("polygon is left clicked");
     // console.log(this_polygon);
     if ( stateService.getStatus() === "arearemoving") {
@@ -166,6 +168,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     var drawingPath = mapRelatedService.drawingPath;
     if (drawingPath.getPath().getLength() < 3){
       console.log("to be transformed drawingPath has less than 3 vertice, cannot transform.");
+      return;
     }
     var paths = mapRelatedService.activePolygon.getPaths();
     var direction0  =  mapRelatedService.spherical.computeSignedArea(paths.getAt(0));
