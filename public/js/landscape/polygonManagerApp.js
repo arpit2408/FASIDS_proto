@@ -118,6 +118,14 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
           location.href= pmaConstants.GLOBALPREFIX +"/landscape/treatment/" + mapRelatedService.activePolygon._id ; // TODO: add glblprefix to config of this application
         }
         break;
+      case "resetting":
+        mapRelatedService.drawingPath.setPath([]);
+        for (var i = 0, len = mapRelatedService.polygons.length; i < len; i++){
+          mapRelatedService.polygons[i].setMap(null);
+        }
+        mapRelatedService.polygons = [];
+        stateService.setStatus(null);
+        break;
       default:
     }
   });  // end of $watch();
