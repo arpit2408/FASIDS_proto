@@ -106,6 +106,14 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
           });
         }
         break;
+      case "productlisting":
+        if (mapRelatedService.isOnlyOnePolygon()) {
+          mapRelatedService.activePolygon = mapRelatedService.polygons[0];
+        }
+        if (mapRelatedService.activePolygon) {
+          location.href= glblprefix +"/landscape/treatment/" + mapRelatedService.activePolygon._id ; // TODO: add glblprefix to config of this application
+        }
+        break;
       default:
     }
   });  // end of $watch();
