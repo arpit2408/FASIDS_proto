@@ -70,6 +70,23 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
   };
 })
 .factory("mapRelatedFunctionsService", function ($rootScope){
+
+  function codeAddress( address, mapRelatedService) {
+    mapRelatedService.geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        try{
+          mapRelatedService.gmap.fitBounds(results[0].geometry.viewport);
+        } catch(e){  // possibly there is not bounds
+          console.error(e);
+          mapRelatedService.gmap.setCenter(results[0].geometry.location);
+        }
+      } else {
+        // alert("Geocode was not successful for the following reason: " + status);
+        $(".errormessage-container").removeClass("hidden");
+        $(".errormessage-container").find(".alert-danger.alert").text("Failure in searching: \"" + address +"\", "+ status);
+      }
+    });
+  }
   function setActive(toBeActivatedPolygon, mapRelatedService, stateService) {
     mapRelatedService.activePolygon = toBeActivatedPolygon;
     var currentStatus = stateService.getStatus();
@@ -358,6 +375,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
   }
 
   return {
+    codeAddress: codeAddress,
     polygonLeftClickedCB: polygonLeftClickedCB,
     transformPolylineIntoPolygon: transformPolylineIntoPolygon,
     transformPolylineIntoRemovedArea: transformPolylineIntoRemovedArea,
@@ -390,6 +408,26 @@ pmaServices.run(function ($rootScope, stateService, mapRelatedService, mapRelate
     }
     return bounds;
   }
+  var $errormessageContainer = $(".errormessage-container");
+  /*geosearch processing*/
+  $("#map-input-geosearch").keyup(function(e){
+    var code = e.which; // recommended to use e.which, it's normalized across browsers
+    $errormessageContainer.addClass("hidden");
+    if(code===13)e.preventDefault();
+    if(code===13){
+      console.log("enter");
+      $("#map-input-geosearch-btn").click();
+    } 
+  });
+  $("#map-input-geosearch-btn").click(function (){
+
+    var input = $("#map-input-geosearch").val();
+    if (!input){
+      return;
+    }
+    mapRelatedFunctionsService.codeAddress(input, mapRelatedService);
+  });
+
 
   var initialGeoJsonStr = $("meta[name=target-polygon]").attr("content");
   if (initialGeoJsonStr && initialGeoJsonStr.search("Feature") >= 0 ) {
@@ -404,7 +442,6 @@ pmaServices.run(function ($rootScope, stateService, mapRelatedService, mapRelate
         targetPolygon: googleMapPolygon
       });
     }, 1000);
-
   }
   // google.maps.Polygon.prototype
 });

@@ -121,7 +121,7 @@ DeleteMenu.prototype.removePath = function () {
   }
   var polygon_paths = target_polygon.getPaths();
   if (polygon_paths.getLength() < 2){
-    alert("This polygon does not contain holes, and cannot use this method to remove exterior path.");
+    alert("This polygon does not contain subroute(s), and cannot use this method to remove exterior path.");
     this.close();
     return;
   }
