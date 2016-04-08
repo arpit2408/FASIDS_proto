@@ -1,6 +1,9 @@
 // completely use angularJS to refactor this JS application
 var polygonManagerApp = angular.module("polygonManagerApp", ["pmaServices"]);
-
+polygonManagerApp.constant("pmaConstants", {
+  GLOBALPREFIX: $("meta[name=glblprefix]").attr("content"),
+  page_status: JSON.parse($("meta[name=page_status]").attr("content"))
+});
 polygonManagerApp.directive("toolButton", function factoryFn(stateService){
   // the scope shoudl be scope of pmaDefaultCtrl
   return function linkFn(scope, element, attrs) {
@@ -62,7 +65,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
   function(
     $scope, $rootScope, 
     stateService,mapRelatedService, 
-    mapRelatedFunctionsService) {
+    mapRelatedFunctionsService, pmaConstants) {
   console.log("loading pmaToolPanelCtrl.");
   $scope.$watch(
     function() {
@@ -111,7 +114,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
           mapRelatedService.activePolygon = mapRelatedService.polygons[0];
         }
         if (mapRelatedService.activePolygon) {
-          location.href= glblprefix +"/landscape/treatment/" + mapRelatedService.activePolygon._id ; // TODO: add glblprefix to config of this application
+          location.href= pmaConstants.GLOBALPREFIX +"/landscape/treatment/" + mapRelatedService.activePolygon._id ; // TODO: add glblprefix to config of this application
         }
         break;
       default:
@@ -131,7 +134,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
   });
 });
 
-polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, mapRelatedService, mapRelatedFunctionsService) {
+polygonManagerApp.controller("pmaModalsCtrl", function($scope, pmaConstants, stateService, mapRelatedService, mapRelatedFunctionsService) {
   console.log("pmaModalsCtrl init()");
   var $treatmentModal = $("#treatment-modal");
   $scope.optionsForTypeOfUse = ["home", "professional", "agricultural"];
@@ -159,11 +162,11 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
     usage: null,                // required
     is_outdoor_land: null,       // 
     need_organic: null,
-    need_safe_for_pets: null
+    need_safe_for_pets: null,
 
     // environment_map: null,  // this field will be filled by underlying JS logic
     // bounds,         // this field will be filled by underlying JS logic
-    // owner,         // this field will be generated when posted to server
+    owner:null,         // this field will be filled by JS logic
   };
 
   $scope.$watch(
@@ -188,14 +191,20 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
   }
 
   // user clicked 
-  $scope.saveTreatmentAndPolygonToServer = function() {
+  $scope.saveTreatmentAndPolygonToServer = function( $event) {
     console.log( "save treatment to server.");
+    console.log($event);
+    var $targetButton = $($event.target);
+    $targetButton.text("Submitting...");
+    $targetButton.addClass("disabled");
+    // return;
     var geoJsonPolygon = mapRelatedFunctionsService.saveAndGenResult( 
       mapRelatedService.activePolygon, 
       mapRelatedService
     );
     angular.extend(geoJsonPolygon.properties, $scope.treatment);
     console.log(JSON.stringify(geoJsonPolygon));
+
 
     $("input#geojson").val(JSON.stringify(geoJsonPolygon));    
     var $tempForm = $('form#treatment');
@@ -210,6 +219,7 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
         alert(errorThrown);
       }
     });
+    
     // $treatmentModal.modal('hide');
     // if (mapRelatedService.isOnlyOnePolygon()) {
     //   stateService.setStatus(null);
@@ -220,6 +230,11 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, stateService, map
   $scope.fillTreatmentForm = function(googleMVCObjectPolygon) {  //TODO
     console.log("I am going to fill the form");
     console.log(googleMVCObjectPolygon.properties);
+    angular.forEach($scope.treatment, function(value, keyName){
+      if (angular.isDefined(googleMVCObjectPolygon.properties[keyName])) {
+        $scope.treatment[keyName] = angular.copy(googleMVCObjectPolygon.properties[keyName]);
+      }
+    });
   };
 
   // shouldOpenTreatment event is broadcasted at two places:
