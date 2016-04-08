@@ -50,6 +50,9 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
       $rootScope.$broadcast('polylineFinishing');
     }
   });
+
+  var deleteMenu = new DeleteMenu();  // DeleteMenu is defined in DeleteMenu.js
+
   return {
     mapcover: mapcover,
     gmap: gmap,
@@ -60,6 +63,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
     activePolygon: null,
     saved_polygons: [],
     polygons:[],
+    deleteMenu: deleteMenu,
     isOnlyOnePolygon: function() {
       return this.polygons.length === 1;
     }
@@ -90,6 +94,14 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
   }
   function polygonRightClickedCB(event, mapRelatedService, stateService) {
     console.log("polygon right click placeholder");
+    var this_polygon = this;
+    setActive(this_polygon, mapRelatedService, stateService);
+    var deleteMenu = mapRelatedService.deleteMenu;
+    var gmap = mapRelatedService.gmap;
+    if (event.vertex == undefined || event.path == undefined){
+      return;
+    }
+    deleteMenu.open(gmap, this_polygon.getPaths().getAt(event.path) ,event.vertex, mapRelatedService.activePolygon);
   } 
   function polygonLeftClickedCB (event, mapRelatedService, stateService) {
     var this_polygon = this;  // save this reference
@@ -209,18 +221,19 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp']).factory("
   }
   // dependency fufilled
   function convertPaths(MVCArray, tbr_a) {
-    if ( MVCArray.getAt(0).hasOwnProperty("lat")  ){
+    console.log(MVCArray.getArray());
+    if ( MVCArray.getAt(0).hasOwnProperty("lat")){
       // arrived deepest Array level
-      MVCArray.forEach(function (element, index){
+      MVCArray.forEach(function (latLng, index){
         tbr_a.push( convertGoogleLatLngToGeoJLonLat(MVCArray.getAt(index)));
       });
-      // assuming above forEach is blocking
       tbr_a.push( convertGoogleLatLngToGeoJLonLat(MVCArray.getAt(0))  );
-    }
-    else{
-      MVCArray.forEach( function (element, index){
-        tbr_a[index] = [];
-        convertPaths(element, tbr_a[index]);
+    } else {
+      MVCArray.forEach( function (oneMVCArray, index){
+        if (oneMVCArray.getLength() > 0) {
+          tbr_a[index] = [];
+          convertPaths(oneMVCArray, tbr_a[index]);
+        }
       });
     }
     return tbr_a;
