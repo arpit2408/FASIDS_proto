@@ -71,7 +71,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
   };
 })
 .factory("mapRelatedFunctionsService", function ($rootScope){
-  // inner Function
+  // inner Functions
   function _setActive(toBeActivatedPolygon, mapRelatedService, stateService) {
     mapRelatedService.activePolygon = toBeActivatedPolygon;
     var currentStatus = stateService.getStatus();
@@ -214,13 +214,13 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
     return tmpLatLng;
   }
 
-  function convertToMVCArray(array, index_at_parent, parent_array) {
+  function _convertToMVCArray(array, index_at_parent, parent_array) {
     var ClassRef = this;
     if ( !Array.isArray(array[0]) ) {
       parent_array[index_at_parent] = geoLatLngToGoogleLatLng(array);
     } else { // var len = array[0][0]
       array.forEach( function (element, index, ar){
-        convertToMVCArray(element, index, ar);
+        _convertToMVCArray(element, index, ar);
         if (typeof ar[0].lat === 'function') {
           if (typeof index_at_parent !== 'undefined' && index === array.length - 1){
             parent_array[index_at_parent] = new google.maps.MVCArray(ar.slice(0,index));
@@ -302,7 +302,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
     var gmap = mapRelatedService.gmap;
     var temp_geojson = JSON.parse(Geojson_string);
     // Key step is covert JS Geojson latlng array into MVCArray instance
-    var temp_MVCArray = convertToMVCArray(temp_geojson.geometry.coordinates);
+    var temp_MVCArray = _convertToMVCArray(temp_geojson.geometry.coordinates);
     var temp_polygon = new google.maps.Polygon({
       paths:temp_MVCArray,
       geodesic: false,
@@ -388,8 +388,8 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
     geoLatLngToGoogleLatLng: geoLatLngToGoogleLatLng,
     convertPaths: convertPaths,
     geoJsonize: geoJsonize, 
-    saveAndGenResult: saveAndGenResult,
     deGeoJsonize: deGeoJsonize,
+    saveAndGenResult: saveAndGenResult,
     renderPolygonProperly: renderPolygonProperly
   };
 });

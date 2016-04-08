@@ -28,12 +28,12 @@ block renderBody
               button.close(type='button', data-dismiss='alert') ×
               | Error Message.
 
-      .mc-static2mapcontainer.panel#map-tools-box(ng-controller="pmaToolPanelCtrl")
+      .mc-static2mapcontainer.panel.ng-cloak#map-tools-box(ng-controller="pmaToolPanelCtrl")
         .row
           .col-xs-12
             span.btn.btn-default 
               a(ng-href='#{glblprefix}/landscape/instructions') Instructions
-        .row
+        .row(ng-if="pmaConstants.page_status.model_op === 'create'")
           .col-xs-12 
               span.btn.btn-default(tool-button target-status="polygondrawing") Draw Polygon
         .row
