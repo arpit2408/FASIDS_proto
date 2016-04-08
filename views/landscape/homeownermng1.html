@@ -10,6 +10,7 @@
 
         <!-- CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.0.min.js"></script>
         <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" href="assets/css/form-elements.css">
         <link rel="stylesheet" href="assets/css/style.css">
@@ -28,22 +29,19 @@
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
 
-        <style>
-        .reveal-if-active{
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transform: scale(0.8);
-            transition: 0.5s;
-            input[type="checkbox"]:checked ~ &{
-                opacity: 1;
-                max-height: 100px;
-                overflow: visible;
-                padding: 10px 20px;
-                transform: scale(1);
+        
+        
+
+        <script>
+        function showAdditionalInput(box){
+            console.log("trigger function");
+            if(document.getElementById("usage1").checked){
+                document.getElementById(box).style.display = "block";
             }
+            else
+                document.getElementById(box).style.display = "none";
         }
-        </style>
+        </script>
 
     </head>
 
@@ -107,23 +105,36 @@
 	                        	<label for="usage">Usage: </label>
                                 <div>
                                 <div class="checkbox">
-                                <label><input type="checkbox" name="usage" id="usage" value="imt">Individual Mount Treatment</label>
+                                <label><input type="checkbox" name="usage" id="usage1" value="imt" onclick="showAdditionalInput('addInput')">Individual Mount Treatment</label>
                                 </div>
-                                <div class="reveal-if-active">
+                                <div id="addInput" style="display: none">
                                 <label for="mountNum">Please enter estimated mount number: </label>
-                                <input type="text" id="mountNum" name="mountNum" class="require-if-active" data-require-pair="#choice-animals-dogs">
+                                <input type="text" id="mountNum" name="mountNum">
                                 </div>
                                 </div>
                                 <div class="checkbox">
-                                <label><input type="checkbox" name="usage" id="usage" value="broadcast">Broadcast</label>
+                                <label><input type="checkbox" name="usage" id="usage2" value="broadcast">Broadcast</label>
                                 </div>
 	                        </div>
 	                        <div class="form-group">
-	                        	<label class="sr-only" for="form-about-yourself">About yourself</label>
-	                        	<textarea name="form-about-yourself" placeholder="About yourself..." 
-	                        				class="form-about-yourself form-control" id="form-about-yourself"></textarea>
+	                        	<label for="specialRequirements">Special Requirements: </label>
+                                <label class="checkbox-inline"><input type="checkbox" name="specialRequirements" id="specialRequirements" value="is_safe_for_pets">Safe for Pets</label>
+                                <label class="checkbox-inline"><input type="checkbox" name="specialRequirements" id="specialRequirements" value="is_organic">Organic</label>
+                                <label class="checkbox-inline"><input type="checkbox" name="specialRequirements" id="specialRequirements" value="is_outdoor">Outdoor Use</label>
 	                        </div>
-	                        <button type="submit" class="btn">Sign me up!</button>
+                            <div class="form-group">
+                                <label for="polygonName">Polygon Name: </label>
+                                <input type="text" id="polygonName" name="polygonName">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address: </label>
+                                <input type="text" id="address" name="address">
+                            </div>
+                            <div class="form-group">
+                                <label for="note">Note: </label>
+                                <textarea class="form-control" rows="5" id="note"></textarea>
+                            </div>
+	                        <button type="submit" class="btn">Finish Preparation</button>
 	                    </form>
 	                    
         			</div>
