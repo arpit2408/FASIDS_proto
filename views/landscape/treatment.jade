@@ -2,8 +2,45 @@ extends ../layout
 
 block additionalCSS
   //- I just share the use of this homeownermng.less
-  link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')  
+  link(href='#{glblprefix}/css/landscape/homeownermng.css', rel='stylesheet', type='text/css', media='screen')
+  script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js')
+  meta#target-polygon(name="target-polygon", content="#{JSON.stringify(geojson)}")
+  meta#productsJson(name="products", content="#{JSON.stringify(products)}")
+  script(type="text/javascript").
+    var model = {};
+    var sortFireAntProduct = angular.module("sortFireAntProduct", []);
+    // get data    
+    var data = JSON.parse(document.getElementById("productsJson").getAttribute("content"));
+    model.items = data;
+    model.items.forEach(function(oneItem, idx, arra) {
+      if (oneItem.hasOwnProperty("coverage")) {
+        oneItem.coverageToBeSorted = new Number(oneItem.coverage);
+      }
+      if (oneItem.coverage) {
+        oneItem.coverageOriginal = new Number(oneItem.coverage)
+        switch (oneItem.usage) {
+          case "imt":
+            oneItem.coverage = oneItem.coverage + " mnds";
+            break;
+          case "line":
+            oneItem.coverage = oneItem.coverage + " m";
+            break;
+          case "broadcast":
+            oneItem.coverage = oneItem.coverage + " ";
+            break;
+          default:
+            oneItem.coverage = "unknow unit due to unknow usage";
+        }
+      } else {
+        oneItem.coverage = "No Data";
+      }
+    });
 
+    sortFireAntProduct.controller("FAPrdtSortCtrl", function($scope) {
+      $scope.sortType = 'product_name'; // set the default sort type
+      $scope.sortReverse = false; // set the default sort order
+      $scope.FireAntProduct = model;
+    });
 block renderBody
 
   mixin tabledatarow(product)
@@ -32,12 +69,10 @@ block renderBody
       else
         td= "No Data"
         td= product.amount 
-  
-
   include ../snippets/breadcrum
-  .container
+  div.hide#productsJsonDiv=products
+  .container()
     //- following class should 400 px height
-    meta#target-polygon(name="target-polygon", content="#{JSON.stringify(geojson)}")
     .divide30
     .mapcontainer#mapcontainer
     //- .debugger= JSON.stringify(products)
@@ -64,22 +99,46 @@ block renderBody
             | Mound density is #{geojson.convertMoundDensityIntoFt()} / ft
             sup 2
           p Estimated there are #{geojson.getMoundsNum()} mounds.
-
     hr
-    .comparison-table-container
-      table.table.table-striped
-        thead
-          tr
-            th Product Page
-            th Product Id
-            th Product Name
-            th Application Type
-            th Coverage per unit
-            th Amount
-        tbody
-          each product, index in products
-            +tabledatarow(product)
+    .comparison-table-container(ng-app="sortFireAntProduct", ng-cloak)
+      .row(ng-controller='FAPrdtSortCtrl')
+        .col-xs-12
+          table.table.table-striped.table-bordered
+            thead
+              tr
+                th.col-xs-3 Product Page
+                th.col-xs-2
+                  a.productth( ng-click="sortType='product_name'; sortReverse=!sortReverse")
+                    | Product Name
+                    span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
+                    span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
+                th.col-xs-2
+                  a.productth( ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
+                    | Brand
+                    span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
+                    span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
+                th.col-xs-1 Usage
+                th.col-xs-2 
 
+                  a.productth( ng-click="sortType='control_method'; sortReverse=!sortReverse")
+                    | Control Method
+                    span.fa.fa-caret-down(ng-show="sortType === 'control_method' && !sortReverse")
+                    span.fa.fa-caret-up(ng-show="sortType === 'control_method' && sortReverse")
+                th.col-xs-2
+                  a.productth( ng-click="sortType='coverageOriginal'; sortReverse=!sortReverse")
+                    | Coverage
+                    span.fa.fa-caret-down(ng-show="sortType === 'coverageOriginal' && !sortReverse")
+                    span.fa.fa-caret-up(ng-show="sortType === 'coverageOriginal' && sortReverse")
+            tbody
+              tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse")
+                td
+                  a(ng-href='{{roll.product_url}}', target='_blank')
+                    img.img-thumbnail(ng-src='{{roll.img_small_url}}', alt='product_img')
+                td {{roll.product_name}}
+                td {{roll.manufacturer}}
+                td {{roll.usage}}
+                td {{roll.control_method}}
+                td {{roll.coverage}}
 
 block additionalJS
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA7z3meKGq4cAqC5iziMLVXuHPtwrFdIcY&libraries=geometry')

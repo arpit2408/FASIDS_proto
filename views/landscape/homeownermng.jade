@@ -86,9 +86,11 @@ block renderBody
                     ng-options="optionOfUsage.value as optionOfUsage.optionText for optionOfUsage in optionsForUsage", required)
                       option(value="") (Pick One Product Usagge)
                 .form-group.row(ng-if="treatment.usage === 'imt'")
-                  label.col-sm-3.control-label.text-right(for='moundNumber') Mound Number
+                  label.col-sm-3.control-label.text-right(for='moundNumber') 
+                    | Mound Number
+                    span *
                   .col-sm-9
-                    input#moundNumber.form-control(type="number", placeholder='Mound Number', ng-model="treatment.mound_number")
+                    input#moundNumber.form-control(type="number", placeholder='Mound Number', ng-model="treatment.mound_number", required="treatment.usage === 'imt'")
                 .form-group.row
                   label.col-sm-3.control-label.text-right Additional Things
                   .col-sm-9
