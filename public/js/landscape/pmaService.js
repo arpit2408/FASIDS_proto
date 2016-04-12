@@ -376,7 +376,6 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
         });
         break;
         default:
-
       }
     }
     // console.log(to_be_rendered_polygon.properties);

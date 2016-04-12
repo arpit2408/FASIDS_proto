@@ -209,12 +209,21 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, pmaConstants, sta
   };
 
   // user clicked 'x' of Treatment modal
-  $scope.saveTreatmentAndPolygonLocally = function() {
+  $scope.mergeTreatmentAndRender = function() {
     // no need to hide modal, since 'x' has data-dismiss attribute
-    console.log("save treatment and polygon locally");
     if (mapRelatedService.isOnlyOnePolygon()) {
       stateService.setStatus(null);
     }
+    if (!mapRelatedService.activePolygon) {
+      console.error("mergeTreatAndRender() did not find activePolygon");
+      return;
+    }
+    var activePolygon = mapRelatedService.activePolygon;
+    if (!angular.isDefined(activePolygon.properties)) {
+      activePolygon.properties = {};
+    }
+    angular.extend(activePolygon.properties, $scope.treatment);
+    mapRelatedFunctionsService.renderPolygonProperly(activePolygon, mapRelatedService);
   }
 
   // user clicked 

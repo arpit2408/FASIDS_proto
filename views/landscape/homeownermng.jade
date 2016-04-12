@@ -62,7 +62,7 @@ block renderBody
         .modal-dialog.modal-xl(role='document')
           .modal-content
             .modal-header
-              button.close(type='button', data-dismiss='modal', aria-label='Close',ng-click="saveTreatmentAndPolygonLocally()")
+              button.close(type='button', data-dismiss='modal', aria-label='Close',ng-click="mergeTreatmentAndRender()")
                 span(aria-hidden='true') ×
               h4.modal-title Edit treatment properties
             .modal-body
@@ -130,7 +130,7 @@ block renderBody
                     textarea#polygonNotes.form-control(rows="5", ng-model="treatment.notes")
 
             .modal-footer
-              button.btn.btn-default(type='button', data-dismiss='modal',ng-click="saveTreatmentAndPolygonLocally()") Close
+              button.btn.btn-default(type='button', data-dismiss='modal',ng-click="mergeTreatmentAndRender()") Close
               button.btn.btn-primary(type='button', ng-click="saveTreatmentAndPolygonToServer($event)", ng-disabled="!treatmentForm.$valid" ) Save Treatment to Server
 
 
