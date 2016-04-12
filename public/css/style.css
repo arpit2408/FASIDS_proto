@@ -864,7 +864,6 @@ input[type="color"]:focus,
   border-radius: 4px;
   border: 0;
   text-align: left; }
-
 .treatmentModal .modal-header {
   padding: 25px 25px 15px 25px;
   background: #fff;
@@ -873,18 +872,15 @@ input[type="color"]:focus,
   -moz-border-radius: 4px 4px 0 0;
   -webkit-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0; }
-
 .treatmentModal .modal-header .close {
   font-size: 36px;
   color: #888;
   font-weight: 300;
   text-shadow: none;
   opacity: 1; }
-
 .treatmentModal .modal-title {
   margin-bottom: 10px;
   line-height: 30px; }
-
 .treatmentModal .modal-body {
   padding: 25px 25px 30px 25px;
   background: #eee;
@@ -892,13 +888,12 @@ input[type="color"]:focus,
   -moz-border-radius: 0 0 4px 4px;
   -webkit-border-radius: 0 0 4px 4px;
   border-radius: 0 0 4px 4px; }
-
-.treatmentForm input[type="text"],
-input[type="number"],
-input[type="email"],
-select.form-control,
-textarea,
-textarea.form-control {
+.treatmentModal .treatmentForm input[type="text"],
+.treatmentModal .treatmentForm input[type="number"],
+.treatmentModal .treatmentForm input[type="email"],
+.treatmentModal .treatmentForm select.form-control,
+.treatmentModal .treatmentForm textarea,
+.treatmentModal .treatmentForm textarea.form-control {
   height: 45px;
   margin: 0;
   padding: 0 10px;
@@ -919,16 +914,14 @@ textarea.form-control {
   -webkit-transition: all .3s;
   -ms-transition: all .3s;
   transition: all .3s; }
-
-.treatmentForm textarea,
-textarea.form-control {
+.treatmentModal .treatmentForm textarea,
+.treatmentModal .treatmentForm textarea.form-control {
   height: 100px; }
-
-.treatmentForm select.form-control:focus,
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="email"]:focus,
-textarea.form-control:focus {
+.treatmentModal .treatmentForm select.form-control:focus,
+.treatmentModal .treatmentForm input[type="text"]:focus,
+.treatmentModal .treatmentForm input[type="number"]:focus,
+.treatmentModal .treatmentForm input[type="email"]:focus,
+.treatmentModal .treatmentForm textarea.form-control:focus {
   outline: 0;
   background: #fff;
   border: 3px solid #ccc;
@@ -2738,7 +2731,7 @@ label span {
   #clients-carousel .center-heading h2 {
     color: #fff; }
 
-/*cta-1 and cta-2 are adjacent to footer, see career.html and element.html, τ▒╗Σ╝╝σ«úΦ¿Ç*/
+/*cta-1 and cta-2 are adjacent to footer, see career.html and element.html, 类似宣言*/
 #cta-1 {
   padding: 40px 0;
   background-color: #500000;

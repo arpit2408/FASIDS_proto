@@ -147,16 +147,18 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
     if (mapRelatedService.isOnlyOnePolygon()) {
       mapRelatedService.activePolygon = mapRelatedService.polygons[0];
     }
-    $.ajax({
-      type: "DELETE",
-      url: pmaConstants.GLOBALPREFIX + "/landscape/homeownermng/" + mapRelatedService.activePolygon._id,
-      success: function(apiResult) {
-        location.href = apiResult.jumpUrl;
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        location.alert(textStatus);
-      }
-    });
+    if (confirm("You really want to delete this polygon ?")){
+      $.ajax({
+        type: "DELETE",
+        url: pmaConstants.GLOBALPREFIX + "/landscape/homeownermng/" + mapRelatedService.activePolygon._id,
+        success: function(apiResult) {
+          location.href = apiResult.jumpUrl;
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          location.alert(textStatus);
+        }
+      });
+    }
   }
 
   // polylineFinishing event is triggerred at handlerFn of temp_startmarker.addListener('click', handlerFn)

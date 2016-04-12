@@ -11,8 +11,6 @@ $(document).ready(function onDocReady(){
       error : function (jqXHR, textStatus, errorThrown){
         console.log(textStatus);
       }
-
-
     });
   });
 });

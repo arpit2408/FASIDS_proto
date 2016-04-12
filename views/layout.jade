@@ -79,10 +79,12 @@ body(data-spy='scroll', data-target='#myScrollspy')
           li(class='#{(activePage=="Ants")?"active":null}')
             a(href='#{glblprefix}/antactivity') FIRE ANT ACTIVITY
           // menu pages li end here
-          li.dropdown(class='#{(activePage=="Questions")?"active":null}')
+          li(class='#{(activePage=="Questions")?"active":null}')
             a(href='#{glblprefix}/qa') Q &amp; A
           // menu Shop li end here
           if (!isAuthenticated)
+            li
+              a(href='#{glblprefix}/users/signup') SIGN UP
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown')
                 i.fa.fa-lock
