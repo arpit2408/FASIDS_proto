@@ -9,11 +9,6 @@ block additionalCSS
   // This is used to retrieve target polygon, when user click their polygon in their user profile
   meta(name="target-polygon", content="#{JSON.stringify(geojson)}")
   meta(name="glblprefix", content="#{glblprefix}")
-  style(type='text/css').
-      .form-horizontal input.ng-invalid.ng-touched{
-      border-color: red;
-      outline-color: red;
-      }
 block renderBody
   div(ng-app="polygonManagerApp" ng-controller="pmaDefaultCtrl")
     .mapcover#mapcover
@@ -72,16 +67,18 @@ block renderBody
                     | Type of Use of the land
                     span *
                   .col-sm-4
-                    select.form-control(ng-model="treatment.type_of_use", ng-options="typeOfUseOption for typeOfUseOption in optionsForTypeOfUse", required)
+                    select.form-control(ng-model="treatment.type_of_use", ng-options="typeOfUseOption for typeOfUseOption in optionsForTypeOfUse", required, name="tyoeOfUse")
                       option(value="") (Pick One Type of Use)
+                  span(ng-show='treatmentForm.tyoeOfUse.$touched && treatmentForm.tyoeOfUse.$invalid') Please select type of use
                 .form-group.row
                   label.col-sm-3.control-label.text-right
                     | Control Strategy
                     span *
                   .col-sm-4
                     select.form-control(ng-model="treatment.control_method", 
-                    ng-options="optionOfControl.value as optionOfControl.optionText for optionOfControl in optionsForControlMethod", required)
+                    ng-options="optionOfControl.value as optionOfControl.optionText for optionOfControl in optionsForControlMethod", required, name="controlMethod")
                       option(value="") (Pick One Control Strategy)
+                  span(ng-show='treatmentForm.controlMethod.$touched && treatmentForm.controlMethod.$invalid') Please select control strategy
                 .form-group.row
                   label.col-sm-3.control-label.text-right 
                     | Treatment strategy
@@ -90,13 +87,15 @@ block renderBody
                     select.form-control(ng-model="treatment.usage", 
                     ng-options="optionOfUsage.value as optionOfUsage.optionText for optionOfUsage in optionsForUsage", required name="treatmentStrategy")
                       option(value="") (Pick One Product Usagge)
-                  span.error(ng-show='treatmentForm.treatmentStrategy.$dirty && treatmentForm.treatmentStrategy.$invalid') Please Treatment Stratege
+                  span(ng-show='treatmentForm.treatmentStrategy.$touched && treatmentForm.treatmentStrategy.$invalid') Please set treatment stratege
+                .row(ng-show='treatmentForm.moundNumber.$touched')
+                  .col-sm-9.col-sm-offset-3(ng-show='treatmentForm.moundNumber.$error.required') Please Estimate Mound Number
                 .form-group.row(ng-if="treatment.usage === 'imt'")
                   label.col-sm-3.control-label.text-right(for='moundNumber') 
                     | Mound Number
                     span *
                   .col-sm-9
-                    input#moundNumber.form-control(type="number", placeholder='Mound Number', ng-model="treatment.mound_number", required="treatment.usage === 'imt'")
+                    input#moundNumber.form-control(type="number", placeholder='Mound Number', ng-model="treatment.mound_number", required="treatment.usage === 'imt'", name="moundNumber")
                 .form-group.row
                   label.col-sm-3.control-label.text-right Additional Things
                   .col-sm-9
@@ -112,7 +111,7 @@ block renderBody
                       label
                         input(type='checkbox', ng-model="treatment.need_safe_for_pets")
                         | Safe-for-pet product
-                .row(ng-show='treatmentForm.$submitted || treatmentForm.polygonName.$touched')
+                .row(ng-show='treatmentForm.polygonName.$touched')
                   .col-sm-9.col-sm-offset-3(ng-show='treatmentForm.polygonName.$error.required') Please Name your polygon
                 .form-group.row
                   label.col-sm-3.control-label.text-right(for='polygonName') 
