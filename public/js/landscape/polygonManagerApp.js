@@ -98,6 +98,13 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
       }  // close switch (oldStatus)
 
       switch(newStatus) {
+        case "polygondrawing":
+          if (mapRelatedService.polygons.length >= 1) {
+            alert("Cannot create more than one polygon");
+            stateService.setStatus(null);
+            return;
+          }
+          break;
         case "shapeediting":
           if (mapRelatedService.isOnlyOnePolygon()) {
             mapRelatedService.activePolygon = mapRelatedService.polygons[0];
@@ -110,7 +117,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
           if (mapRelatedService.isOnlyOnePolygon()) {
             mapRelatedService.activePolygon = mapRelatedService.polygons[0];
           }
-          if (mapRelatedService.activePolygon) {
+          if (mapRelatedService.activePolygon && mapRelatedService.isOnlyOnePolygon()) {
             $rootScope.$broadcast('shouldOpenTreatment', {
               content: "hehe"
             });
@@ -142,6 +149,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
     switch(stateService.getStatus()){
       case "polygondrawing":
         mapRelatedFunctionsService.transformPolylineIntoPolygon(mapRelatedService, stateService);
+        stateService.setStatus(null);
         break;
       case "arearemoving":
         mapRelatedFunctionsService.transformPolylineIntoRemovedArea(mapRelatedService, stateService);
