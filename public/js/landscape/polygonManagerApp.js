@@ -143,6 +143,21 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
       }
     }
   );  // end of $watch();
+  $scope.deleteGeojsonInPatchMode = function (){
+    if (mapRelatedService.isOnlyOnePolygon()) {
+      mapRelatedService.activePolygon = mapRelatedService.polygons[0];
+    }
+    $.ajax({
+      type: "DELETE",
+      url: pmaConstants.GLOBALPREFIX + "/landscape/homeownermng/" + mapRelatedService.activePolygon._id,
+      success: function(apiResult) {
+        location.href = apiResult.jumpUrl;
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        location.alert(textStatus);
+      }
+    });
+  }
 
   // polylineFinishing event is triggerred at handlerFn of temp_startmarker.addListener('click', handlerFn)
   $scope.$on('polylineFinishing', function(event) {

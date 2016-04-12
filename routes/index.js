@@ -320,18 +320,30 @@ router.get('/landscape/homeownermng/:geojson_id', function (req, res, next){
 
 // this is for ajax
 router.delete('/landscape/homeownermng/:geojson_id' , ensureAuthenticated,function (req, res, next){
+  var api_route = req.baseUrl +req.path;
   req.db_models.PolygonGeojson.findOne(  {_id: req.params.geojson_id}, null,{}, function execRemoval(error, the_polygon ){
     if (error) return next(error);
     if (!the_polygon) {
-      return res.status(404).send("Did not find");
+      var e = new Error("requested geojson could not be found");
+      e.status = 404
+      return res.json(e);
     }
-    if (the_polygon.properties.owner.toString() === req.user._id.toString()){
-      the_polygon.remove(function onRemoval(error){
-        if (error){
-          return next (error);
-        }
-        res.send("removal successful"); 
-      } );
+    try {
+      if (the_polygon.properties.owner.toString() === req.user._id.toString()) {
+        the_polygon.remove(function onRemoval(error){
+          if (error){
+            return res.json(error);
+          }
+          res.json({
+            api_result:"success : PolygonGeojson Deleted", 
+            api_route:api_route, 
+            jumpUrl:glblprefix + '/landscape/homeownermng'
+          });
+        });
+      }
+    } catch (error) {  // possibly field undefined
+      error.status = 500;
+      return res.json(error);
     }
   });
 });

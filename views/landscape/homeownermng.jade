@@ -48,9 +48,13 @@ block renderBody
         .row(ng-if="pmaConstants.page_status.model_op === 'patch'")
           .col-xs-12
             span.btn.btn-default(tool-button target-status="productlisting") Product List
-        .row
+        .row(ng-if="pmaConstants.page_status.model_op === 'create'")
           .col-xs-12
-            span.btn.btn-default(tool-button target-status="resetting") cancel
+            span.btn.btn-default(tool-button target-status="resetting") Cancel
+        //- When use are in patch mode, if user clicked delete, ajax delete polygon, then go to landscape management tool
+        .row(ng-if="pmaConstants.page_status.model_op === 'patch'")
+          .col-xs-12
+            span.btn.btn-default(ng-click="deleteGeojsonInPatchMode()") Delete
     .modal-container(ng-controller="pmaModalsCtrl")
       #treatment-modal.modal.treatmentModal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
         //- class "modal-xl" is introduced by Bowei, refer _basic.scss please
