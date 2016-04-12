@@ -204,6 +204,9 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, pmaConstants, sta
   $scope.saveTreatmentAndPolygonLocally = function() {
     // no need to hide modal, since 'x' has data-dismiss attribute
     console.log("save treatment and polygon locally");
+    if (mapRelatedService.isOnlyOnePolygon()) {
+      stateService.setStatus(null);
+    }
   }
 
   // user clicked 

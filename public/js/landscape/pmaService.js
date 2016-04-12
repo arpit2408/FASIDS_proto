@@ -107,6 +107,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
     deleteMenu.open(gmap, this_polygon.getPaths().getAt(event.path) ,event.vertex, mapRelatedService.activePolygon);
   } 
   function _polygonLeftClickedCB (event, mapRelatedService, stateService) {
+    console.log("asfd");
     var this_polygon = this;  // save this reference
     if (mapRelatedService.activePolygon !== this_polygon) {
       _setActive(this_polygon, mapRelatedService, stateService);  // gurantee current polygon is active and in correct mode
@@ -119,7 +120,13 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
         mapRelatedService.temp_startmarker.setPosition(event.latLng);
         mapRelatedService.temp_startmarker.setMap(mapRelatedService.gmap);
       }
-    } 
+    } else if (stateService.getStatus() === "treatmentsetting") {
+      if (mapRelatedService.activePolygon) {
+        $rootScope.$broadcast('shouldOpenTreatment', {
+          content: "hehe"
+        });
+      }
+    }
   }
 
   function codeAddress( address, mapRelatedService) {
