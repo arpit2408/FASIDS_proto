@@ -184,7 +184,7 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, pmaConstants, sta
     type_of_use: null,         // required
     control_method: null,   // required
     usage: null,                // required
-    is_outdoor_land: null,       // 
+    is_outdoor: null,       // 
     need_organic: null,
     need_safe_for_pets: null,
 

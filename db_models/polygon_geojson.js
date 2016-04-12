@@ -39,7 +39,7 @@ var polygon_geojson_schema = new mongoose.Schema({
       enum: ["broadcast", "imt", "broadcastimt"],
       required: [true, "usage field not supplied"]
     },
-    is_outdoor_land: Boolean,
+    is_outdoor: Boolean,
     need_organic: Boolean,
     need_safe_for_pets: Boolean,
 

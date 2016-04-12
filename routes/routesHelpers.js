@@ -57,3 +57,37 @@ exports.isValidPassword = function (toBeTestedPass) {
   if (toBeTestedPass.length <6 || toBeTestedPass.length >16) return false;
   return true;
 }
+
+/*
+{
+  type_of_uses: String,   // the field in fire_ant_product is String[], while the field(type_of_use) in polygon_geojson is String
+  is_outdoor: Boolean,
+  is_organic: Boolean,
+  is_safe_for_pets: Boolean,
+  control_method: String,
+  usage: String
+}
+*/
+exports.extractFireAntProductQueryFromGeojson = function (geoJson) {
+  var query = {};
+  var falseThenDeleteFields = ["is_outdoor", "is_organic", "is_safe_for_pets"];
+  var polygonGeojsonPropFields = [
+    "type_of_use","is_outdoor", 
+    "need_organic", "need_safe_for_pets", 
+    "control_method", "usage"
+  ];
+  var fireAndProductPropFields = [
+    "type_of_uses","is_outdoor", 
+    "is_organic", "is_safe_for_pets",
+    "control_method", "usage"
+  ];
+  polygonGeojsonPropFields.forEach(function (keyName, idx){
+    if (typeof geoJson.properties[keyName] != "undefined" && geoJson.properties[keyName] != null) {
+      query[fireAndProductPropFields[idx]] = geoJson.properties[keyName];
+      if ( falseThenDeleteFields.indexOf(fireAndProductPropFields[idx]) >-1 &&  query[fireAndProductPropFields[idx]] === false ) {
+        delete  query[fireAndProductPropFields[idx]];
+      }
+    }
+  });
+  return query;
+}
