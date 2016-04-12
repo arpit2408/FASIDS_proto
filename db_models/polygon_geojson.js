@@ -17,7 +17,10 @@ var polygon_geojson_schema = new mongoose.Schema({
     address:String,
     notes:String, // used by user to input their notes about this polygon
 
-    total_area:Number,
+    total_area: {
+      type: Number,
+      required: [true, "total_area must be supplied"]
+    },
     mound_density:Number,
     mound_number: Number,
 

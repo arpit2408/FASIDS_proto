@@ -4,7 +4,6 @@ $(document).ready(function onDocReady(){
 
   var glblprefix = location.href.search('fasids.tamu.edu') >= 0 ? "/node/fasids" : "";
   function colorOf (type_of_use ){
-    console.log(type_of_use);
     var fillColor = "#000000";
     switch(type_of_use){
       case "agricultural":
@@ -40,10 +39,7 @@ $(document).ready(function onDocReady(){
   } catch (e){
     alert("JSON.parse failure at target_geojson initialization");
   }
-
-  console.log(JSON.stringify(target_geojson));
   var bounds = new google.maps.LatLngBounds(target_geojson.properties.bounds.sw, target_geojson.properties.bounds.ne);
-  console.log(bounds.getCenter().toString());
   gmap.fitBounds(bounds);
 
   // var target_geojson_gfeature = new google.maps.Data.Feature(target_geojson);
@@ -60,7 +56,6 @@ $(document).ready(function onDocReady(){
   gmap.data.addListener('click', function (event){
     location.href = glblprefix + "/landscape/homeownermng/" + target_geojson._id;
   });
-
 });
 
 // For events supported in google map
