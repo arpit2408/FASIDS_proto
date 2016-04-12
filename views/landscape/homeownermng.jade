@@ -52,7 +52,7 @@ block renderBody
           .col-xs-12
             span.btn.btn-default(tool-button target-status="resetting") cancel
     .modal-container(ng-controller="pmaModalsCtrl")
-      #treatment-modal.modal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+      #treatment-modal.modal.treatmentModal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
         //- class "modal-xl" is introduced by Bowei, refer _basic.scss please
         .modal-dialog.modal-xl(role='document')
           .modal-content
@@ -61,7 +61,7 @@ block renderBody
                 span(aria-hidden='true') ×
               h4.modal-title Edit treatment properties
             .modal-body
-              form.form-horizontal(novalidate, name="treatmentForm")
+              form.form-horizontal.treatmentForm(novalidate, name="treatmentForm")
                 .form-group.row
                   label.col-sm-3.control-label.text-right 
                     | Type of Use of the land
