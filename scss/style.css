@@ -894,6 +894,8 @@ input[type="color"]:focus,
   border-radius: 0 0 4px 4px; }
 
 .treatmentForm input[type="text"],
+input[type="number"],
+input[type="email"],
 select.form-control,
 textarea,
 textarea.form-control {
@@ -924,6 +926,8 @@ textarea.form-control {
 
 .treatmentForm select.form-control:focus,
 input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
 textarea.form-control:focus {
   outline: 0;
   background: #fff;
