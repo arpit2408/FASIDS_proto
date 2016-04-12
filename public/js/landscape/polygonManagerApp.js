@@ -98,6 +98,13 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
       }  // close switch (oldStatus)
 
       switch(newStatus) {
+        case "polygondrawing":
+          if (mapRelatedService.polygons.length >= 1) {
+            alert("Cannot create more than one polygon");
+            stateService.setStatus(null);
+            return;
+          }
+          break;
         case "shapeediting":
           if (mapRelatedService.isOnlyOnePolygon()) {
             mapRelatedService.activePolygon = mapRelatedService.polygons[0];
@@ -110,7 +117,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
           if (mapRelatedService.isOnlyOnePolygon()) {
             mapRelatedService.activePolygon = mapRelatedService.polygons[0];
           }
-          if (mapRelatedService.activePolygon) {
+          if (mapRelatedService.activePolygon && mapRelatedService.isOnlyOnePolygon()) {
             $rootScope.$broadcast('shouldOpenTreatment', {
               content: "hehe"
             });
@@ -142,6 +149,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
     switch(stateService.getStatus()){
       case "polygondrawing":
         mapRelatedFunctionsService.transformPolylineIntoPolygon(mapRelatedService, stateService);
+        stateService.setStatus(null);
         break;
       case "arearemoving":
         mapRelatedFunctionsService.transformPolylineIntoRemovedArea(mapRelatedService, stateService);
@@ -201,9 +209,21 @@ polygonManagerApp.controller("pmaModalsCtrl", function($scope, pmaConstants, sta
   };
 
   // user clicked 'x' of Treatment modal
-  $scope.saveTreatmentAndPolygonLocally = function() {
+  $scope.mergeTreatmentAndRender = function() {
     // no need to hide modal, since 'x' has data-dismiss attribute
-    console.log("save treatment and polygon locally");
+    if (mapRelatedService.isOnlyOnePolygon()) {
+      stateService.setStatus(null);
+    }
+    if (!mapRelatedService.activePolygon) {
+      console.error("mergeTreatAndRender() did not find activePolygon");
+      return;
+    }
+    var activePolygon = mapRelatedService.activePolygon;
+    if (!angular.isDefined(activePolygon.properties)) {
+      activePolygon.properties = {};
+    }
+    angular.extend(activePolygon.properties, $scope.treatment);
+    mapRelatedFunctionsService.renderPolygonProperly(activePolygon, mapRelatedService);
   }
 
   // user clicked 
