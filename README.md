@@ -3,15 +3,16 @@ Fire Ant Spatial Information and Decision Support
 
 ## Synopsis
 
-This readme is about **Fire Ant Spatial Information and Decision Support (FASIDS)**. This Software as a Service project is funded by [Texas A&M AgriLife Extension](http://agrilifeextension.tamu.edu/), and is supervised by Prof. [Robert Coulson](http://entomology.tamu.edu/people/coulson-robert/) at Department of Entomology. [Bowei Liu](https://www.linkedin.com/in/boweiliujs) is responsible for the implementation of this version of FASIDS.
-This SaaS project aims at fascilitating management of imported fire ant.  It has mainly three purposes:
-1. Landscape tool in fire ant management
-2. Fire ant management knowledge base 
-3. Fire ant management Knowledge sharing 
+This readme.md is about Ant Spatial Information and Decision Support (FASIDS). This web project is funded by Texas A&M AgriLife Extension, and is supervised by Prof. Robert Coulson at Department of Entomology. Bowei Liu has been responsible for the implementation of this version of FASIDS since October 2016. This web project aims at facilitating management of imported fire ants. It has mainly three purposes: 
+  1. Landscape tool in fire ant management 
+  2. Fire ant management knowledge base 
+  3. Fire ant management Knowledge sharing
 
-This project adopts [MEAN stack](http://blog.mongodb.org/post/49262866911/the-mean-stack-mongodb-expressjs-angularjs-and), and can be hosted in Linux server or in Windows server having IIS and [IISNODE](https://github.com/tjanczuk/iisnode). 
+At the time of writing (04/14/2016), This project adopts [MEAN stack](http://blog.mongodb.org/post/49262866911/the-mean-stack-mongodb-expressjs-angularjs-and), and can be hosted in Linux server or in Windows server having IIS with [IISNODE](https://github.com/tjanczuk/iisnode).
 
-The project is currently hosted at [OpenShift Redhat cloud](http://fasids-u7yhjm.rhcloud.com/) for testing purpose. The IIS hosted site is only internally accessible from TAMU. 
+The project can be visited at http://fasids.tamu.edu/node/fasids.
+
+The edge version of project is currently hosted at [OpenShift Redhat cloud](http://fasids-u7yhjm.rhcloud.com/) for testing purpose. 
 
 ## Features and Usage
 
