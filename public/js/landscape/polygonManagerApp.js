@@ -105,6 +105,13 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
             return;
           }
           break;
+        case "arearemoving":
+          if (!mapRelatedService.isOnlyOnePolygon()) {
+            alert("can not remove area when there is NO active polygon on map.");
+            stateService.setStatus(null);
+            return;
+          }
+          break;
         case "shapeediting":
           if (mapRelatedService.isOnlyOnePolygon()) {
             mapRelatedService.activePolygon = mapRelatedService.polygons[0];
@@ -132,12 +139,7 @@ polygonManagerApp.controller("pmaToolPanelCtrl",
           }
           break;
         case "resetting":
-          mapRelatedService.drawingPath.setPath([]);
-          for (var i = 0, len = mapRelatedService.polygons.length; i < len; i++){
-            mapRelatedService.polygons[i].setMap(null);
-          }
-          mapRelatedService.polygons = [];
-          stateService.setStatus(null);
+          mapRelatedFunctionsService.pmaReset(mapRelatedService, stateService);
           break;
         default:
       }

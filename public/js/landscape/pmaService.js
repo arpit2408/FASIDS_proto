@@ -385,7 +385,15 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
       gmap.setMapTypeId(environment_map.MapTypeId);
     }
   }
-
+  function pmaReset(mapRelatedService, stateService) {
+    mapRelatedService.drawingPath.setPath([]);
+    for (var i = 0, len = mapRelatedService.polygons.length; i < len; i++){
+      mapRelatedService.polygons[i].setMap(null);
+    }
+    mapRelatedService.polygons = [];
+    mapRelatedService.temp_startmarker.setMap(null);
+    stateService.setStatus(null);
+  }
   return {
     codeAddress: codeAddress,
     transformPolylineIntoPolygon: transformPolylineIntoPolygon,
@@ -396,7 +404,8 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
     geoJsonize: geoJsonize, 
     deGeoJsonize: deGeoJsonize,
     saveAndGenResult: saveAndGenResult,
-    renderPolygonProperly: renderPolygonProperly
+    renderPolygonProperly: renderPolygonProperly,
+    pmaReset: pmaReset
   };
 });
 
