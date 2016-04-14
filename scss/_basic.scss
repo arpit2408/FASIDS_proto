@@ -551,7 +551,7 @@ p.sub-text{
 
     &.active{
       a{
-        background-color: $maroon;
+        background-color: $maroon !important;
         &:hover{
           background-color: lighten($maroon, 10%);
         }

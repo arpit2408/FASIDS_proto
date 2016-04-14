@@ -10,7 +10,7 @@ block renderBody
       -var targets = ["#instruction-signup", "#instruction-signin","#instruction-drawpolygon","#instruction-removearea","#instruction-editshape","#instruction-settreatmeent","#instruction-productresult"];
       -var steps = ["Sign Up", "Sign In", "Draw Polygon", "Remove Area", "Edit Shape", "Set Treatment", "Products Result"];
       nav#myScrollspy.col-sm-3
-        ul.nav.nav-pills.nav-stacked(data-spy='affix', data-offset-top='10')
+        ul.nav.nav-pills.nav-stacked(data-spy='affix', data-offset-top='0')
           each val, index in targets
             li
               a(href=val)=steps[index]
@@ -53,3 +53,22 @@ block renderBody
         img.img-responsive(src="#{glblprefix}/img/procedures/10polygonInDashboard.jpg" ,alt="polygon in dashboard")
         .divide50
 block additionalJS
+  script.
+    var navbarHt = $("div.navbar.navbar-default").height();
+    $('body').scrollspy({
+      offset: navbarHt +5
+    });
+    $(function() {
+      $('a[href*="#"]:not([href="#"])').click(function() {
+        if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+          var target = $(this.hash);
+          target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+          if (target.length) {
+            $('html, body').animate({
+              scrollTop: target.offset().top - navbarHt
+            }, 500);
+            return false;
+          }
+        }
+      });
+    });

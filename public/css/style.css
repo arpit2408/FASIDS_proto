@@ -550,7 +550,7 @@ p.sub-text {
 /* end bootstrap tabs overrides*/
 /* override nav-pills */
 .nav-pills li.active a {
-  background-color: #500000; }
+  background-color: #500000 !important; }
   .nav-pills li.active a:hover {
     background-color: #830000; }
 
