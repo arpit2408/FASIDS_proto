@@ -27,6 +27,7 @@ var ensureAuthenticated = routesHelpers.ensureAuthenticated;
 var processReqUser = routesHelpers.processReqUser;
 /*routes
 get    "/" index page
+
 //********* Q & A **********
 get    "/qa"                         Q & A index
 post   "/qa/question?qid=xxxxx"      post replies to certain question
@@ -34,8 +35,7 @@ get    "/qa/question?qid=xxxxx"      render certain questions and answers
 delete "/qa/question?qid=xxxxx"      destroy this post and clean all associations    Not Done Yet
 post   "/qa/posting"                 New questions posted via this route                 
 get    "/qa/posting"                 Render the input page for use to post a question
-get    "/qa/edit_post?post_id=xx"    Render the editor with to be edited content in  
-                                     eit
+get    "/qa/edit_post?post_id=xx"    Render the editor with to be edited content in  eit
 post   "/qa/edit_post?post_id=xx"    update content of post instance
 
 //********* ant activity *****
@@ -44,14 +44,14 @@ get    "/antactivity"                show ant acitvity page
 //******map application ******
 get    "/landscape/homeownermng"     show main page of landscape management
 get    "/landscape/homeownermng/:geojson_id"   show patch page of certain geojson
-delete "/landscape/homeownermng/:geojson_id"   delete geojson
-post   "/landscape/homeownermng/:geojson_id/patch"   update geojson instance
+delete "/landscape/homeownermng/:geojson_id"  API, delete geojson
+post   "/landscape/homeownermng/:geojson_id/patch"  API, update geojson instance
 get    "/landscape/treatment/:geojson_id"      show treatment (list of products and map of 
                                                polygon)
-post   "/landscape/treatment"        create new geojson and show treatment
+post   "/landscape/treatment"          API, create new geojson and show treatment
 get    "/landscape/fire_ant_products"  show list of all fire_ant_products
 get    "/landscape/antdistribution"    show counties map
-get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  api for antdistribution
+get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  API, for antdistribution
 */
 
 
