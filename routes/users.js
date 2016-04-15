@@ -26,6 +26,29 @@ router.get('/signup', function (req, res, next){
   });
 });
 
+
+router.post('/signup', function (req, res, next){
+  /*db operation goes here*/
+  var new_user = {};
+  new_user.email = req.body.email;
+  new_user.password_hash = req.body.password; 
+  new_user.first_name = req.body.firstname;
+  new_user.last_name = req.body.lastname;
+  new_user.nickname = req.body.nickname;
+  // new_user.receive_updates = req.body.receive_updates|| false;
+  new_user.usercat = req.body.usercat;     // 1 is common user
+  
+  new_user = new req.DB_USER(new_user);
+  new_user.save(function (error){
+    if (error) return next(error);
+    return res.render("signup",{
+      breadcrumTitle:"sign up",
+      pathToHere:"users / signup",
+      flash:{type:"success", message:"Hello, "+new_user.displayName()+", you've signed up successfully. Click \"SIGN IN\" at left upper corner to sign in"}
+    });
+  });
+});
+
 router.get('/forgot_password', function (req, res, next){
   // res.send("reset your passowrd, page view is under implementing");
   res.render("users/forgot_password", {
@@ -85,27 +108,6 @@ router.get('/signin', function(req,res,next){
   });
 });
 
-router.post('/signup', function (req, res, next){
-  /*db operation goes here*/
-  var new_user = {};
-  new_user.email = req.body.email;
-  new_user.password_hash = req.body.password; 
-  new_user.first_name = req.body.firstname;
-  new_user.last_name = req.body.lastname;
-  new_user.nickname = req.body.nickname;
-  // new_user.receive_updates = req.body.receive_updates|| false;
-  new_user.usercat = req.body.usercat;     // 1 is common user
-  
-  new_user = new req.DB_USER(new_user);
-  new_user.save(function (error){
-    if (error) return next(error);
-    return res.render("signup",{
-      breadcrumTitle:"sign up",
-      pathToHere:"users / signup",
-      flash:{type:"success", message:"Hello, "+new_user.displayName()+", you've signed up successfully. Click \"SIGN IN\" at left upper corner to sign in"}
-    });
-  });
-});
 
 router.get('/logout', function (req, res, next){
   req.logout();

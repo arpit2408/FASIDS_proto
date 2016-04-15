@@ -14,7 +14,7 @@ function APIEnsureAuthenticated (req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    return res.status(401).json( {api_result:"error : not authorized", api_route:"/api"});
+    return res.status(401).json( {api_result:"error : not authorized", api_route: req.baseUrl +req.path});
   }
 }
 

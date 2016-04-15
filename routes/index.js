@@ -30,8 +30,8 @@ get    "/" index page
 
 //********* Q & A **********
 get    "/qa"                         Q & A index
-post   "/qa/question?qid=xxxxx"      post replies to certain question
 get    "/qa/question?qid=xxxxx"      render certain questions and answers
+post   "/qa/question?qid=xxxxx"      post replies to certain question
 delete "/qa/question?qid=xxxxx"      destroy this post and clean all associations    Not Done Yet
 post   "/qa/posting"                 New questions posted via this route                 
 get    "/qa/posting"                 Render the input page for use to post a question
@@ -50,8 +50,8 @@ get    "/landscape/treatment/:geojson_id"      show treatment (list of products 
                                                polygon)
 post   "/landscape/treatment"          API, create new geojson and show treatment
 get    "/landscape/fire_ant_products"  show list of all fire_ant_products
-get    "/landscape/antdistribution"    show counties map
-get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  API, for antdistribution
+get    "/landscape/antdistribution"    show counties map with ant distribution
+get    "/landscape/antdistribution_lookup?genus=xx(&specie=xx)"  API, for antdistribution lookup
 */
 
 
@@ -104,34 +104,6 @@ router.get('/qa', function (req, res, next){
   });
 });
 
-/* POST replies at path: "/qa/question" */
-router.post('/qa/question', ensureAuthenticated, function (req, res, next) {
-  var reply = {
-    role:2,
-    poster_id: req.user._id,
-    post_time: new Date(),
-    // need to assign urlTitle
-    reply_to_post: (req.query.replyto)?req.query.replyto:null,
-    reply_to_mainpost:req.query.qid,
-    content: req.body.content,
-    votes:0,
-    stars:0
-  };
-  reply = new req.DB_POST(reply);
-  reply.save( function (error){
-    if (error) return next(error);
-    // at current scope, reply is saved successfully 
-    req.DB_POST.findOne({_id:reply.reply_to_mainpost}).exec(function (err, main_post){
-      if (err) return next(err);
-      if (!main_post) return next(new Error("Did not find this main_post"));
-      main_post.addOneReply(reply._id, function onSave(err){
-        if (err) return next(err);
-        return res.redirect(glblprefix + '/qa/question?qid='+req.query.qid);
-      });
-    });
-  });
-});
-
 /* /qa/question?qid=123  */
 router.get('/qa/question',function (req, res, next){
   // console.log(req.query.qid);
@@ -155,6 +127,35 @@ router.get('/qa/question',function (req, res, next){
         momentlib:moment,
         main_post: main_post,
         replies:replies,
+      });
+    });
+  });
+});
+
+
+/* POST replies at path: "/qa/question" */
+router.post('/qa/question', ensureAuthenticated, function (req, res, next) {
+  var reply = {
+    role:2,
+    poster_id: req.user._id,
+    post_time: new Date(),
+    // need to assign urlTitle
+    reply_to_post: (req.query.replyto)?req.query.replyto:null,
+    reply_to_mainpost:req.query.qid,
+    content: req.body.content,
+    votes:0,
+    stars:0
+  };
+  reply = new req.DB_POST(reply);
+  reply.save( function (error){
+    if (error) return next(error);
+    // at current scope, reply is saved successfully 
+    req.DB_POST.findOne({_id:reply.reply_to_mainpost}).exec(function (err, main_post){
+      if (err) return next(err);
+      if (!main_post) return next(new Error("Did not find this main_post"));
+      main_post.addOneReply(reply._id, function onSave(err){
+        if (err) return next(err);
+        return res.redirect(glblprefix + '/qa/question?qid='+req.query.qid);
       });
     });
   });
