@@ -3,7 +3,7 @@ Fire Ant Spatial Information and Decision Support
 
 ## Synopsis
 
-This readme.md is about Ant Spatial Information and Decision Support (FASIDS). This web project is funded by Texas A&M AgriLife Extension, and is supervised by Prof. Robert Coulson at Department of Entomology. Bowei Liu has been responsible for the implementation of this version of FASIDS since October 2016. This web project aims at facilitating management of imported fire ants. It has mainly three purposes: 
+This readme.md is about Fire Ant Spatial Information and Decision Support (FASIDS). This web project is funded by Texas A&M AgriLife Extension, and is supervised by Prof. Robert Coulson at Department of Entomology. Bowei Liu has been responsible for the implementation of this version of FASIDS since October 2015. He finishes his development at May of 2016. This web project aims at facilitating management of imported fire ants. It has mainly three purposes: 
   1. Landscape tool in fire ant management 
   2. Fire ant management knowledge base 
   3. Fire ant management Knowledge sharing
@@ -16,7 +16,7 @@ The edge version of project is currently hosted at [OpenShift Redhat cloud](http
 
 ## Features and Usage
 
-Mark to be treated area on map, put land usuage, memo, and fire ant mound denstiy to it, and save it to your profile. 
+Mark to-be-treated area on map, put land usuage, memo, and fire ant mound denstiy to it, and save it to your profile. 
 ![save treatment area][polygon]
 
 ##### Start Drawing
@@ -43,9 +43,9 @@ Describe and show how to run the tests with code examples.
 
 ## Contributors
 
-[Bowei Liu][1], Computer Engineering Major, Master of Engineering candidate, Texas A&M Unviersity. **Actively seeking one full-time position in software development beginning at August 2016**.
+[Bowei Liu][1], Computer Engineering Major, Master of Engineering candidate, Texas A&M Unviersity. **Actively seeking one full-time position in software development beginning at September 2016**.
 
-Sylvia Wang, Management Information System, Master of Science candidate, Texas A&M Universtity.
+Sylvia Wang, Management Information System, Master of Science candidate, mays business school, Texas A&M Universtity.
 
 Maria D. Tchakerian, Associate Research Scientist, Dept. of Entomology, Texas A&M University 
 
