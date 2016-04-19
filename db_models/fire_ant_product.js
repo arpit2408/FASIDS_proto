@@ -59,26 +59,29 @@ var fire_ant_product_schema = new mongoose.Schema({
 
 // define instance methods
 fire_ant_product_schema.method({
-  getAmount: function (totalarea, density){
+  getAmount: function (geoJsonObject) {
     var product = this;
-    var amount =""
-    if (product.coverage){
-      switch(product.usage){
+    var amount = -1;
+    if (product.coverage) {
+      switch(geoJsonObject.properties.usage) {    // "usage" field of geoJsonObject is a must-be-filled field.
         case "imt":
-          amount =  (totalarea * density / product.coverage).toFixed(1); 
+          try {
+            amount = (geoJsonObject.properties.mound_number / product.coverage); 
+          } catch (e) {
+            console.error(e);
+          }
           break;
         case "broadcast":
-          amount = (totalarea / product.coverage).toFixed(1);
+          amount = (geoJsonObject.properties.total_area / product.coverage);
           break;
-        case "line":
-          amount = "No data for perimeter";
+        case "broadcastimt":
+          amount = (geoJsonObject.properties.total_area / product.coverage);
           break;
         default:
-          amount = "No valid coverage";
+          amount = -1;
+          console.log("unrecognized usage field in geoJsonObject." + geoJsonObject.properties.usage);
       } 
-    } else {
-      amount = "No Data"
-    }
+    } 
     return amount;
   }
 });

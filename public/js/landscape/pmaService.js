@@ -195,7 +195,7 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
     drawingPath.setPath([]);
     mapRelatedService.temp_startmarker.setMap(null);
   }
-  // inner function
+  // inner function, return area in unit of meters
   function _getTotalAreaOf(googleMapPolygon, mapRelatedService) {
     var paths = googleMapPolygon.getPaths();
     var i = 0;
@@ -335,7 +335,6 @@ var pmaServices = angular.module("pmaServices", ['polygonManagerApp'])
   }
   function saveAndGenResult(this_polygon, mapRelatedService) {
     var geoJsonPolygon = geoJsonize(this_polygon,"polygon", mapRelatedService);
-    $('input#geojson').val(JSON.stringify(geoJsonPolygon));
     if (this_polygon.saved === true){
       return alert("This polygon has already been saved, please go to your user dashboard to check");
     }

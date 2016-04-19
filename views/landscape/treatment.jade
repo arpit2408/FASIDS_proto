@@ -8,7 +8,20 @@ block additionalCSS
   meta#productsJson(name="products", content="#{JSON.stringify(products)}")
   script(type="text/javascript").
     var model = {};
-    var sortFireAntProduct = angular.module("sortFireAntProduct", []);
+    var sortFireAntProduct = angular.module("sortFireAntProduct", [])
+    .filter('toFeet', function () {
+      return function (input) {
+        return input * 10.7639;
+      }
+    })
+    .filter('toFixed', function () {
+      return function (input, numberOfDecimal) {
+        if (typeof input !== 'number') {
+          return "toFixed filter only accepts number";
+        }
+        return input.toFixed(numberOfDecimal);
+      };
+    });
     // get data    
     var data = JSON.parse(document.getElementById("productsJson").getAttribute("content"));
     model.items = data;
@@ -22,12 +35,11 @@ block additionalCSS
           case "imt":
             oneItem.coverage = oneItem.coverage + " mnds";
             break;
-          case "line":
-            oneItem.coverage = oneItem.coverage + " m";
-            break;
           case "broadcast":
-            oneItem.coverage = oneItem.coverage + " ";
+            oneItem.coverage = (oneItem.coverage * 10.7639).toFixed(2) + " ";
             break;
+          case "broadcastimt":
+            oneItem.coverage = "Undecided conversion strategy";
           default:
             oneItem.coverage = "unknow unit due to unknow usage";
         }
@@ -41,95 +53,83 @@ block additionalCSS
       $scope.sortReverse = false; // set the default sort order
       $scope.FireAntProduct = model;
     });
+    sortFireAntProduct.controller("summaryOfGeojsonCtrl", function ($scope){
+      $scope.geoJson = JSON.parse(document.getElementById("target-polygon").getAttribute("content"));
+    })
 block renderBody
-
-  mixin tabledatarow(product)
-    tr
-      td
-        a(href=product.product_url, target="_blank")
-          img.img-thumbnail( src=product.img_small_url alt="product_img")
-      td= product.product_id
-      td= product.product_name
-      td= product.application_type
-      if product.coverage
-        - product.usage = product.usage.toLowerCase();
-        case product.usage
-          when "imt"
-            td= product.coverage + " mnds"
-            td= product.amount + " units"
-          when "broadcast"
-            td!= product.coverage + " m<sup>2</sup>"
-            td= product.amount + " units"
-          when "line"
-            td= product.coverage + " m"
-            td= product.amount 
-          default
-            td="unknown unit due to unknown usage"
-            td= product.amount 
-      else
-        td= "No Data"
-        td= product.amount 
   include ../snippets/breadcrum
   div.hide#productsJsonDiv=products
-  .container()
+  .container(ng-app="sortFireAntProduct", ng-cloak)
     //- following class should 400 px height
     .divide30
     .mapcontainer#mapcontainer
     //- .debugger= JSON.stringify(products)
     .divide30
     hr
-    .row.situation-summary
-        case geojson.properties.usage
-          when "imt"
-            h4 
-              | Selected 
-              a(href="http://fireant.tamu.edu/controlmethods/twostep/", target="_blank") Individual Mound Treatment 
-              | Method
-          when "broadcast"
-            h4 
-              | Selected 
-              a(href="http://fireant.tamu.edu/controlmethods/twostep/", target="_blank") Broadcast 
-              | Method
-        p 
-          | The total area is #{ geojson.convertMtSquareToFtSquare().toFixed(1) } ft
-          sup 2
+    .row.situation-summary(ng-controller="summaryOfGeojsonCtrl")
 
-        if geojson.properties.treatment && geojson.properties.treatment.toLowerCase() === "imt"
-          p 
-            | Mound density is #{geojson.convertMoundDensityIntoFt()} / ft
-            sup 2
-          p Estimated there are #{geojson.getMoundsNum()} mounds.
+        h4(ng-if="geoJson.properties.usage == 'imt'")
+          | Selected 
+          a(href="http://fireant.tamu.edu/controlmethods/twostep/", target="_blank") Individual Mound Treatment 
+          | Method
+        h4(ng-if="geoJson.properties.usage == 'broadcast'")
+          | Selected 
+          a(href="http://fireant.tamu.edu/controlmethods/twostep/", target="_blank") Broadcast 
+          | Method
+        p Type of use of the land: {{geoJson.properties.type_of_use}}
+        p Control method / control strategy: {{geoJson.properties.control_method}}
+        p 
+          | The total area is {{ geoJson.properties.total_area | toFeet |toFixed:2 }} ft
+          sup 2
+        //- is_outdoor: Boolean,
+        //- need_organic: Boolean,
+        //- need_safe_for_pets: Boolean,
+        div(ng-if="geoJson.properties.is_outdoor || geoJson.properties.need_organic || geoJson.properties.need_safe_for_pets")
+          span.label.label-default.margin-right-10(ng-show="geoJson.properties.is_outdoor")  Outdoor land
+          span.label.label-default.margin-right-10(ng-show="geoJson.properties.need_organic")  Organic product
+          span.label.label-default.margin-right-10(ng-show="geoJson.properties.need_safe_for_pets")  Safe for pets
+
+        //- if geojson.properties.treatment && geojson.properties.treatment.toLowerCase() === "imt"
+        //-   p 
+        //-     | Mound density is #{geojson.convertMoundDensityIntoFt()} / ft
+        //-     sup 2
+        //-   p Estimated there are #{geojson.getMoundsNum()} mounds.
 
     hr
-    .comparison-table-container(ng-app="sortFireAntProduct", ng-cloak)
+    .comparison-table-container
       .row(ng-controller='FAPrdtSortCtrl')
         .col-xs-12
-          table.table.table-striped.table-bordered
+          h4(ng-if="!(FireAntProduct.items && FireAntProduct.items.length > 0)") No fire ant product fits the requirement
+          table.table.table-striped.table-bordered(ng-if="FireAntProduct.items && FireAntProduct.items.length > 0")
             thead
               tr
-                th.col-xs-3 Product Page
-                th.col-xs-2
+                th Product Page
+                th
                   a.productth( ng-click="sortType='product_name'; sortReverse=!sortReverse")
                     | Product Name
                     span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
                     span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
-                th.col-xs-2
+                th
                   a.productth( ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
                     | Brand
                     span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
                     span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
-                th.col-xs-1 Usage
-                th.col-xs-2 
-
+                th Usage
+                th
                   a.productth( ng-click="sortType='control_method'; sortReverse=!sortReverse")
                     | Control Method
                     span.fa.fa-caret-down(ng-show="sortType === 'control_method' && !sortReverse")
                     span.fa.fa-caret-up(ng-show="sortType === 'control_method' && sortReverse")
-                th.col-xs-2
+                th
                   a.productth( ng-click="sortType='coverageOriginal'; sortReverse=!sortReverse")
                     | Coverage
                     span.fa.fa-caret-down(ng-show="sortType === 'coverageOriginal' && !sortReverse")
                     span.fa.fa-caret-up(ng-show="sortType === 'coverageOriginal' && sortReverse")
+                th
+                  a.productth(ng-click="sortType='amount'; sortReverse=!sortReverse")
+                    | Amount
+                    span.fa.fa-caret-down(ng-show="sortType === 'amount' && !sortReverse")
+                    span.fa.fa-caret-up(ng-show="sortType === 'amount' && sortReverse")
             tbody
               tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse")
                 td
@@ -139,7 +139,12 @@ block renderBody
                 td {{roll.manufacturer}}
                 td {{roll.usage}}
                 td {{roll.control_method}}
-                td {{roll.coverage}}
+                td 
+                  | {{roll.coverage}}
+                  span(ng-show="roll.usage === 'broadcast'") 
+                   | ft
+                   sup 2 
+                td {{roll.amount | toFixed:2}}
 
 
 block additionalJS

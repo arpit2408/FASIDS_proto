@@ -17,7 +17,7 @@ var polygon_geojson_schema = new mongoose.Schema({
     address:String,
     notes:String, // used by user to input their notes about this polygon
 
-    total_area: {
+    total_area: {   // in meter unit
       type: Number,
       required: [true, "total_area must be supplied"]
     },
@@ -34,7 +34,7 @@ var polygon_geojson_schema = new mongoose.Schema({
       enum: ["bait", "contact", "baitcontact"],
       required: [true, "control_method field not supplied"]
     },
-    usage: {                            // 'broadcast', 'imt'
+    usage: {                            // this means usage of treatment product, 'broadcast', 'imt'
       type: String,
       enum: ["broadcast", "imt", "broadcastimt"],
       required: [true, "usage field not supplied"]
@@ -55,6 +55,7 @@ var polygon_geojson_schema = new mongoose.Schema({
   }
 },{collection:'polygon_geojson'});
   
+
 // define instance methods
 polygon_geojson_schema.method({
   // someMethod: function (...){}

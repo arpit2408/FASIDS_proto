@@ -82,7 +82,7 @@ exports.extractFireAntProductQueryFromGeojson = function (geoJson) {
     "control_method", "usage"
   ];
   polygonGeojsonPropFields.forEach(function (keyName, idx){
-    if (typeof geoJson.properties[keyName] != "undefined" && geoJson.properties[keyName] != null) {
+    if (geoJson.properties[keyName]) {
       query[fireAndProductPropFields[idx]] = geoJson.properties[keyName];
       if ( falseThenDeleteFields.indexOf(fireAndProductPropFields[idx]) >-1 &&  query[fireAndProductPropFields[idx]] === false ) {
         delete  query[fireAndProductPropFields[idx]];

@@ -408,8 +408,9 @@ router.get('/landscape/treatment/:geojson_id', ensureAuthenticated, function (re
     req.db_models.FireAntProduct.find(query , null, {}, function exec(error, products){
       if (error) return next(error);
       products.forEach(function iteratee (product, index, al){
-        // products[index].amount= product.getAmount(the_polygon.properties.total_area, the_polygon.properties.mound_density);
-        products[index].amount= 0;
+        var tempAmount = product.getAmount(the_polygon);
+        products[index] = product.toObject();
+        products[index]["amount"] = tempAmount; 
       });
 
       res.render('landscape/treatment.jade',{
