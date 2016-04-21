@@ -105,7 +105,7 @@ router.get('/qa', function (req, res, next){
 });
 
 /* /qa/question?qid=123  */
-router.get('/qa/question',function (req, res, next){
+router.get('/qa/question', ensureAuthenticated,function (req, res, next){
   // console.log(req.query.qid);
   if (!req.query.qid){
     return next( new Error('illegal queries'));
@@ -460,15 +460,25 @@ router.get('/landscape/fire_ant_products', function(req, res, next){
   });
 });
 
-router.get('/landscape/fire_ant_products2', function(req, res, next){
+/*
+  For Future developer, 
+  The unfinished updating form and list is in fire_ant_products2.jade
+*/
+router.get('/landscape/fire_ant_products2/:productId?', function(req, res, next){
+  
+  var displayMode =  req.params.productId ? "edit":"list";
+
   res.render("landscape/fire_ant_products2.jade",{
-    page_status:{isAuthenticated: req.isAuthenticated(), user: processReqUser(req.user)},
+    page_status:{
+      isAuthenticated: req.isAuthenticated(), 
+      user: processReqUser(req.user), 
+      displayMode: displayMode,
+      productId: req.params.productId
+    },
     isAuthenticated: req.isAuthenticated(),
     user: processReqUser(req.user)
   });
 });
-
-
 
 
 // 11/12/2015 Add ant distribution map, this one should be one client side project

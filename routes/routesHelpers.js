@@ -19,16 +19,21 @@ exports.APIEnsureAuthenticated = function (req, res, next, group) {
     return res.status(401).json( {api_result:"error : not authorized", api_route: req.baseUrl +req.path});
   }
 };
-
+// once the argument number is not correct, this authentication middleware function will not be even invoked
 exports.ensureAuthenticated = function (req, res, next) {
+  // if (typeof group === "undefined" || group == null ) {
+  //   group = [];  // it just means all group okay
+  // }
   switch (req.method){
     case "GET":
-      if (!req.isAuthenticated()) {
+      // console.log("hehe");
+      if (!req.isAuthenticated() ) {
         res.redirect(glblprefix + "/users/signin?referral_url=" +  encodeURIComponent(req.originalUrl) );
         return;
       }
     break;
     default:
+      // console.log("haha");
       if (!req.isAuthenticated()) {
         var nonGETnotAuthorizedError = new Error("HTTP non-GET request not authorized ");
         nonGETnotAuthorizedError.status = 401;

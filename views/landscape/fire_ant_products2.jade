@@ -2,30 +2,102 @@ extends ../layout
 
 block additionalCSS
   script(src=angularJS_src)
+  script(src=ngResource_src)
   script#inpage-script(type='text/javascript' data-page-status = page_status).
-    var page_status = JSON.parse(document.getElementById("inpage-script").getAttribute("data-page-status"));
     var model = {};
-    var sortFireAntProduct = angular.module("sortFireAntProduct", []);
-    // get data
-    sortFireAntProduct.run(function($http) {
-      // this url needs to be changed
-      var globalPrefix = window.location.href.search("fasids.tamu.edu") >= 0 ?  "/node/fasids" : "";
-      $http.get(globalPrefix +"/api/fire_ant_products").success(function(data) {
-        console.log("successfully get data in ajax way");
-        model.items = data;
-      });
-    });
-    sortFireAntProduct.controller("FAPrdtSortCtrl", function($scope) {
+    angular.module("sortFireAntProduct", ["ngResource"])
+    .constant("baseUrl", (window.location.href.search("fasids.tamu.edu") >= 0 ?  "/node/fasids" : "" ) + "/api/fire_ant_products/")
+    .controller("FAPrdtSortCtrl", function($scope, $http, $resource, baseUrl) {
+      console.log("FAPrdtSortCtrl()");
+      $scope.page_status = JSON.parse(document.getElementById("inpage-script").getAttribute("data-page-status"));
+      $scope.displayMode = $scope.page_status.displayMode;
       $scope.sortType = 'product_name'; // set the default sort type
       $scope.sortReverse = false; // set the default sort order
-      $scope.FireAntProduct = model;
+      $scope.FireAntProduct = {};
+      $scope.currentProduct = null;
+      $scope.productsResource = $resource(baseUrl + ":productId", {productId:"@_id"});
+
+      $scope.listProducts = function () {
+        console.log("loading");
+        $scope.products = $scope.productsResource.query();
+        console.log($scope.products);
+        //- $scope.currentProduct = $scope.products[0];
+        //- $scope.displayMode = "edit";
+      };
+
+      $scope.deleteProduct = function (product) {
+
+        product.$delete().then( 
+          function successCB (response) {
+            $scope.products.splice($scope.products.indexOf(product), 1);
+            $scope.displayMode = "list";
+          },
+          function errorCB (response) {
+
+          }
+        );
+      };
+
+      var createProduct = function (product) {
+        console.log("create product");
+        new $scope.productsResource(product).$save().then(function (newProduct){
+          $scope.products.push(newProduct);
+          $scope.displayMode = "list";
+        })
+      };
+
+      var updateProduct = function (product) {
+        console.log("update product");
+        product.$save(function (savedProduct, postResponseHeader){
+          $scope.displayMode = "list";
+        });  // put callback into save
+
+      }
+
+      $scope.editOrCreateProduct = function (product) {
+        $scope.currentProduct = product ? product : {};
+        $scope.displayMode = "edit";
+      }
+
+      $scope.saveEdit = function (product) {
+        if (angular.isDefined(product._id)) {
+          updateProduct(product);
+        } else {
+          createProduct(product);
+        }
+      }
+
+      $scope.cancelEdit = function () {
+        if ($scope.currentProduct && $scope.currentProduct.$get) {
+          $scope.currentProduct.$get();  
+          // some time if use modified contents in table, need to HTTP GET original data again
+        }
+        $scope.currentProduct = {};
+        $scope.displayMode = "list";
+      }
+      // init view
+      $scope.listProducts();
+      //- if ($scope.displayMode === "edit") {
+      //-   console.log("edit");
+      //-   console.log($scope.products);
+      //-   angular.forEach($scope.products, function ( product){
+      //-     console.log("forEach");
+      //-     if (product._id === $scope.page_status.productId) {
+      //-       $scope.currentProduct = product;
+      //-     }
+      //-   });
+      //-   if ($scope.currentProduct === null) {
+      //-     $scope.page_status.productId = null;
+      //-     $scope.displayMode = "list";
+      //-   }
+      //- }
     });
 block renderBody
   .divide30
   .container(ng-app='sortFireAntProduct' ng-cloak)
     .row(ng-controller='FAPrdtSortCtrl')
       .col-xs-12
-        table.table.table-striped.table-bordered
+        table.table.table-striped.table-bordered(ng-show="displayMode == 'list'")
           thead
             tr
               th Product Page
@@ -44,14 +116,110 @@ block renderBody
               th options
 
           tbody
-            tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse")
+            tr(ng-repeat="item in products | orderBy:sortType:sortReverse")
               td
-                a(ng-href='{{roll.product_url}}', target='_blank')
-                  img.img-thumbnail(ng-src='{{roll.img_small_url}}', alt='product_img')
-              td {{roll.product_name}}
-              td {{roll.manufacturer}}
-              td {{roll.usage}}
-              td {{roll.control_method}}
-              td operation button
+                a(ng-href='{{item.product_url}}', target='_blank')
+                  img.img-thumbnail(ng-src='{{item.img_small_url}}', alt='product_img')
+              td {{item.product_name}}
+              td {{item.manufacturer}}
+              td {{item.usage}}
+              td {{item.control_method}}
+              td
+                button.btn.btn-theme-bg.btn-sm.margin-right-10(ng-click="editOrCreateProduct(item)") Edit
+                button.btn.btn-danger.btn-ico(ng-click="deleteProduct(item)") Delete
+
+        
+        .fireAntProductFormWrapper(ng-show="displayMode == 'edit'")
+          form
+            .form-group
+              label(for='product_id') Product Id
+              input#product_id.form-control(type='text' ng-model="currentProduct.product_id")
+            .form-group
+              label(for='product_name') Product name
+              input#product_name.form-control(type='text' ng-model="currentProduct.product_name")
+            .form-group
+              label(for='manufacturer') Manufacturer
+              input#manufacturer.form-control(type='text' ng-model="currentProduct.manufacturer")
+
+            //- .form-group
+            //-   label(for='manufacturer') type of uses
+            //-   div
+            //-     label.checkbox-inline
+            //-       input#inlineCheckbox1(type='checkbox', value='home')
+            //-       |  home
+            //-     label.checkbox-inline
+            //-       input#inlineCheckbox2(type='checkbox', value='agricultural')
+            //-       |  agricultural
+            //-     label.checkbox-inline
+            //-       input#inlineCheckbox3(type='checkbox', value='professional')
+            //-       |  professional
+
+            // options for physical form
+            .form-group
+              label(for='manufacturer') Physical Form
+              select.form-control(ng-model="currentProduct.physical_form")
+                option(value="") null
+                option(value="granular") granular
+                option(value="dust") dust
+                option(value="liquid") liquid
+
+            //- // type and become tags
+            //- .form-group
+            //-   label(for='manufacturer') Suitable for pests (have not implemented)
+            //-   input#manufacturer.form-control(type='text')
+
+            // checkboxes for is outdoor , is organic, is safe for pets
+            label.checkbox-inline
+              input#inlineCheckbox1(type='checkbox', ng-model="currentProduct.is_outdoor")
+              |  Outdoor usage
+            label.checkbox-inline
+              input#inlineCheckbox2(type='checkbox', ng-model="currentProduct.is_organic")
+              |  Organic
+            label.checkbox-inline
+              input#inlineCheckbox3(type='checkbox', ng-model="currentProduct.is_safe_for_pets")
+              |  Safe for pets
+
+            // options of control method
+            .form-group
+              label(for='control_method')
+                | Control method
+                span *
+              select#control_method.form-control
+                option bait
+                option contact
+                option baitcontact
+
+            // options of control method
+            .form-group
+              label(for='usage') 
+               | Usage
+               span *
+              select#usage.form-control
+                option broadcast
+                option imt
+                option broadcastimt
+            .form-group
+              label(for="coverage") Coverage
+              input#coverage.form-control(type="text", ng-model="currentProduct.coverage")
+            .form-group
+              label(for="homedepot_score") Homedepot score
+              input#homedepot_score.form-control(type="text", ng-model="currentProduct.homedepot_score")
+            .form-group
+              label(for="product_overview") Product overview
+              input#product_overview.form-control(type="text", ng-model="currentProduct.product_overview")
+            .form-group
+              label(for="product_url") Product url
+              input#product_url.form-control(type="text", ng-model="currentProduct.product_url")
+            .form-group
+              label(for="img_small_url") img small url
+              input#img_small_url.form-control(type="text", ng-model="currentProduct.img_small_url")
+            .form-group
+              label(for="img_url") img url
+              input#img_url.form-control(type="text", ng-model="currentProduct.img_url")
+
+            button.btn.btn-default.margin-right-10(ng-click="saveEdit(currentProduct)") Submit
+            button.btn.btn-default( ng-click="cancelEdit()") Cancel
+          .divide30
+
 
 block additionalJS

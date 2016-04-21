@@ -130,12 +130,14 @@ apirouter.post("/fire_ant_products", function (req, res, next) {
       }
       res.json(newProduct);
     });
-  } catch (e) {
-    return res.status(500).json({api_result: "error: " + err.message, api_route: req.baseUrl +req.path});
+  } catch (err) {
+    return res.status(500).json({
+      api_result: "error: " + err.message, 
+      api_route: req.baseUrl +req.path});
   }
 });
 
-apirouter.get("/fire_ant_products/:id", function (req, res) {
+apirouter.get("/fire_ant_products/:productId", function (req, res) {
   var api_route = req.baseUrl + req.path;
   req.db_models.FireAntProduct.findById(req.params.productId, function (err, fireAntProduct) {
     try {
@@ -143,14 +145,14 @@ apirouter.get("/fire_ant_products/:id", function (req, res) {
         throw err;
       }
       if (!fireAntProduct) {
-        var NOTFOUNDERROR = new Error("Cannot find fireAntProduct with id:" + req.body.productId);
+        var NOTFOUNDERROR = new Error("Cannot find fireAntProduct with id:" + req.params.productId);
         NOTFOUNDERROR.status = 404;
         throw NOTFOUNDERROR;
       }
       // normal logic
       res.json(fireAntProduct);
-    } catch (e) {
-      res.status(e.status || 500).json ({
+    } catch (err) {
+      res.status(err.status || 500).json ({
         api_result: "error: " + err.message,
         api_route: api_route
       });
@@ -160,7 +162,7 @@ apirouter.get("/fire_ant_products/:id", function (req, res) {
 /**
  UPDATE one fire ant prdduct, API auth enabled, only group: [0]  can have access to this API
 */
-apirouter.put("/fire_ant_products/:id", function (req, res, next) {
+apirouter.post("/fire_ant_products/:productId", function (req, res, next) {
   APIEnsureAuthenticated(req, res, next, [0]);
 }, function (req, res) {
   var api_route = req.baseUrl + req.path;  
@@ -170,20 +172,21 @@ apirouter.put("/fire_ant_products/:id", function (req, res, next) {
         throw err;
       }
       if (!fireAntProduct) {
-        var NOTFOUNDERROR = new Error("Cannot find fireAntProduct with id:" + req.body.productId);
+        var NOTFOUNDERROR = new Error("Cannot find fireAntProduct with id:" + req.params.productId);
         NOTFOUNDERROR.status = 404;
         throw NOTFOUNDERROR;
       }
       // normal logic
-      _.assign(fireAntProduct, JSON.parse(req.body.productUpdatesJson));
+      var productUpdatesJson = typeof(req.body) === "string" ? JSON.parse(req.body) : req.body;
+      _.assign(fireAntProduct, productUpdatesJson);
       fireAntProduct.save(function (err) {
         if (err) {
           throw err;
         }
         res.json(fireAntProduct);
       });
-    } catch (e) {
-      res.status(e.status || 500).json ({
+    } catch (err) {
+      res.status(err.status || 500).json ({
         api_result: "error: " + err.message,
         api_route: api_route
       });
@@ -194,23 +197,23 @@ apirouter.put("/fire_ant_products/:id", function (req, res, next) {
 /**
  DELETE one fire ant prdduct, API auth enabled, only group: [0]  can have access to this API
 */
-apirouter.delete("/fire_ant_products/:id", function (req, res, next) {
-  APIEnsureAuthenticated(res, res, next, [0]);
+apirouter.delete("/fire_ant_products/:productId", function (req, res, next) {
+  APIEnsureAuthenticated(req, res, next, [0]);
 }, function (req, res) {
   var api_route = req.baseUrl + req.path;
-  req.db_models.FireAntProduct.findByIdAndRemove(req.params.id, function (err, deletedFireAntProduct) {
+  req.db_models.FireAntProduct.findByIdAndRemove(req.params.productId, function (err, deletedFireAntProduct) {
     try {
       if (err) {
         throw err;
       }
       if (!deletedFireAntProduct) {
-        var NOTFOUNDERROR = new Error("Cannot find fireAntProduct with id:" + req.body.productId);
+        var NOTFOUNDERROR = new Error("Cannot find fireAntProduct with id:" + req.params.productId);
         NOTFOUNDERROR.status = 404;
         throw NOTFOUNDERROR;  
       }
       res.json(deletedFireAntProduct);
-    } catch (e) {
-      res.status(e.status || 500).json ({
+    } catch (err) {
+      res.status(err.status || 500).json ({
         api_result: "error: " + err.message,
         api_route: api_route
       });
