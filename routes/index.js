@@ -453,16 +453,18 @@ router.post('/landscape/treatment', ensureAuthenticated, function (req, res,next
 
 /* this route is used to display products*/
 router.get('/landscape/fire_ant_products', function(req, res, next){
-  req.db_models.FireAntProduct.find({},null,{}, function exec(error, products ){
-    if (error) return next(error);
-    res.render("landscape/fire_ant_products.jade",{
-      breadcrumTitle:"FIRE ANT PRODUCTS",
-      pathToHere:"landscape / fire_ant_products2",
-      activePage:'Landscape',
-      products: products,
-      isAuthenticated: req.isAuthenticated(),
-      user: processReqUser(req.user)
-    });
+  res.render("landscape/fire_ant_products.jade",{
+    page_status:{isAuthenticated: req.isAuthenticated(), user: processReqUser(req.user)},
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user)
+  });
+});
+
+router.get('/landscape/fire_ant_products2', function(req, res, next){
+  res.render("landscape/fire_ant_products2.jade",{
+    page_status:{isAuthenticated: req.isAuthenticated(), user: processReqUser(req.user)},
+    isAuthenticated: req.isAuthenticated(),
+    user: processReqUser(req.user)
   });
 });
 
