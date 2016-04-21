@@ -21,7 +21,7 @@ var fire_ant_product_schema = new mongoose.Schema({
     type: String, 
     enum: ["home", "agricultural", "professional"]
   }],
-  physcial_form:{  //application_type
+  physical_form:{  //application_type
     type: String,
     enum: ["granular", "dust", "liquid"],  //  granular, dust, liquid
     required: [true, "physcial_form field not supplied"]

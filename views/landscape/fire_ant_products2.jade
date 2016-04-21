@@ -1,0 +1,57 @@
+extends ../layout
+
+block additionalCSS
+  script(src=angularJS_src)
+  script#inpage-script(type='text/javascript' data-page-status = page_status).
+    var page_status = JSON.parse(document.getElementById("inpage-script").getAttribute("data-page-status"));
+    var model = {};
+    var sortFireAntProduct = angular.module("sortFireAntProduct", []);
+    // get data
+    sortFireAntProduct.run(function($http) {
+      // this url needs to be changed
+      var globalPrefix = window.location.href.search("fasids.tamu.edu") >= 0 ?  "/node/fasids" : "";
+      $http.get(globalPrefix +"/api/fire_ant_products").success(function(data) {
+        console.log("successfully get data in ajax way");
+        model.items = data;
+      });
+    });
+    sortFireAntProduct.controller("FAPrdtSortCtrl", function($scope) {
+      $scope.sortType = 'product_name'; // set the default sort type
+      $scope.sortReverse = false; // set the default sort order
+      $scope.FireAntProduct = model;
+    });
+block renderBody
+  .divide30
+  .container(ng-app='sortFireAntProduct' ng-cloak)
+    .row(ng-controller='FAPrdtSortCtrl')
+      .col-xs-12
+        table.table.table-striped.table-bordered
+          thead
+            tr
+              th Product Page
+              th
+                a.productth( ng-click="sortType='product_name'; sortReverse=!sortReverse")
+                  | Product Name
+                  span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
+              th
+                a.productth( ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
+                  | Brand
+                  span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
+                  span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
+              th Usage
+              th Control Method
+              th options
+
+          tbody
+            tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse")
+              td
+                a(ng-href='{{roll.product_url}}', target='_blank')
+                  img.img-thumbnail(ng-src='{{roll.img_small_url}}', alt='product_img')
+              td {{roll.product_name}}
+              td {{roll.manufacturer}}
+              td {{roll.usage}}
+              td {{roll.control_method}}
+              td operation button
+
+block additionalJS
