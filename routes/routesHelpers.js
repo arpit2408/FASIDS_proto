@@ -7,7 +7,18 @@ exports.processReqUser = function ( req_user){
   temp_user.display_name = req_user.displayName();
   delete temp_user.password_hash; 
   return temp_user;
-}
+};
+
+exports.APIEnsureAuthenticated = function (req, res, next, group) {
+  if (typeof group === "undefined" || group == null ) {
+    group = [0,1,2,3,4,5,6];  // it just means all group okay
+  }
+  if (req.isAuthenticated() && group.indexOf(req.user.usercat) >= 0 ) {
+    next();
+  } else {
+    return res.status(401).json( {api_result:"error : not authorized", api_route: req.baseUrl +req.path});
+  }
+};
 
 exports.ensureAuthenticated = function (req, res, next) {
   switch (req.method){
@@ -26,12 +37,14 @@ exports.ensureAuthenticated = function (req, res, next) {
       }
   }
   return next();
-}
+};
 
-exports.ensureGroup = function (req, res, next){
+exports.ensureGroup = function (req, res, next, group){
   // I have to supply group thru scope bound outside, I have to figure out a better way
-  var group = this;
-  if (!Array.isArray(group)) {group = [0,1,2,3,4,5]; console.error("[ERROR] ensureGroup's scope is not allowed-group array");}
+  if (typeof group === "undefined" || !Array.isArray(group)) {
+    group = [0,1,2,3,4,5]; 
+    console.error("[ERROR] ensureGroup's scope is not allowed-group array");
+  }
   switch (req.method){
     case "GET":
       if (!req.isAuthenticated()  || group.indexOf(req.user.usercat) < 0 ) {
@@ -48,15 +61,14 @@ exports.ensureGroup = function (req, res, next){
       }
   }
   return next();
-
-}
+};
 
 exports.isValidPassword = function (toBeTestedPass) {
   if (!toBeTestedPass) return false;
   if (typeof toBeTestedPass !== "string") return false;
   if (toBeTestedPass.length <6 || toBeTestedPass.length >16) return false;
   return true;
-}
+};
 
 /*
 {
@@ -90,4 +102,4 @@ exports.extractFireAntProductQueryFromGeojson = function (geoJson) {
     }
   });
   return query;
-}
+};

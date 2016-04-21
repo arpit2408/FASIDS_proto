@@ -466,8 +466,10 @@ router.get('/landscape/fire_ant_products', function(req, res, next){
   });
 });
 
-// 11/12/2015 Add ant distribution map, this one should be one client side project
 
+
+
+// 11/12/2015 Add ant distribution map, this one should be one client side project
 router.get('/landscape/antdistribution', function (req, res, next){
   // TODO: promise readFile 
   readJSON( './data/genus_species.json' , function (err, genus_species){

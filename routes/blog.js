@@ -50,7 +50,9 @@ router.get('/singlepost/:url_title', function (req, res, next) {
 });
 
 // CREATE  part1
-router.get('/create', routesHelpers.ensureGroup.bind([0]), function (req, res, next){
+router.get('/create', function (req, res, next){
+    routesHelpers.ensureGroup(req, res, next, [0]);
+  }, function (req, res, next){
   // res.send("GET /blogs/create\n");
   res.render('blog/create',{
     title: 'Post Blog on FASIDS',
@@ -63,7 +65,9 @@ router.get('/create', routesHelpers.ensureGroup.bind([0]), function (req, res, n
 });
 
 // CREATE part2
-router.post('/create', routesHelpers.ensureGroup.bind([0]), function (req, res, next){
+router.post('/create', function (req, res, next){
+    routesHelpers.ensureGroup(req, res, next, [0]);
+  },function (req, res, next){
   var newblogpost = new req.DB_POST({
     role:3,
     poster_id: req.user._id,
@@ -81,7 +85,9 @@ router.post('/create', routesHelpers.ensureGroup.bind([0]), function (req, res, 
   });
 });
 
-router.get('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function (req, res, next){
+router.get('/update/:url_title', function (req, res, next){
+    routesHelpers.ensureGroup(req, res, next, [0]);
+  },function (req, res, next){
   if (glblprefix  !== "") req.params.url_title = req.originalUrl.match(/update\/(.*)/)[1];
   req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).exec( function (err, blogpost){
     if (err) return next(err);
@@ -102,7 +108,9 @@ router.get('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function (
 * Will be used for ajax saving function for blogpost
 * UPDATE api, standard json return
 */
-router.post('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function (req,res,next){
+router.post('/update/:url_title', function (req, res, next){
+    routesHelpers.ensureGroup(req, res, next, [0]);
+  }, function (req,res,next){
   if (glblprefix  !== "") req.params.url_title = req.originalUrl.match(/update\/(.*)/)[1];
   req.DB_POST.findOne({url_title: encodeURIComponent(req.params.url_title)}).exec( function (err, blogpost){
     if (err) return next(err);
@@ -119,10 +127,12 @@ router.post('/update/:url_title', routesHelpers.ensureGroup.bind([0]), function 
 });
 
 
-// DELETE api, standard json return
-router.get('/delete/:url_title',routesHelpers.ensureGroup.bind([0]) ,function (req, res, next){
+// TODO: has not been implemented DELETE api, standard json return
+router.get('/delete/:url_title', function (req, res, next){
+    routesHelpers.ensureGroup(req, res, next, [0]);
+  },function (req, res, next){
   if (glblprefix  !== "") req.params.url_title = req.originalUrl.match(/delete\/(.*)/)[1];
-  res.send("DELETE /blogs/delete\n");
+  res.send("DELETE /blogs/delete, delete has been implemented\n");
 });
 
 

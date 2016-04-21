@@ -1,5 +1,6 @@
 var apirouter = require('express').Router();
 var _ = require('underscore');
+var routesHelpers = require('./routesHelpers');
 var Promise = require('promise');
 
 function processReqUser ( req_user){  
@@ -10,13 +11,7 @@ function processReqUser ( req_user){
   return temp_user;
 }
 
-function APIEnsureAuthenticated (req, res, next) {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    return res.status(401).json( {api_result:"error : not authorized", api_route: req.baseUrl +req.path});
-  }
-}
+var APIEnsureAuthenticated  = routesHelpers.APIEnsureAuthenticated;
 
 // all routes after (/api)
 
@@ -121,5 +116,106 @@ apirouter.get("/fire_ant_products", function (req, res, next) {
   });
 });
 
+// create fire ant products
+// apirouter.post("/fire_ant_products", APIEnsureAuthenticated)
+apirouter.post("/fire_ant_products", function (req, res, next) {
+  APIEnsureAuthenticated(req, res, next, [0]);
+}, function (req, res) {
+  try {
+    var newProduct = JSON.parse(req.body.newProductJson);
+    newProduct = new req.db_models.FireAntProduct(newProduct);
+    newProduct.save(function (err) {
+      if (err) {
+        throw err;
+      }
+      res.json(newProduct);
+    });
+  } catch (e) {
+    return res.status(500).json({api_result: "error: " + err.message, api_route: req.baseUrl +req.path});
+  }
+});
+
+apirouter.get("/fire_ant_products/:id", function (req, res) {
+  var api_route = req.baseUrl + req.path;
+  req.db_models.FireAntProduct.findById(req.params.productId, function (err, fireAntProduct) {
+    try {
+      if (err) {
+        throw err;
+      }
+      if (!fireAntProduct) {
+        var NOTFOUNDERROR = new Error("Cannot find fireAntProduct with id:" + req.body.productId);
+        NOTFOUNDERROR.status = 404;
+        throw NOTFOUNDERROR;
+      }
+      // normal logic
+      res.json(fireAntProduct);
+    } catch (e) {
+      res.status(e.status || 500).json ({
+        api_result: "error: " + err.message,
+        api_route: api_route
+      });
+    }
+  });
+});
+/**
+ UPDATE one fire ant prdduct, API auth enabled, only group: [0]  can have access to this API
+*/
+apirouter.put("/fire_ant_products/:id", function (req, res, next) {
+  APIEnsureAuthenticated(req, res, next, [0]);
+}, function (req, res) {
+  var api_route = req.baseUrl + req.path;  
+  req.db_models.FireAntProduct.findById(req.params.productId, function (err, fireAntProduct) {
+    try {
+      if (err) {
+        throw err;
+      }
+      if (!fireAntProduct) {
+        var NOTFOUNDERROR = new Error("Cannot find fireAntProduct with id:" + req.body.productId);
+        NOTFOUNDERROR.status = 404;
+        throw NOTFOUNDERROR;
+      }
+      // normal logic
+      _.assign(fireAntProduct, JSON.parse(req.body.productUpdatesJson));
+      fireAntProduct.save(function (err) {
+        if (err) {
+          throw err;
+        }
+        res.json(fireAntProduct);
+      });
+    } catch (e) {
+      res.status(e.status || 500).json ({
+        api_result: "error: " + err.message,
+        api_route: api_route
+      });
+    }
+  });
+});
+
+/**
+ DELETE one fire ant prdduct, API auth enabled, only group: [0]  can have access to this API
+*/
+apirouter.delete("/fire_ant_products/:id", function (req, res, next) {
+  APIEnsureAuthenticated(res, res, next, [0]);
+}, function (req, res) {
+  var api_route = req.baseUrl + req.path;
+  req.db_models.FireAntProduct.findByIdAndRemove(req.params.id, function (err, deletedFireAntProduct) {
+    try {
+      if (err) {
+        throw err;
+      }
+      if (!deletedFireAntProduct) {
+        var NOTFOUNDERROR = new Error("Cannot find fireAntProduct with id:" + req.body.productId);
+        NOTFOUNDERROR.status = 404;
+        throw NOTFOUNDERROR;  
+      }
+      res.json(deletedFireAntProduct);
+    } catch (e) {
+      res.status(e.status || 500).json ({
+        api_result: "error: " + err.message,
+        api_route: api_route
+      });
+    }
+  });
+});
 
 module.exports = apirouter;
