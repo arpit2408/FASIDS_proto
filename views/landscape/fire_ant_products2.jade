@@ -7,6 +7,15 @@ block additionalCSS
     var model = {};
     angular.module("sortFireAntProduct", ["ngResource"])
     .constant("baseUrl", (window.location.href.search("fasids.tamu.edu") >= 0 ?  "/node/fasids" : "" ) + "/api/fire_ant_products/")
+    //- .directive("ifHas", function ($parse) {
+    //-   return function (scope, element, attrs) {
+    //-     var beingWactchedArrayGetter = $parse(attrs['watchArray']);
+    //-     var targetEntry = attrs['ifHas'];
+    //-     if (beingWactchedArrayGetter(scope).indexOf(targetEntry)) {
+
+    //-     }
+    //-   }
+    //- })
     .controller("FAPrdtSortCtrl", function($scope, $http, $resource, baseUrl) {
       console.log("FAPrdtSortCtrl()");
       $scope.page_status = JSON.parse(document.getElementById("inpage-script").getAttribute("data-page-status"));
@@ -75,6 +84,19 @@ block additionalCSS
         $scope.currentProduct = {};
         $scope.displayMode = "list";
       }
+
+      $scope.toggleEntryInArray = function(entry, array) {
+        if (!angular.isDefined(entry) || !angular.isDefined(array)) {
+          console.error("arguments of toggleEntryInArray() are invalid");
+          return;
+        }
+        var idx = array.indexOf(entry);
+        if (idx > -1) {
+          array.splice(idx, 1);
+        } else {
+          array.push(entry);
+        }
+      }
       // init view
       $scope.listProducts();
       //- if ($scope.displayMode === "edit") {
@@ -97,67 +119,77 @@ block renderBody
   .container(ng-app='sortFireAntProduct' ng-cloak)
     .row(ng-controller='FAPrdtSortCtrl')
       .col-xs-12
-        table.table.table-striped.table-bordered(ng-show="displayMode == 'list'")
-          thead
-            tr
-              th Product Page
-              th
-                a.productth( ng-click="sortType='product_name'; sortReverse=!sortReverse")
-                  | Product Name
-                  span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
-                  span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
-              th
-                a.productth( ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
-                  | Brand
-                  span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
-                  span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
-              th Usage
-              th Control Method
-              th options
+        div(ng-show="displayMode == 'list'")
+          button.btn.btn-theme-bg.btn-sm.margin-right-10(ng-click="editOrCreateProduct()") New
+          .divide20
+          table.table.table-striped.table-bordered
+            thead
+              tr
+                th Product Page
+                th
+                  a.productth( ng-click="sortType='product_name'; sortReverse=!sortReverse")
+                    | Product Name
+                    span.fa.fa-caret-down(ng-show="sortType === 'product_name' && !sortReverse")
+                    span.fa.fa-caret-up(ng-show="sortType === 'product_name' && sortReverse")
+                th
+                  a.productth( ng-click="sortType='manufacturer'; sortReverse=!sortReverse")
+                    | Brand
+                    span.fa.fa-caret-down(ng-show="sortType === 'manufacturer' && !sortReverse")
+                    span.fa.fa-caret-up(ng-show="sortType === 'manufacturer' && sortReverse")
+                th Usage
+                th Control Method
+                th options
 
-          tbody
-            tr(ng-repeat="item in products | orderBy:sortType:sortReverse")
-              td
-                a(ng-href='{{item.product_url}}', target='_blank')
-                  img.img-thumbnail(ng-src='{{item.img_small_url}}', alt='product_img')
-              td {{item.product_name}}
-              td {{item.manufacturer}}
-              td {{item.usage}}
-              td {{item.control_method}}
-              td
-                button.btn.btn-theme-bg.btn-sm.margin-right-10(ng-click="editOrCreateProduct(item)") Edit
-                button.btn.btn-danger.btn-ico(ng-click="deleteProduct(item)") Delete
+            tbody
+              tr(ng-repeat="item in products | orderBy:sortType:sortReverse")
+                td
+                  a(ng-href='{{item.product_url}}', target='_blank')
+                    img.img-thumbnail(ng-src='{{item.img_small_url}}', alt='product_img')
+                td {{item.product_name}}
+                td {{item.manufacturer}}
+                td {{item.usage}}
+                td {{item.control_method}}
+                td
+                  button.btn.btn-theme-bg.btn-sm.margin-right-10(ng-click="editOrCreateProduct(item)") Edit
+                  button.btn.btn-danger.btn-ico(ng-click="deleteProduct(item)") Delete
+
 
         
         .fireAntProductFormWrapper(ng-show="displayMode == 'edit'")
-          form
+          form(name="editOrCreateProductForm" novalidate)
             .form-group
-              label(for='product_id') Product Id
-              input#product_id.form-control(type='text' ng-model="currentProduct.product_id")
+              label(for='product_id') 
+               | Product Id
+               span *
+              input#product_id.form-control(type='number' ng-model="currentProduct.product_id", required)
             .form-group
-              label(for='product_name') Product name
-              input#product_name.form-control(type='text' ng-model="currentProduct.product_name")
+              label(for='product_name') 
+                | Product name
+                span *
+              input#product_name.form-control(type='text' ng-model="currentProduct.product_name", required)
             .form-group
               label(for='manufacturer') Manufacturer
               input#manufacturer.form-control(type='text' ng-model="currentProduct.manufacturer")
 
-            //- .form-group
-            //-   label(for='manufacturer') type of uses
-            //-   div
-            //-     label.checkbox-inline
-            //-       input#inlineCheckbox1(type='checkbox', value='home')
-            //-       |  home
-            //-     label.checkbox-inline
-            //-       input#inlineCheckbox2(type='checkbox', value='agricultural')
-            //-       |  agricultural
-            //-     label.checkbox-inline
-            //-       input#inlineCheckbox3(type='checkbox', value='professional')
-            //-       |  professional
-
-            // options for physical form
             .form-group
-              label(for='manufacturer') Physical Form
-              select.form-control(ng-model="currentProduct.physical_form")
+              label type of uses
+              div
+                label.checkbox-inline
+                  input(type='checkbox', ng-checked="currentProduct.type_of_uses.indexOf('home') > -1", ng-click="toggleEntryInArray('home', currentProduct.type_of_uses)")
+                  |  home
+                label.checkbox-inline
+                  input(type='checkbox', ng-checked="currentProduct.type_of_uses.indexOf('agricultural') > -1", ng-click="toggleEntryInArray('agricultural', currentProduct.type_of_uses)")
+                  |  agricultural
+                label.checkbox-inline
+                  input(type='checkbox', ng-checked="currentProduct.type_of_uses.indexOf('professional') > -1", ng-click="toggleEntryInArray('professional', currentProduct.type_of_uses)")
+                  |  professional
+
+            // options for physical form, required
+            .form-group
+              label(for='manufacturer') 
+                | Physical Form
+                span *
+              select.form-control(ng-model="currentProduct.physical_form", required)
                 option(value="") null
                 option(value="granular") granular
                 option(value="dust") dust
@@ -179,22 +211,22 @@ block renderBody
               input#inlineCheckbox3(type='checkbox', ng-model="currentProduct.is_safe_for_pets")
               |  Safe for pets
 
-            // options of control method
+            // options of control method, required
             .form-group
               label(for='control_method')
                 | Control method
                 span *
-              select#control_method.form-control
+              select#control_method.form-control(required)
                 option bait
                 option contact
                 option baitcontact
 
-            // options of control method
+            // options of usage, requried
             .form-group
               label(for='usage') 
                | Usage
                span *
-              select#usage.form-control
+              select#usage.form-control(required)
                 option broadcast
                 option imt
                 option broadcastimt
@@ -217,7 +249,7 @@ block renderBody
               label(for="img_url") img url
               input#img_url.form-control(type="text", ng-model="currentProduct.img_url")
 
-            button.btn.btn-default.margin-right-10(ng-click="saveEdit(currentProduct)") Submit
+            button.btn.btn-default.margin-right-10(ng-click="saveEdit(currentProduct)", ng-disabled="editOrCreateProductForm.$invalid") Submit
             button.btn.btn-default( ng-click="cancelEdit()") Cancel
           .divide30
 
