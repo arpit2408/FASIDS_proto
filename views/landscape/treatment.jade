@@ -134,7 +134,7 @@ block renderBody
               tr(ng-repeat="roll in FireAntProduct.items | orderBy:sortType:sortReverse")
                 td
                   a(ng-href='{{roll.product_url}}', target='_blank')
-                    img.img-thumbnail(ng-src='{{roll.img_small_url}}', alt='product_img')
+                    img.img-thumbnail(ng-src="{{roll.img_small_url || 'http://www.homedepot.com/HFApp/static/global/images/desktop/thd-logo.png'}}", alt='product_img')
                 td {{roll.product_name}}
                 td {{roll.manufacturer}}
                 td {{roll.usage}}

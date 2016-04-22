@@ -23,7 +23,7 @@ block additionalCSS
       $scope.sortType = 'product_name'; // set the default sort type
       $scope.sortReverse = false; // set the default sort order
       $scope.FireAntProduct = {};
-      $scope.currentProduct = null;
+      $scope.currentProduct = emptyProduct();
       $scope.productsResource = $resource(baseUrl + ":productId", {productId:"@_id"});
 
       $scope.listProducts = function () {
@@ -60,11 +60,17 @@ block additionalCSS
         product.$save(function (savedProduct, postResponseHeader){
           $scope.displayMode = "list";
         });  // put callback into save
+      }
 
+      function emptyProduct() {
+        return {
+          type_of_uses:[],
+          pest_types: []
+        }
       }
 
       $scope.editOrCreateProduct = function (product) {
-        $scope.currentProduct = product ? product : {};
+        $scope.currentProduct = product ? product : emptyProduct();
         $scope.displayMode = "edit";
       }
 
@@ -81,7 +87,7 @@ block additionalCSS
           $scope.currentProduct.$get();  
           // some time if use modified contents in table, need to HTTP GET original data again
         }
-        $scope.currentProduct = {};
+        $scope.currentProduct = emptyProduct();
         $scope.displayMode = "list";
       }
 
@@ -144,7 +150,7 @@ block renderBody
               tr(ng-repeat="item in products | orderBy:sortType:sortReverse")
                 td
                   a(ng-href='{{item.product_url}}', target='_blank')
-                    img.img-thumbnail(ng-src='{{item.img_small_url}}', alt='product_img')
+                    img.img-thumbnail(ng-src="{{item.img_small_url || 'http://www.homedepot.com/HFApp/static/global/images/desktop/thd-logo.png'}}", alt='product_img')
                 td {{item.product_name}}
                 td {{item.manufacturer}}
                 td {{item.usage}}
@@ -216,7 +222,8 @@ block renderBody
               label(for='control_method')
                 | Control method
                 span *
-              select#control_method.form-control(required)
+              select#control_method.form-control(required, ng-model="currentProduct.control_method")
+                option(value="") null
                 option bait
                 option contact
                 option baitcontact
@@ -226,7 +233,8 @@ block renderBody
               label(for='usage') 
                | Usage
                span *
-              select#usage.form-control(required)
+              select#usage.form-control(required, ng-model="currentProduct.usage")
+                option(value="") null
                 option broadcast
                 option imt
                 option broadcastimt
@@ -240,8 +248,10 @@ block renderBody
               label(for="product_overview") Product overview
               input#product_overview.form-control(type="text", ng-model="currentProduct.product_overview")
             .form-group
-              label(for="product_url") Product url
-              input#product_url.form-control(type="text", ng-model="currentProduct.product_url")
+              label(for="product_url") 
+                | Product url
+                span *
+              input#product_url.form-control(type="text", ng-model="currentProduct.product_url", required)
             .form-group
               label(for="img_small_url") img small url
               input#img_small_url.form-control(type="text", ng-model="currentProduct.img_small_url")
