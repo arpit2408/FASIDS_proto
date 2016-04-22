@@ -16,7 +16,7 @@ block renderBody
     -var str = Object.keys(paging_condition).map(function(key) {
     -    return key + '=' + paging_condition[key];
     -}).join('&');
-    -return '#{glblprefix}/qa?'+str;
+    -return glblprefix + '/qa?'+str;
   -}
   mixin paging(paging_condition)
     //- paging_condition is like following
