@@ -60,7 +60,7 @@ app.use('/', index_route);
 app.post('/users/signin', passport.authenticate('local',{failureRedirect: glblprefix + '/users/signin',failureFlash:true, sucessFlash: true}),function (req, res, next){
   if (typeof req.query.referral_url !== "undefined" && req.query.referral_url.search(/signin/) === -1){
     return res.redirect(req.query.referral_url);
-  } else if (typeof req.header('Referer') !== "undefined" && req.header('Referer').search(/signin/) === -1  ) {
+  } else if (typeof req.header('Referer') !== "undefined" && req.header('Referer').search(/signin|signup/) === -1  ) {
     return res.redirect("back");
   } else {
     return res.redirect(glblprefix + "/");
