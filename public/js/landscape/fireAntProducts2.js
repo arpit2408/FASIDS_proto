@@ -19,14 +19,13 @@ angular.module("sortFireAntProduct", ["ngResource"])
   $scope.FireAntProduct = {};
   $scope.currentProduct = emptyProduct();
   $scope.productsResource = $resource(baseUrl + ":productId", {productId:"@_id"});
-
   $scope.toBeAddedPestType = "";
   $scope.listProducts = function () {
     console.log("loading");
     $scope.products = $scope.productsResource.query();
     console.log($scope.products);
     //- $scope.currentProduct = $scope.products[0];
-    $scope.displayMode = "edit";
+    // $scope.displayMode = "edit";
   };
 
   $scope.deleteProduct = function (product) {
@@ -75,6 +74,7 @@ angular.module("sortFireAntProduct", ["ngResource"])
     } else {
       createProduct(product);
     }
+    $scope.toBeAddedPestType = "";
   }
 
   $scope.cancelEdit = function () {
@@ -84,6 +84,7 @@ angular.module("sortFireAntProduct", ["ngResource"])
     }
     $scope.currentProduct = emptyProduct();
     $scope.displayMode = "list";
+    $scope.toBeAddedPestType = "";
   }
 
   $scope.toggleEntryInArray = function(entry, array) {
@@ -97,6 +98,7 @@ angular.module("sortFireAntProduct", ["ngResource"])
     } else {
       array.push(entry);
     }
+    $scope.toBeAddedPestType = "";
   }
   // init view
   $scope.listProducts();
