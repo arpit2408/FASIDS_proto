@@ -464,10 +464,8 @@ router.get('/landscape/fire_ant_products', function(req, res, next){
   For Future developer, 
   The unfinished updating form and list is in fire_ant_products2.jade
 */
-router.get('/landscape/fire_ant_products2/:productId?', function(req, res, next){
-  
+router.get('/landscape/fire_ant_products2/:productId?', ensureAdmin, function(req, res, next){
   var displayMode =  req.params.productId ? "edit":"list";
-
   res.render("landscape/fire_ant_products2.jade",{
     page_status:{
       isAuthenticated: req.isAuthenticated(), 

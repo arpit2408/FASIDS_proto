@@ -122,8 +122,8 @@ apirouter.post("/fire_ant_products", function (req, res, next) {
   APIEnsureAuthenticated(req, res, next, [0]);
 }, function (req, res) {
   try {
-    var newProduct = JSON.parse(req.body.newProductJson);
-    newProduct = new req.db_models.FireAntProduct(newProduct);
+    // var newProduct = ;
+    newProduct = new req.db_models.FireAntProduct(req.body);
     newProduct.save(function (err) {
       if (err) {
         throw err;
